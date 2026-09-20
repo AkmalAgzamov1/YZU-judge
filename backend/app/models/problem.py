@@ -16,4 +16,4 @@ class Problem(Base):
     is_cpe = Column(Boolean, nullable = False, default = True)
     difficulty = Column(Enum("Easy", "Medium", "Hard", name = "problem_difficulty"), nullable = False)
 
-    created_by = Column(String, ForeignKey("users.id"), nullable = False)
+    created_by = Column(Integer, ForeignKey("users.id"), nullable = False)
