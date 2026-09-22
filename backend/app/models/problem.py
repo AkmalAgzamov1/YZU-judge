@@ -14,6 +14,6 @@ class Problem(Base):
     memory_limit_mb = Column(Integer, nullable = False)
 
     is_cpe = Column(Boolean, nullable = False, default = True)
-    difficulty = Column(Enum("Easy", "Medium", "Hard", name = "problem_difficulty"), nullable = False)
+    difficulty = Column(Enum("easy", "medium", "hard", name = "problem_difficulty"), nullable = False)
 
     created_by = Column(Integer, ForeignKey("users.id"), nullable = False)
