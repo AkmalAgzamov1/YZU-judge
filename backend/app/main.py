@@ -10,7 +10,7 @@ app.include_router(users.router)
 
 @app.get("/")
 def root():
-    return {"message": "Hello CodeArena"}
+    return {"message": "Aki Chan!"}
 
 
 

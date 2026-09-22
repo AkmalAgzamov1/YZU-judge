@@ -65,7 +65,7 @@ def delete_problem(problem_id: int, current_user: User = Depends(get_current_adm
     db.delete(problem)
     db.commit()
 
-    return {"Message": "Problem deleted"}
+    return {"message": "problem deleted"}
 
 
 @router.put("/{problem_id}", response_model = ProblemOut)
@@ -85,8 +85,8 @@ def update_problem(problem_id: int, problem_data: ProblemUpdate, current_user: U
     problem.memory_limit_mb = problem_data.memory_limit_mb
     problem.is_cpe = problem_data.is_cpe
 
-    db.commit(problem)
-    db.refresh()
+    db.commit()
+    db.refresh(problem)
 
     return problem
     
