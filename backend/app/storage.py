@@ -19,3 +19,8 @@ def save_file(problem_id: int, filename: str, content: str) -> str:
 def read_file(path: str) -> str:
     with open(path, "r") as file:
         return file.read()
+
+
+def write_file(path: str, content: str) -> None:
+    with open(path, "w") as file:
+        file.write(content)

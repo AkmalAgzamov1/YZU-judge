@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Boolean, Enum, ForeignKey
-
+from sqlalchemy.orm import relationship
 from ..database import Base
 
 class Problem(Base):
@@ -17,3 +17,4 @@ class Problem(Base):
     difficulty = Column(Enum("easy", "medium", "hard", name = "problem_difficulty"), nullable = False)
 
     created_by = Column(Integer, ForeignKey("users.id"), nullable = False)
+    testcases = relationship("TestCase", back_populates="problem")
