@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Boolean
 
+from sqlalchemy.orm import relationship
 from ..database import Base
 
 class TestCase(Base):
@@ -13,3 +14,5 @@ class TestCase(Base):
 
     is_sample = Column(Boolean, nullable = False, default = False)
     sample_order = Column(Integer, nullable = True)
+
+    problem = relationship("Problem", back_populates="testcases")
