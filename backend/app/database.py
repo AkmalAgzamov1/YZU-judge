@@ -36,9 +36,9 @@ def get_db():
 def check_connection():
     try:
         with engine.connect():
-            print("✅ PostgreSQL CONNECTED!")
+            print("Postgres connected")
     except Exception as e:
-        print("❌ Connection failed:")
+        print("Postgres conntection failed")
         print(e)
 
 
