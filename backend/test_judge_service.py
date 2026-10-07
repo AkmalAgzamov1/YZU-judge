@@ -7,7 +7,7 @@ from app.services.judge_service import (
     judge_submission,
 )
 
-from docker_test.test_docker import run_code_in_docker
+from app.services.docker_runner import run_code_in_docker
 
 
 db = SessionLocal()
