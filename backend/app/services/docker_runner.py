@@ -29,9 +29,17 @@ def _read_memory_peak_bytes(container):
 
 
 def run_code_in_docker(code, input_data, time_limit_ms, memory_limit_mb):
+    # Keep the interpreter alive until the memory monitor is ready. The runner
+    # sends a newline gate followed by the student's stdin after the first read.
+    bootstrap = (
+        "import io,sys; sys.stdin.buffer.readline(); "
+        "data=sys.stdin.buffer.read(); "
+        "sys.stdin=io.TextIOWrapper(io.BytesIO(data)); "
+        "exec(compile(sys.argv[1], '<submission>', 'exec'))"
+    )
     container = client.containers.create(
         "python:3.11-slim",
-        ["python", "-c", code],
+        ["python", "-c", bootstrap, code],
         stdin_open=True,
         mem_limit=f"{memory_limit_mb}m",
         nano_cpus=CPU_LIMIT_NANO_CPUS,
@@ -43,31 +51,32 @@ def run_code_in_docker(code, input_data, time_limit_ms, memory_limit_mb):
     try:
         container.start()
 
-        stream = container.attach_socket(
-            params={"stdin": 1, "stdout": 0, "stderr": 0, "stream": 1}
-        )
-        stream.sendall(input_data.encode())
-        stream.close()
+        # Sample before sending stdin so even a submission that exits immediately
+        # cannot finish before the monitor has observed its cgroup.
+        initial_peak = _read_memory_peak_bytes(container)
+        if initial_peak is not None:
+            peak_memory_bytes = initial_peak
 
-        start_time = time.perf_counter()
         stats_stop = threading.Event()
 
         def sample_memory_peak():
             nonlocal peak_memory_bytes
-            try:
-                for sample in container.stats(decode=True):
-                    memory = sample.get("memory_stats", {})
-                    peak_memory_bytes = max(
-                        peak_memory_bytes,
-                        int(memory.get("max_usage", memory.get("usage", 0))),
-                    )
-                    if stats_stop.is_set():
-                        break
-            except (docker.errors.DockerException, KeyError, TypeError, ValueError):
-                pass
+            while not stats_stop.is_set():
+                memory_peak = _read_memory_peak_bytes(container)
+                if memory_peak is not None:
+                    peak_memory_bytes = max(peak_memory_bytes, memory_peak)
+                stats_stop.wait(MEMORY_PEAK_POLL_INTERVAL_SECONDS)
 
         stats_thread = threading.Thread(target=sample_memory_peak, daemon=True)
         stats_thread.start()
+
+        stream = container.attach_socket(
+            params={"stdin": 1, "stdout": 0, "stderr": 0, "stream": 1}
+        )
+        stream.sendall(b"\n" + input_data.encode())
+        stream.close()
+
+        start_time = time.perf_counter()
         timed_out = False
         try:
             result = container.wait(timeout=time_limit_ms / 1000)
@@ -77,7 +86,9 @@ def run_code_in_docker(code, input_data, time_limit_ms, memory_limit_mb):
             result = container.wait()
         finally:
             stats_stop.set()
-            stats_thread.join(timeout=1)
+            stats_thread.join(
+                timeout=MEMORY_PEAK_POLL_INTERVAL_SECONDS * 2
+            )
 
         time_taken_ms = int((time.perf_counter() - start_time) * 1000)
         container.reload()
