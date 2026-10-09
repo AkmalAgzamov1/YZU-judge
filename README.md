@@ -1,9 +1,9 @@
 # CodeArena (YZU-Judge)
 
-An online judge built from scratch, with the long-term goal of helping **Yuan Ze University** students prepare for the **CPE** (Collegiate Programming Exam, Taiwan): solve problems, submit code, get verdicts, and eventually discuss solutions with each other.
+An online judge built from scratch, with the long-term goal of helping **Yuan Ze University** students prepare for the **CPE** (Collegiate Programming Exam, Taiwan): solve problems, submit code, get verdicts based on test cases.
 
 > **Status: backend core is working; automatic judging is not wired into the API yet.**
-> Auth, problems, test cases and submissions have complete CRUD, and the Docker-based judge engine works and is tested standalone. The next milestone is connecting the two through a job queue (Celery + Redis). See the [Roadmap](#roadmap).
+> Auth, problems, test cases and submissions have complete CRUD, and the Docker-based judge engine works and is tested standalone. The next milestone is connecting the two through a job queue (Celery + Redis).
 
 This is also a **learning project**. Every layer was written by hand, step by step, with the "why" behind each decision. That is why this README documents decisions and trade-offs, not just features.
 
@@ -94,7 +94,7 @@ flowchart LR
     Client -->|GET /submissions/id| API
 ```
 
-The API process and the worker are **separate processes** that communicate only through Redis (the queue) and PostgreSQL (the data). `judge_service` receives the code runner as a parameter (`run_code`) instead of importing Docker itself, so the API process never needs Docker, and the judging logic can be tested with a fake runner.
+The API process and the worker are **separate processes** that communicate only through Redis (the queue) and PostgreSQL (the data). `judge_service` receives the code runner as a parameter (`run_code` is injected).
 
 ---
 
@@ -178,7 +178,7 @@ Flow: `JWT -> get_current_user -> get_current_admin_user -> allow / 403`
 - Passwords are hashed with Argon2 and never returned (`UserOut` has no hash field).
 - Login returns a JWT (HS256, 30-minute lifetime) containing `user_id`, `username` and `exp`.
 - `get_current_user` (FastAPI dependency) decodes the token and loads the user, returning 401 if the token is invalid or the user no longer exists.
-- `get_current_admin_user` wraps `get_current_user` and returns 403 unless `is_admin` is true. It is reused by every admin-only route, so authorization lives in one place instead of being copy-pasted into each endpoint.
+- `get_current_admin_user` wraps `get_current_user` and returns 403 unless `is_admin` is true. It is reused by every admin-only route, so authorization lives in one place instead of being copy-pasted.
 - Login uses one generic message for "wrong username" and "wrong password", so it does not reveal which usernames exist.
 - Submissions are private. Even a valid token cannot read someone else's submission or results.
 
@@ -202,9 +202,9 @@ Why files and not database columns:
 - Megabyte-sized values in a relational table are slow to read and write and bloat backups.
 - The judge reads a file straight into a container's stdin and compares output as text.
 
-How creation works: the `TestCase` row is inserted and flushed first to obtain its `id`, the files are written using that id (so names never collide and never come from user input, which also prevents path traversal), and the paths are saved on the row before the transaction commits.
+How creation works: the `TestCase` row is inserted and flushed first to obtain its `id`, the files are written using that id (so names never collide and never come from user input, which also prevents directory traversal).
 
-All file access goes through `app/storage.py` (`save_file`, `write_file`, `read_file`). Routers never build paths themselves. For production this module is the single seam to swap in S3-compatible object storage, because local disk does not survive redeploys and cannot be shared between several app instances. `test_data/` is gitignored.
+All file access goes through `app/storage.py` (`save_file`, `write_file`, `read_file`). Routers never build paths themselves. For production this module is the single seam to swap in S3-compatible object storage.
 
 ---
 
@@ -232,13 +232,13 @@ Two modules, split on purpose:
 1. The container starts running a tiny **bootstrap**: it blocks reading a single line from stdin (a "gate"), then `exec`s the student's code.
 2. While it is blocked, the runner takes its first memory sample. This guarantees the monitor has observed the container even if the program would otherwise finish instantly.
 3. The runner sends `\n` followed by the test input **in a separate thread**, and waits for the container **in another thread**. The deadline is applied to the waiting, not to the sending.
-4. A background thread polls the container's cgroup **memory high-water mark** every ~10 ms (`memory.peak` on cgroup v2, `memory.max_usage_in_bytes` on v1). The bootstrap also reports `ru_maxrss` on exit as a second source. The larger value wins.
+4. A background thread polls the container's cgroup **memory high-water mark** every ~10 ms (`memory.peak` on cgroup v2, `memory.max_usage_in_bytes` on v1). The bootstrap also reports `ru_maxrss` on exit.
 5. On timeout the container is killed. Afterwards the runner reads stdout, stderr, exit code, and Docker's `OOMKilled` flag.
 
 Why it is built this way, in terms of problems that were actually hit:
 
-- **Gate on one line only.** An earlier version read the whole input into memory first. On a 40 MB input that made peak memory about 85 MB, versus about 11 MB when only the gate line is read. With "big test cases" as a goal, that would produce false memory-limit verdicts, so the real `sys.stdin` is left untouched.
-- **Sending input in a thread.** If the code never reads stdin (for example `while True: pass`) and the input is larger than the socket and pipe buffers, a blocking `sendall` would hang forever *before* the timeout even started. That would freeze a worker. Now the deadline always wins; the hanging case returns `time_limit_exceeded` (a 5 MB-input test returned in ~317 ms against a 300 ms limit).
+- **Gate on one line only.** An earlier version read the whole input into memory first. On a 40 MB input that made peak memory about 85 MB, versus about 11 MB when only the gate line is read. With "big input" test cases, this matters.
+- **Sending input in a thread.** If the code never reads stdin (for example `while True: pass`) and the input is larger than the socket and pipe buffers, a blocking `sendall` would hang forever *before* the deadline could be applied to the container.
 - **Polling instead of streaming Docker stats.** Docker's stats stream emits roughly once per second, longer than a typical run, so most runs would have reported 0 MB.
 - **Unknown is not zero.** If no counter can be read, memory is reported as unknown (`NULL`).
 
@@ -254,7 +254,7 @@ Checked in this order; the first match wins:
 
 ### Early stopping
 
-Test cases run in order and judging **stops at the first non-accepted verdict**, which is what Codeforces-style judges do. It saves a lot of CPU when tests are large, and for exam practice the first failure is the useful signal. The returned `results` list includes every test up to and including the failing one.
+Test cases run in order and judging **stops at the first non-accepted verdict**, which is what Codeforces-style judges do. It saves a lot of CPU when tests are large, and for exam practice the first failure is the only one that matters.
 
 ---
 
@@ -324,7 +324,7 @@ UPDATE users SET is_admin = true WHERE username = 'your_username';
 
 ### Trying the judge engine
 
-The judge is not connected to the API yet, so it is exercised by a standalone script. With at least one problem and its test cases in the database, edit the `code` in `backend/test_judge_service.py` and run it from the `backend/` directory:
+The judge is not connected to the API yet, so it is exercised by a standalone script. With at least one problem and its test cases in the database, edit the `code` in `backend/test_judge_service.py` and run:
 
 ```bash
 python test_judge_service.py
@@ -341,7 +341,7 @@ Being explicit about what is **not** done:
 - **Submissions are not judged automatically yet.** `POST /submissions` stores a `pending` row and nothing consumes it. This is the next milestone.
 - **Python only.** The schema accepts only `python`; C++ and Java need a compile stage and `compilation_error` handling.
 - **The sandbox is solid for development but not production-hardened.** Further hardening is listed in the roadmap.
-- **Memory numbers are approximate.** Sampling is periodic, so a very short-lived spike right before exit can be missed; treat the value as a lower bound. Real enforcement is Docker's OOM kill, not this measurement.
+- **Memory numbers are approximate.** Sampling is periodic, so a very short-lived spike right before exit can be missed; treat the value as a lower bound. Real enforcement is Docker's OOM kill, not the sampling.
 - **Memory counters depend on the host kernel.** `memory.peak` needs cgroup v2 and Linux 5.19 or newer (older hosts fall back to cgroup v1 or `ru_maxrss`). Check the worker host before deploying.
 - **Measured time includes the time to push the input** into the container.
 - **Output comparison is exact after trimming.** There is no token-based or floating-point-tolerant checker, and no special judges.
