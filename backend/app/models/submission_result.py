@@ -13,5 +13,5 @@ class SubmissionResult(Base):
     verdict = Column(Enum("accepted", "wrong_answer", "time_limit_exceeded", "memory_limit_exceeded", "runtime_error", name = "submission_result_verdict"), nullable = False) 
 
     time_taken_ms = Column(Integer, nullable = False)
-    memory_used_mb = Column(Integer, nullable = False)
+    memory_used_mb = Column(Integer, nullable = True)
 
