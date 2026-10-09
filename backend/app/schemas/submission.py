@@ -1,13 +1,20 @@
 from datetime import datetime
-from typing import Literal
+from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
 class SubmissionCreate(BaseModel):
     problem_id: int
     language: Literal["python", "java", "cpp"]
-    code: str
+    code: Annotated[str, Field(max_length=65_536)]
+
+    @field_validator("code")
+    @classmethod
+    def code_must_fit_argv(cls, code: str) -> str:
+        if len(code.encode("utf-8")) > 65_536:
+            raise ValueError("code must be at most 64 KiB when UTF-8 encoded")
+        return code
 
 
 class SubmissionOut(BaseModel):
@@ -44,4 +51,4 @@ class SubmissionResultOut(BaseModel):
         "runtime_error"
     ]
     time_taken_ms: int
-    memory_used_mb: int
+    memory_used_mb: int | None
