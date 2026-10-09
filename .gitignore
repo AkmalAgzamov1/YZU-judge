@@ -17,6 +17,9 @@ venv/
 *.db
 *.sqlite3
 
+# Generated judge test data
+/backend/test_data/
+
 # Logs
 *.log
 

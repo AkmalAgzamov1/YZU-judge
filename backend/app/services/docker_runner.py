@@ -116,7 +116,11 @@ def run_code_in_docker(code, input_data, time_limit_ms, memory_limit_mb):
         time_taken_ms = int((time.perf_counter() - start_time) * 1000)
 
         if timed_out:
-            container.kill()
+            try:
+                container.kill()
+            except docker.errors.APIError:
+                # It may have exited naturally at the deadline.
+                pass
         try:
             stream.close()
         except Exception:
