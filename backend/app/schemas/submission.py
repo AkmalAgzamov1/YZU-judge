@@ -6,7 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 class SubmissionCreate(BaseModel):
     problem_id: int
-    language: Literal["python", "java", "cpp"]
+    language: Literal["python"]
     code: Annotated[str, Field(max_length=65_536)]
 
     @field_validator("code")

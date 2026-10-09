@@ -5,7 +5,6 @@ import threading
 import re
 
 import docker
-import requests
 
 
 client = docker.from_env()
@@ -81,35 +80,66 @@ def run_code_in_docker(code, input_data, time_limit_ms, memory_limit_mb):
         stream = container.attach_socket(
             params={"stdin": 1, "stdout": 0, "stderr": 0, "stream": 1}
         )
-        try:
-            stream.sendall(b"\n")
-            stream.sendall(input_data.encode())
-        except Exception:
-            # A submission may exit without consuming its full input. Closing
-            # the attach socket can then fail while the container still exits
-            # normally, which should not turn that submission into a runner error.
-            pass
-        finally:
+
+        def send_input():
             try:
-                stream.close()
+                stream.sendall(b"\n")
+                stream.sendall(input_data.encode())
             except Exception:
+                # Submissions that exit without consuming stdin can close the
+                # pipe while the writer is sending. The verdict comes from wait().
                 pass
+            finally:
+                try:
+                    stream.close()
+                except Exception:
+                    pass
 
         start_time = time.perf_counter()
-        timed_out = False
-        try:
-            result = container.wait(timeout=time_limit_ms / 1000)
-        except requests.exceptions.ReadTimeout:
-            timed_out = True
+        input_thread = threading.Thread(target=send_input, daemon=True)
+        input_thread.start()
+        wait_finished = threading.Event()
+        wait_result = []
+        wait_error = []
+
+        def wait_for_container():
+            try:
+                wait_result.append(container.wait())
+            except Exception as error:
+                wait_error.append(error)
+            finally:
+                wait_finished.set()
+
+        wait_thread = threading.Thread(target=wait_for_container, daemon=True)
+        wait_thread.start()
+        timed_out = not wait_finished.wait(time_limit_ms / 1000)
+        time_taken_ms = int((time.perf_counter() - start_time) * 1000)
+
+        if timed_out:
             container.kill()
-            result = container.wait()
+        try:
+            stream.close()
+        except Exception:
+            pass
+
+        if timed_out:
+            # Killing the container should release Docker's wait request. Bound
+            # cleanup so a daemon/API problem cannot pin this worker indefinitely.
+            wait_finished.wait(5)
+
+        try:
+            input_thread.join(timeout=MEMORY_PEAK_POLL_INTERVAL_SECONDS * 2)
         finally:
             stats_stop.set()
             stats_thread.join(
                 timeout=MEMORY_PEAK_POLL_INTERVAL_SECONDS * 2
             )
 
-        time_taken_ms = int((time.perf_counter() - start_time) * 1000)
+        if not timed_out and wait_error:
+            raise wait_error[0]
+
+        result = wait_result[0] if wait_result else {"StatusCode": None}
+
         container.reload()
         is_oom = container.attrs.get("State", {}).get("OOMKilled", False)
         exit_code = None if timed_out else result["StatusCode"]
