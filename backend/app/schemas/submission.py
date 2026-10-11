@@ -25,7 +25,7 @@ class SubmissionOut(BaseModel):
     problem_id: int
     language: Literal["python", "java", "cpp"]
     code: str
-    verdict: Literal[
+    status: Literal[
         "pending",
         "running",
         "memory_limit_exceeded",

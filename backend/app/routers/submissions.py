@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from app.tasks import judge_submission_task
+
 from ..database import get_db
 from ..dependencies import get_current_user
 from ..models.submission import Submission
@@ -30,7 +32,7 @@ def create_submission(submission_data: SubmissionCreate, current_user: User = De
     db.add(submission)
     db.commit()
     db.refresh(submission)
-
+    judge_submission_task.delay(submission.id)
     return submission
 
 
