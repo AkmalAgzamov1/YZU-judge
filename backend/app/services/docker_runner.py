@@ -12,7 +12,7 @@ client = docker.from_env()
 # A single submission can use at most one CPU core.
 CPU_LIMIT_NANO_CPUS = 1_000_000_000
 PROCESS_LIMIT = 50
-MEMORY_PEAK_POLL_INTERVAL_SECONDS = 0.01
+MEMORY_PEAK_POLL_INTERVAL_SECONDS = 0.1
 
 
 def _read_memory_peak_bytes(container):

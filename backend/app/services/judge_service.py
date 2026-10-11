@@ -15,6 +15,7 @@ def load_testcases(db: Session, problem_id: int):
 
     return [
         {
+            "id": testcase.id,
             "input": read_file(testcase.input_path),
             "output": read_file(testcase.output_path),
         }
@@ -86,6 +87,7 @@ def judge_submission(
             time_limit_ms=time_limit_ms,
             memory_limit_mb=memory_limit_mb,
         )
+        result["testcase_id"] = testcase["id"]
 
         results.append(result)
 
