@@ -77,6 +77,9 @@ def judge_submission(
 
     results = []
 
+    if not testcases:
+        raise ValueError("Cannot judge a submission without testcases")
+
     for testcase in testcases:
 
         result = judge_code(
