@@ -11,7 +11,10 @@ from ..models.submission_result import SubmissionResult
 
 from ..schemas.submission import SubmissionCreate, SubmissionOut, SubmissionResultOut
 
+import logging
+logger = logging.getLogger(__name__)
 router = APIRouter(prefix = "/submissions", tags = ["Submissions"])
+
 
 @router.post("/", response_model = SubmissionOut)
 def create_submission(submission_data: SubmissionCreate, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
@@ -31,13 +34,17 @@ def create_submission(submission_data: SubmissionCreate, current_user: User = De
     db.add(submission)
     db.commit()
     db.refresh(submission)
-    
+
     try: 
         judge_submission_task.delay(submission.id)
 
     except Exception:
+        logger.exception(
+            "Failed to enqueue judging task for submission %s",
+            submission.id,
+        )
         db.rollback()
-
+        
         try:
             submission.status = "internal_error"
             db.commit()
