@@ -33,7 +33,8 @@ class SubmissionOut(BaseModel):
         "wrong_answer",
         "time_limit_exceeded",
         "compilation_error",
-        "runtime_error"
+        "runtime_error",
+        "internal_error"
     ]
     created_at: datetime
 

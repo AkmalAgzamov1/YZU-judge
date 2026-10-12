@@ -1,6 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.orm import Session
-
+from sqlalchemy.orm import Session 
 from app.tasks import judge_submission_task
 
 from ..database import get_db
@@ -32,7 +31,23 @@ def create_submission(submission_data: SubmissionCreate, current_user: User = De
     db.add(submission)
     db.commit()
     db.refresh(submission)
-    judge_submission_task.delay(submission.id)
+    
+    try: 
+        judge_submission_task.delay(submission.id)
+
+    except Exception:
+        db.rollback()
+
+        try:
+            submission.status = "internal_error"
+            db.commit()
+        except Exception:
+            db.rollback()
+            raise    
+        raise HTTPException(
+            status_code = 503, 
+            detail = f"Submission {submission.id} was created, but judge service is temporarily unavailable")
+    
     return submission
 
 
