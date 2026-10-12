@@ -1,16 +1,15 @@
+import logging
+
 from app.celery_app import celery_app
 from app.database import SessionLocal
 
 from app.models.submission import Submission 
 from app.models.submission_result import SubmissionResult
 
-from app.models.problem import Problem
-from app.models.user import User
+from app.models.problem import Problem 
 from app.services.judge_service import load_testcases, judge_submission
 
 
-
-import logging
 logger = logging.getLogger(__name__)
 
 
@@ -43,6 +42,7 @@ def judge_submission_task(submission_id):
 
             testcases = load_testcases(db, problem.id)
 
+            # Must stay lazy, do not delete please bro
             from app.services.docker_runner import run_code_in_docker
 
             judge_result = judge_submission(
