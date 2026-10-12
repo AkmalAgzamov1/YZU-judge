@@ -234,7 +234,8 @@ Two modules, split on purpose:
 3. The runner sends `\n` followed by the test input **in a separate thread**, and waits for the container **in another thread**. The deadline is applied to the waiting, not to the sending.
 4. A background thread polls the container's cgroup **memory high-water mark** every ~10 ms (`memory.peak` on cgroup v2, `memory.max_usage_in_bytes` on v1). The bootstrap also reports `ru_maxrss` to stdout as a fallback.
 5. On timeout the container is killed. Afterwards the runner reads stdout, stderr, exit code, and Docker's `OOMKilled` flag.
-
+6. Memory monitoring: The judge samples the container's memory usage approximately every 100 ms (0.1 seconds). A 10 ms polling interval caused excessive docker exec calls, adding overhead to execution time and potentially causing false TLEs. Testing with a large Python list showed approximately 93 MB of memory usage at the 100 ms interval, so the longer interval was retained.
+   
 Why it is built this way, in terms of problems that were actually hit:
 
 - **Gate on one line only.** An earlier version read the whole input into memory first. On a 40 MB input that made peak memory about 85 MB, versus about 11 MB when only the gate line is read. Without the gate, memory measurement would miss the startup phase.
