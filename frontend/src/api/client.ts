@@ -1,0 +1,98 @@
+import type { paths } from "./schema";
+
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
+
+type LoginRequest =
+  paths["/users/login"]["post"]["requestBody"]["content"]["application/json"];
+
+type LoginResponse =
+  paths["/users/login"]["post"]["responses"][200]["content"]["application/json"];
+
+type RegisterRequest =
+  paths["/users/register"]["post"]["requestBody"]["content"]["application/json"];
+
+type CurrentUser =
+  paths["/users/me"]["get"]["responses"][200]["content"]["application/json"];
+
+export class ApiError extends Error {
+  public readonly status: number;
+
+  constructor(status: number, message: string) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+  }
+}
+function getErrorMessage(payload: unknown, fallback: string): string {
+  if (
+    typeof payload === "object" &&
+    payload !== null &&
+    "detail" in payload
+  ) {
+    const detail = payload.detail;
+
+    if (typeof detail === "string") {
+      return detail;
+    }
+  }
+
+  return fallback;
+}
+
+async function request<T>(
+  path: string,
+  options: RequestInit = {},
+): Promise<T> {
+  const headers = new Headers(options.headers);
+  headers.set("Content-Type", "application/json");
+
+  const token = localStorage.getItem("access_token");
+
+  if (token) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
+
+  let response: Response;
+
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      ...options,
+      headers,
+    });
+  } catch {
+    throw new ApiError(0, "Cannot connect to the server. Is the backend running?");
+  }
+
+  const payload: unknown = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    throw new ApiError(
+      response.status,
+      getErrorMessage(payload, `Request failed (${response.status})`),
+    );
+  }
+
+  return payload as T;
+}
+
+export const authApi = {
+  login(data: LoginRequest): Promise<LoginResponse> {
+    return request<LoginResponse>("/users/login", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  },
+
+  register(data: RegisterRequest): Promise<CurrentUser> {
+    return request<CurrentUser>("/users/register", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  },
+
+  me(): Promise<CurrentUser> {
+    return request<CurrentUser>("/users/me");
+  },
+};
+
+export type { CurrentUser, LoginRequest, RegisterRequest, LoginResponse };

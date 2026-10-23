@@ -16,7 +16,7 @@ interface VerdictConfig {
 }
 
 const VERDICT_CONFIG = {
-  pending: { label: "Pending", tone: "warning" },
+  pending: { label: "Pending", tone: "neutral" },
   running: { label: "Running", tone: "info" },
   accepted: { label: "Accepted", tone: "success" },
   wrong_answer: { label: "Wrong Answer", tone: "danger" },
