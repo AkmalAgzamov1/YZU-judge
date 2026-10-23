@@ -57,7 +57,7 @@ export default function StyleTile() {
     <main className="tile-page">
       <header className="tile-header">
         <div className="tile-brand">
-          <span className="tile-brand__mark">YZ</span>
+          <span className="tile-brand__mark">YZU</span>
           <div>
             <strong>YZU Judge</strong>
             <span>Frontend design system</span>
