@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import Avatar from "./Avatar";
 import Logo from "./Logo";
 import { buttonGhostSmall, buttonPrimarySmall, focusRing } from "./ui";
 
@@ -64,9 +65,17 @@ export default function SiteNav() {
     }`;
 
   const accountLinks = user ? (
-    <NavLink to="/account" className={({ isActive }) => linkClass(isActive)}>
-      {user.username}
-    </NavLink>
+    <>
+      <NavLink to="/account" className={({ isActive }) => linkClass(isActive)} aria-label="Your account">
+        <span className="flex items-center gap-2">
+          <Avatar name={user.username} />
+          {user.username}
+        </span>
+      </NavLink>
+      <Link to="/problems" className={buttonPrimarySmall}>
+        Open judge
+      </Link>
+    </>
   ) : (
     <>
       <NavLink
@@ -97,9 +106,14 @@ export default function SiteNav() {
       </Link>
     )),
     user ? (
-      <Link key="account" to="/account" className={`block rounded-lg px-3 py-3 text-3xl font-semibold tracking-tight text-neutral-400 ${focusRing}`}>
-        Your account
-      </Link>
+      <div key="app" className="flex flex-col gap-3 px-3 pt-6">
+        <Link to="/problems" className={`${buttonPrimarySmall} py-3 text-base`}>
+          Open judge
+        </Link>
+        <Link to="/account" className={`${buttonGhostSmall} border border-white/10 py-3 text-base`}>
+          Your account
+        </Link>
+      </div>
     ) : (
       <div key="auth" className="flex flex-col gap-3 px-3 pt-6">
         <Link to="/register" className={`${buttonPrimarySmall} py-3 text-base`}>

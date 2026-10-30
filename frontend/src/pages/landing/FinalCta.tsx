@@ -1,9 +1,12 @@
 import { ArrowRight } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../auth/AuthContext";
 import Reveal from "../../components/Reveal";
 import { buttonPrimary } from "../../components/ui";
 
 export default function FinalCta() {
+  const { user } = useAuth();
+
   return (
     <section className="px-4 pt-24 pb-24">
       <Reveal className="mx-auto max-w-6xl">
@@ -19,8 +22,8 @@ export default function FinalCta() {
               <br className="hidden md:block" /> Free for every YZU student,
               nothing to install.
             </p>
-            <Link to="/register" className={`${buttonPrimary} mt-8`}>
-              Create your free account
+            <Link to={user ? "/problems" : "/register"} className={`${buttonPrimary} mt-8`}>
+              {user ? "Continue practicing" : "Create your free account"}
               <ArrowRight size={18} weight="bold" aria-hidden="true" />
             </Link>
           </div>

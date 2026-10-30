@@ -6,7 +6,12 @@ from app.database import SessionLocal
 from app.models.submission import Submission 
 from app.models.submission_result import SubmissionResult
 
-from app.models.problem import Problem 
+from app.models.problem import Problem
+# Not used directly, but the worker must load it so SQLAlchemy can resolve
+# submissions.user_id -> users.id. Without it every task crashes before judging.
+from app.models.user import User  # noqa: F401
+from app.models.mock_exam import MockExam  # noqa: F401  # submissions.mock_exam_id
+from app.models.cpe_paper import CpePaper  # noqa: F401  # mock_exams.paper_id
 from app.services.judge_service import load_testcases, judge_submission
 
 

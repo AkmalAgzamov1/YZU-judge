@@ -201,6 +201,112 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/cpe-papers/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Papers */
+        get: operations["get_papers_cpe_papers__get"];
+        put?: never;
+        /** Create Paper */
+        post: operations["create_paper_cpe_papers__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/cpe-papers/{paper_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Paper */
+        get: operations["get_paper_cpe_papers__paper_id__get"];
+        /** Update Paper */
+        put: operations["update_paper_cpe_papers__paper_id__put"];
+        post?: never;
+        /** Delete Paper */
+        delete: operations["delete_paper_cpe_papers__paper_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/mock-exams/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Mock Exams */
+        get: operations["get_mock_exams_mock_exams__get"];
+        put?: never;
+        /** Start Mock Exam */
+        post: operations["start_mock_exam_mock_exams__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/mock-exams/active": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Active Mock Exam */
+        get: operations["get_active_mock_exam_mock_exams_active_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/mock-exams/{exam_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Mock Exam */
+        get: operations["get_mock_exam_mock_exams__exam_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/mock-exams/{exam_id}/finish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Finish Mock Exam */
+        post: operations["finish_mock_exam_mock_exams__exam_id__finish_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/": {
         parameters: {
             query?: never;
@@ -222,10 +328,145 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** CpePaperCreate */
+        CpePaperCreate: {
+            /** Title */
+            title: string;
+            /**
+             * Held On
+             * Format: date
+             */
+            held_on: string;
+            /**
+             * Duration Minutes
+             * @default 180
+             */
+            duration_minutes: number;
+            /** Problem Ids */
+            problem_ids: number[];
+        };
+        /** CpePaperOut */
+        CpePaperOut: {
+            /** Id */
+            id: number;
+            /** Title */
+            title: string;
+            /**
+             * Held On
+             * Format: date
+             */
+            held_on: string;
+            /** Duration Minutes */
+            duration_minutes: number;
+            /** Problems */
+            problems: components["schemas"]["CpePaperProblemOut"][];
+        };
+        /** CpePaperProblemOut */
+        CpePaperProblemOut: {
+            /** Position */
+            position: number;
+            /** Problem Id */
+            problem_id: number;
+            /** Title */
+            title: string;
+            /** Uva Id */
+            uva_id: number | null;
+            /**
+             * Difficulty
+             * @enum {string}
+             */
+            difficulty: "easy" | "medium" | "hard";
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** MockExamCreate */
+        MockExamCreate: {
+            /** Paper Id */
+            paper_id: number;
+        };
+        /** MockExamOut */
+        MockExamOut: {
+            /** Id */
+            id: number;
+            /** Paper Id */
+            paper_id: number;
+            /** Paper Title */
+            paper_title: string;
+            /**
+             * Started At
+             * Format: date-time
+             */
+            started_at: string;
+            /**
+             * Ends At
+             * Format: date-time
+             */
+            ends_at: string;
+            /** Finished At */
+            finished_at: string | null;
+            /** Is Active */
+            is_active: boolean;
+            /** Solved Count */
+            solved_count: number;
+            /** Problem Count */
+            problem_count: number;
+            /**
+             * Server Time
+             * Format: date-time
+             */
+            server_time: string;
+            /** Problems */
+            problems: components["schemas"]["MockExamProblemOut"][];
+        };
+        /** MockExamProblemOut */
+        MockExamProblemOut: {
+            /** Position */
+            position: number;
+            /** Problem Id */
+            problem_id: number;
+            /** Title */
+            title: string;
+            /** Uva Id */
+            uva_id: number | null;
+            /**
+             * Difficulty
+             * @enum {string}
+             */
+            difficulty: "easy" | "medium" | "hard";
+            /** Status */
+            status: ("solved" | "attempted") | null;
+            /** Solved At Minutes */
+            solved_at_minutes: number | null;
+        };
+        /** MockExamSummary */
+        MockExamSummary: {
+            /** Id */
+            id: number;
+            /** Paper Id */
+            paper_id: number;
+            /** Paper Title */
+            paper_title: string;
+            /**
+             * Started At
+             * Format: date-time
+             */
+            started_at: string;
+            /**
+             * Ends At
+             * Format: date-time
+             */
+            ends_at: string;
+            /** Finished At */
+            finished_at: string | null;
+            /** Is Active */
+            is_active: boolean;
+            /** Solved Count */
+            solved_count: number;
+            /** Problem Count */
+            problem_count: number;
         };
         /** ProblemCreate */
         ProblemCreate: {
@@ -309,6 +550,8 @@ export interface components {
              * @constant
              */
             language: "python";
+            /** Mock Exam Id */
+            mock_exam_id?: number | null;
             /** Code */
             code: string;
         };
@@ -327,6 +570,8 @@ export interface components {
             language: "python" | "java" | "cpp";
             /** Code */
             code: string;
+            /** Mock Exam Id */
+            mock_exam_id?: number | null;
             /**
              * Status
              * @enum {string}
@@ -1005,6 +1250,291 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["UserOut"];
+                };
+            };
+        };
+    };
+    get_papers_cpe_papers__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CpePaperOut"][];
+                };
+            };
+        };
+    };
+    create_paper_cpe_papers__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CpePaperCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CpePaperOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_paper_cpe_papers__paper_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                paper_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CpePaperOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_paper_cpe_papers__paper_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                paper_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CpePaperCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CpePaperOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_paper_cpe_papers__paper_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                paper_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_mock_exams_mock_exams__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MockExamSummary"][];
+                };
+            };
+        };
+    };
+    start_mock_exam_mock_exams__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MockExamCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MockExamOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_active_mock_exam_mock_exams_active_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MockExamOut"] | null;
+                };
+            };
+        };
+    };
+    get_mock_exam_mock_exams__exam_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                exam_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MockExamOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    finish_mock_exam_mock_exams__exam_id__finish_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                exam_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MockExamOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

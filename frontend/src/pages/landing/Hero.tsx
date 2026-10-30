@@ -1,9 +1,12 @@
 import { ArrowRight } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../auth/AuthContext";
 import Reveal from "../../components/Reveal";
 import { buttonPrimary } from "../../components/ui";
 
 export default function Hero() {
+  const { user } = useAuth();
+
   return (
     <section id="top" className="px-4 pt-24">
       <div className="mx-auto grid max-w-6xl items-center gap-12 pt-16 lg:grid-cols-[3fr_2fr] lg:gap-16">
@@ -32,8 +35,8 @@ export default function Hero() {
 
           <Reveal delay={240}>
             <div className="mt-10 flex flex-col gap-6 sm:flex-row sm:items-center">
-              <Link to="/register" className={`${buttonPrimary} self-start`}>
-                Create your free account
+              <Link to={user ? "/problems" : "/register"} className={`${buttonPrimary} self-start`}>
+                {user ? "Continue practicing" : "Create your free account"}
                 <ArrowRight size={18} weight="bold" aria-hidden="true" />
               </Link>
               <p className="font-mono text-sm text-neutral-500">
