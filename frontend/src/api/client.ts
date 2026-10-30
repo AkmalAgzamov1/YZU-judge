@@ -18,6 +18,12 @@ type Problem = components["schemas"]["ProblemOut"];
 
 type Submission = components["schemas"]["SubmissionOut"];
 
+type SubmissionCreate = components["schemas"]["SubmissionCreate"];
+
+type SubmissionResult = components["schemas"]["SubmissionResultOut"];
+
+type Sample = components["schemas"]["SampleOut"];
+
 export class ApiError extends Error {
   public readonly status: number;
 
@@ -103,12 +109,35 @@ export const problemsApi = {
   list(): Promise<Problem[]> {
     return request<Problem[]>("/problems/");
   },
+
+  get(id: number): Promise<Problem> {
+    return request<Problem>(`/problems/${id}`);
+  },
+
+  samples(id: number): Promise<Sample[]> {
+    return request<Sample[]>(`/problems/${id}/samples`);
+  },
 };
 
 export const submissionsApi = {
   // Only the signed in user's submissions; the backend filters by token.
   list(): Promise<Submission[]> {
     return request<Submission[]>("/submissions/");
+  },
+
+  create(data: SubmissionCreate): Promise<Submission> {
+    return request<Submission>("/submissions/", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  },
+
+  get(id: number): Promise<Submission> {
+    return request<Submission>(`/submissions/${id}`);
+  },
+
+  results(id: number): Promise<SubmissionResult[]> {
+    return request<SubmissionResult[]>(`/submissions/${id}/results`);
   },
 };
 
@@ -118,5 +147,7 @@ export type {
   RegisterRequest,
   LoginResponse,
   Problem,
+  Sample,
   Submission,
+  SubmissionResult,
 };
