@@ -23,3 +23,9 @@ class TestCaseUpdate(BaseModel):
     output_content: str
     is_sample: bool = False
     sample_order: int | None = None
+
+
+class SampleOut(BaseModel):
+    order: int
+    input: str
+    output: str

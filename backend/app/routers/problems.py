@@ -8,8 +8,8 @@ from ..schemas.problem import ProblemCreate, ProblemOut, ProblemUpdate
 from ..dependencies import get_current_admin_user
 
 from ..models.testcase import TestCase
-from ..schemas.testcase import TestCaseCreate, TestCaseOut
-from ..storage import save_file
+from ..schemas.testcase import TestCaseCreate, TestCaseOut, SampleOut
+from ..storage import save_file, read_file
 
 router = APIRouter(prefix = "/problems", tags = ["Problems"])
 
@@ -55,6 +55,32 @@ def get_problem(problem_id: int, db: Session = Depends(get_db)):
         )
 
     return problem
+
+
+@router.get("/{problem_id}/samples", response_model = list[SampleOut])
+def get_samples(problem_id: int, db: Session = Depends(get_db)):
+    """Public sample tests shown under the statement. Hidden tests stay private."""
+    problem = db.query(Problem).filter(Problem.id == problem_id).first()
+
+    if problem is None:
+        raise HTTPException(
+            status_code = 404,
+            detail = "No such problem"
+        )
+
+    samples = db.query(TestCase).filter(
+        TestCase.problem_id == problem_id,
+        TestCase.is_sample == True
+    ).order_by(TestCase.sample_order, TestCase.id).all()
+
+    return [
+        SampleOut(
+            order = index + 1,
+            input = read_file(sample.input_path),
+            output = read_file(sample.output_path)
+        )
+        for index, sample in enumerate(samples)
+    ]
 
 
 @router.delete("/{problem_id}")

@@ -130,6 +130,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/problems/{problem_id}/samples": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Samples
+         * @description Public sample tests shown under the statement. Hidden tests stay private.
+         */
+        get: operations["get_samples_problems__problem_id__samples_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/users/register": {
         parameters: {
             query?: never;
@@ -270,6 +290,15 @@ export interface components {
             memory_limit_mb: number;
             /** Is Cpe */
             is_cpe: boolean;
+        };
+        /** SampleOut */
+        SampleOut: {
+            /** Order */
+            order: number;
+            /** Input */
+            input: string;
+            /** Output */
+            output: string;
         };
         /** SubmissionCreate */
         SubmissionCreate: {
@@ -850,6 +879,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_samples_problems__problem_id__samples_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                problem_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SampleOut"][];
                 };
             };
             /** @description Validation Error */

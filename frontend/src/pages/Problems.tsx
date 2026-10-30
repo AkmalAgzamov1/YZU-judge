@@ -10,6 +10,7 @@ import DifficultyLabel, {
   type Difficulty,
 } from "../components/DifficultyLabel";
 import { buttonSecondary, focusRing } from "../components/ui";
+import { formatTime } from "../lib/format";
 
 type SolveStatus = "solved" | "attempted";
 
@@ -35,10 +36,6 @@ function buildStatuses(submissions: Submission[]): Map<number, SolveStatus> {
     }
   }
   return statuses;
-}
-
-function formatTime(ms: number) {
-  return ms >= 1000 ? `${(ms / 1000).toFixed(1)} s` : `${ms} ms`;
 }
 
 function StatusIcon({ status }: { status?: SolveStatus }) {
