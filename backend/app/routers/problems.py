@@ -19,6 +19,7 @@ def create_problem(problem: ProblemCreate, current_user: User = Depends(get_curr
 
     new_problem = Problem(
         title = problem.title,
+        uva_id = problem.uva_id,
         difficulty = problem.difficulty,
 
         description = problem.description,
@@ -83,6 +84,7 @@ def update_problem(problem_id: int, problem_data: ProblemUpdate, current_user: U
         )
  
     problem.title = problem_data.title
+    problem.uva_id = problem_data.uva_id
     problem.description = problem_data.description
     problem.difficulty = problem_data.difficulty
     problem.time_limit_ms = problem_data.time_limit_ms

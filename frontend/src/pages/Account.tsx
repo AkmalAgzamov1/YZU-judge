@@ -1,8 +1,8 @@
 import { Code } from "@phosphor-icons/react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import PageShell from "../components/PageShell";
-import { buttonSecondary } from "../components/ui";
+import { buttonPrimary, buttonSecondary } from "../components/ui";
 
 export default function Account() {
   const { user, logout } = useAuth();
@@ -35,9 +35,12 @@ export default function Account() {
             </span>
             <h2 className="mt-6 text-2xl font-semibold text-white">No submissions yet</h2>
             <p className="mt-3 max-w-md text-base text-neutral-400">
-              The problem set opens soon. When it does, your submissions and
-              verdicts will show up here so you can track your progress.
+              Solve your first past CPE problem and your submissions and
+              verdicts will show up here.
             </p>
+            <Link to="/problems" className={`${buttonPrimary} mt-6`}>
+              Browse problems
+            </Link>
           </div>
         </div>
       </section>

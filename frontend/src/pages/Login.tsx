@@ -22,7 +22,7 @@ export default function Login() {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const from = location.state?.from?.pathname ?? "/account";
+  const from = location.state?.from?.pathname ?? "/problems";
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

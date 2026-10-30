@@ -1,8 +1,9 @@
 from pydantic import BaseModel, ConfigDict
-from typing import Literal
+from typing import Literal, Optional
 
 class ProblemCreate(BaseModel):
     title: str
+    uva_id: Optional[int] = None
     description: str
     difficulty: Literal["easy", "medium", "hard"]
 
@@ -16,6 +17,7 @@ class ProblemOut(BaseModel):
 
     id: int
     title: str
+    uva_id: Optional[int] = None
     description: str
     difficulty: Literal["easy", "medium", "hard"]
 
@@ -27,6 +29,7 @@ class ProblemOut(BaseModel):
 
 class ProblemUpdate(BaseModel):
     title: str
+    uva_id: Optional[int] = None
     description: str
     difficulty: Literal["easy", "medium", "hard"]
     time_limit_ms: int

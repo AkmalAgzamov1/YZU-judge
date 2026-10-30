@@ -1,4 +1,4 @@
-import type { paths } from "./schema";
+import type { components, paths } from "./schema";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
 
@@ -13,6 +13,10 @@ type RegisterRequest =
 
 type CurrentUser =
   paths["/users/me"]["get"]["responses"][200]["content"]["application/json"];
+
+type Problem = components["schemas"]["ProblemOut"];
+
+type Submission = components["schemas"]["SubmissionOut"];
 
 export class ApiError extends Error {
   public readonly status: number;
@@ -95,4 +99,24 @@ export const authApi = {
   },
 };
 
-export type { CurrentUser, LoginRequest, RegisterRequest, LoginResponse };
+export const problemsApi = {
+  list(): Promise<Problem[]> {
+    return request<Problem[]>("/problems/");
+  },
+};
+
+export const submissionsApi = {
+  // Only the signed in user's submissions; the backend filters by token.
+  list(): Promise<Submission[]> {
+    return request<Submission[]>("/submissions/");
+  },
+};
+
+export type {
+  CurrentUser,
+  LoginRequest,
+  RegisterRequest,
+  LoginResponse,
+  Problem,
+  Submission,
+};

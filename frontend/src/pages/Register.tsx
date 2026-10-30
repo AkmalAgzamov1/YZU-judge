@@ -62,7 +62,7 @@ export default function Register() {
 
     try {
       await register(username.trim(), email.trim(), password);
-      navigate("/account", { replace: true });
+      navigate("/problems", { replace: true });
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message);
