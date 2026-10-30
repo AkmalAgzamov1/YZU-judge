@@ -36,16 +36,17 @@ const highlight = HighlightStyle.define([
 
 interface CodeEditorProps {
   value: string;
-  onChange: (value: string) => void;
-  onSubmit: () => void;
+  onChange?: (value: string) => void;
+  onSubmit?: () => void;
+  readOnly?: boolean;
 }
 
 const extensions = [python(), syntaxHighlighting(highlight)];
 
-export default function CodeEditor({ value, onChange, onSubmit }: CodeEditorProps) {
+export default function CodeEditor({ value, onChange, onSubmit, readOnly = false }: CodeEditorProps) {
   // Catch Ctrl/Cmd + Enter before CodeMirror turns it into a new line.
   function handleKeyDownCapture(event: KeyboardEvent<HTMLDivElement>) {
-    if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
+    if (onSubmit && event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
       event.preventDefault();
       event.stopPropagation();
       onSubmit();
@@ -57,12 +58,15 @@ export default function CodeEditor({ value, onChange, onSubmit }: CodeEditorProp
       <CodeMirror
         value={value}
         onChange={onChange}
+        editable={!readOnly}
+        readOnly={readOnly}
         theme={editorTheme}
         extensions={extensions}
-        height="100%"
+        height={readOnly ? "auto" : "100%"}
+        maxHeight={readOnly ? "480px" : undefined}
         className="h-full"
         aria-label="Code editor"
-        basicSetup={{ foldGutter: false, highlightActiveLine: true, autocompletion: true }}
+        basicSetup={{ foldGutter: false, highlightActiveLine: !readOnly, autocompletion: !readOnly }}
       />
     </div>
   );

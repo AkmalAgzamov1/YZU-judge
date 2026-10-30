@@ -17,21 +17,16 @@ export default function AppNav() {
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-ink-0/80 px-4 backdrop-blur-xl">
       <nav aria-label="App" className="mx-auto flex h-16 max-w-6xl items-center gap-2">
-        <Link to="/" className={`mr-4 rounded-lg ${focusRing}`} aria-label="YZU Judge home">
-          <Logo />
+        <Link to="/" className={`mr-2 rounded-lg sm:mr-4 ${focusRing}`} aria-label="YZU Judge home">
+          <Logo compact />
         </Link>
 
         <NavLink to="/problems" className={linkClass}>
           Problems
         </NavLink>
-        <span
-          aria-disabled="true"
-          title="Coming soon"
-          className="hidden cursor-not-allowed items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-neutral-600 sm:flex"
-        >
+        <NavLink to="/submissions" className={linkClass}>
           Submissions
-          <span className="rounded bg-ink-2 px-1 py-0.5 font-mono text-xs text-neutral-500">soon</span>
-        </span>
+        </NavLink>
 
         <div className="ml-auto flex items-center gap-2">
           {user ? (

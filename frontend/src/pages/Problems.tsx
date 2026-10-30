@@ -1,9 +1,10 @@
 import { CheckCircle, Circle, CircleHalf, MagnifyingGlass } from "@phosphor-icons/react";
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ApiError, problemsApi, submissionsApi, type Problem, type Submission } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
 import AppShell from "../components/AppShell";
+import Message from "../components/Message";
 import DifficultyLabel, {
   difficultyColor,
   difficultyLabel,
@@ -117,16 +118,6 @@ function SkeletonRows() {
         </li>
       ))}
     </ul>
-  );
-}
-
-function Message({ title, body, action }: { title: string; body: string; action?: ReactNode }) {
-  return (
-    <div className="flex flex-col items-center border-y border-white/10 px-4 py-20 text-center">
-      <h2 className="text-xl font-semibold text-white">{title}</h2>
-      <p className="mt-2 max-w-md text-base text-neutral-400">{body}</p>
-      {action && <div className="mt-6">{action}</div>}
-    </div>
   );
 }
 

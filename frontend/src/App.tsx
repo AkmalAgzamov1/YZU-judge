@@ -9,9 +9,11 @@ import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Problems from "./pages/Problems";
 import Register from "./pages/Register";
+import Submissions from "./pages/Submissions";
 
 // The editor and Markdown renderer are heavy, so load them only here.
 const ProblemPage = lazy(() => import("./pages/ProblemPage"));
+const SubmissionDetail = lazy(() => import("./pages/SubmissionDetail"));
 
 export default function App() {
   return (
@@ -34,6 +36,15 @@ export default function App() {
           <Route path="/terms" element={<Legal kind="terms" />} />
           <Route element={<RequireAuth />}>
             <Route path="/account" element={<Account />} />
+            <Route path="/submissions" element={<Submissions />} />
+            <Route
+              path="/submissions/:id"
+              element={
+                <Suspense fallback={<div className="min-h-svh bg-ink-0" />}>
+                  <SubmissionDetail />
+                </Suspense>
+              }
+            />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
