@@ -1,6 +1,6 @@
-import { UserCircle } from "@phosphor-icons/react";
 import { Link, NavLink } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import Avatar from "./Avatar";
 import Logo from "./Logo";
 import { buttonGhostSmall, buttonPrimarySmall, focusRing } from "./ui";
 
@@ -32,7 +32,7 @@ export default function AppNav() {
           {user ? (
             <NavLink to="/account" className={linkClass} aria-label="Your account">
               <span className="flex items-center gap-2">
-                <UserCircle size={20} aria-hidden="true" />
+                <Avatar name={user.username} />
                 <span className="hidden sm:inline">{user.username}</span>
               </span>
             </NavLink>
