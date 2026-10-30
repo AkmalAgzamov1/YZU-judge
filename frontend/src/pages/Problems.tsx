@@ -1,7 +1,7 @@
 import { CheckCircle, Circle, CircleHalf, MagnifyingGlass } from "@phosphor-icons/react";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { ApiError, problemsApi, submissionsApi, type Problem, type Submission } from "../api/client";
+import { ApiError, problemsApi, submissionsApi, type Problem } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
 import AppShell from "../components/AppShell";
 import Message from "../components/Message";
@@ -12,8 +12,8 @@ import DifficultyLabel, {
 } from "../components/DifficultyLabel";
 import { buttonSecondary, focusRing } from "../components/ui";
 import { formatTime } from "../lib/format";
+import { buildStatuses, type SolveStatus } from "../lib/progress";
 
-type SolveStatus = "solved" | "attempted";
 
 type LoadState =
   | { kind: "loading" }
@@ -25,19 +25,6 @@ const difficultyOrder: Record<Difficulty, number> = { easy: 0, medium: 1, hard: 
 
 const statusFilters = ["solved", "attempted", "untried"] as const;
 type StatusFilter = (typeof statusFilters)[number];
-
-// A problem is solved once any submission is accepted, attempted otherwise.
-function buildStatuses(submissions: Submission[]): Map<number, SolveStatus> {
-  const statuses = new Map<number, SolveStatus>();
-  for (const submission of submissions) {
-    if (submission.status === "accepted") {
-      statuses.set(submission.problem_id, "solved");
-    } else if (!statuses.has(submission.problem_id)) {
-      statuses.set(submission.problem_id, "attempted");
-    }
-  }
-  return statuses;
-}
 
 function StatusIcon({ status }: { status?: SolveStatus }) {
   if (status === "solved") {
