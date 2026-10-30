@@ -5,6 +5,7 @@ from ..models.user import User
 from ..schemas.user import UserCreate, UserOut, UserLogin
 from ..security import hash_password, verify_password, create_access_token
 from ..dependencies import get_current_user
+from ..schemas.user import UserCreate, UserOut, UserLogin, Token
 
 
 router = APIRouter(
@@ -42,7 +43,7 @@ def register(user: UserCreate, db = Depends(get_db)):
 
 
 
-@router.post("/login")
+@router.post("/login", response_model = Token)
 def login(user: UserLogin, db = Depends(get_db)):
     existing_user = db.query(User).filter(
         (User.username == user.username)
