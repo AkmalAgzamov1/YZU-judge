@@ -35,6 +35,12 @@ export default function AppNav() {
           <span className="sm:hidden">Mock</span>
           <span className="hidden sm:inline">Mock CPE</span>
         </NavLink>
+        {user?.is_admin && (
+          // Admin work happens on a laptop; the phone nav has no room for it.
+          <NavLink to="/admin" className={(state) => `${linkClass(state)} hidden sm:inline-flex`}>
+            Admin
+          </NavLink>
+        )}
 
         <div className="ml-auto flex items-center gap-2">
           {user ? (

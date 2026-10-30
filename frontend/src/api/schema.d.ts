@@ -74,6 +74,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/problems/{problem_id}/testcases/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Add Testcases Bulk
+         * @description Adds many tests in one request, in order. Either all are added or none.
+         */
+        post: operations["add_testcases_bulk_problems__problem_id__testcases_bulk_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/problems/{problem_id}/testcases/{testcase_id}": {
         parameters: {
             query?: never;
@@ -88,6 +108,27 @@ export interface paths {
         post?: never;
         /** Delete Testcase */
         delete: operations["delete_testcase_problems__problem_id__testcases__testcase_id__delete"];
+        options?: never;
+        head?: never;
+        /**
+         * Update Testcase Flags
+         * @description Marks a test as a sample, or not, without resending its files.
+         */
+        patch: operations["update_testcase_flags_problems__problem_id__testcases__testcase_id__patch"];
+        trace?: never;
+    };
+    "/problems/{problem_id}/testcases/admin": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Testcases Admin */
+        get: operations["get_testcases_admin_problems__problem_id__testcases_admin_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -105,6 +146,23 @@ export interface paths {
         put?: never;
         /** Create Problem */
         post: operations["create_problem_problems__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/problems/admin/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Problem Stats */
+        get: operations["get_problem_stats_problems_admin_stats_get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -144,6 +202,40 @@ export interface paths {
         get: operations["get_samples_problems__problem_id__samples_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/problems/{problem_id}/publish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Publish Problem */
+        post: operations["publish_problem_problems__problem_id__publish_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/problems/{problem_id}/unpublish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Unpublish Problem */
+        post: operations["unpublish_problem_problems__problem_id__unpublish_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -509,8 +601,22 @@ export interface components {
             memory_limit_mb: number;
             /** Is Cpe */
             is_cpe: boolean;
+            /**
+             * Is Published
+             * @default true
+             */
+            is_published: boolean;
             /** Created By */
             created_by: number;
+        };
+        /** ProblemStats */
+        ProblemStats: {
+            /** Problem Id */
+            problem_id: number;
+            /** Test Count */
+            test_count: number;
+            /** Sample Count */
+            sample_count: number;
         };
         /** ProblemUpdate */
         ProblemUpdate: {
@@ -601,6 +707,28 @@ export interface components {
             /** Memory Used Mb */
             memory_used_mb: number | null;
         };
+        /**
+         * TestCaseAdminOut
+         * @description What the admin panel lists: sizes and the first characters, not whole files.
+         */
+        TestCaseAdminOut: {
+            /** Id */
+            id: number;
+            /** Problem Id */
+            problem_id: number;
+            /** Is Sample */
+            is_sample: boolean;
+            /** Sample Order */
+            sample_order: number | null;
+            /** Input Size */
+            input_size: number;
+            /** Output Size */
+            output_size: number;
+            /** Input Preview */
+            input_preview: string;
+            /** Output Preview */
+            output_preview: string;
+        };
         /** TestCaseCreate */
         TestCaseCreate: {
             /** Input Content */
@@ -611,6 +739,13 @@ export interface components {
              * Is Sample
              * @default false
              */
+            is_sample: boolean;
+            /** Sample Order */
+            sample_order?: number | null;
+        };
+        /** TestCaseFlags */
+        TestCaseFlags: {
+            /** Is Sample */
             is_sample: boolean;
             /** Sample Order */
             sample_order?: number | null;
@@ -683,6 +818,11 @@ export interface components {
              * Format: date-time
              */
             created_at: string;
+            /**
+             * Is Admin
+             * @default false
+             */
+            is_admin: boolean;
         };
         /** ValidationError */
         ValidationError: {
@@ -887,6 +1027,41 @@ export interface operations {
             };
         };
     };
+    add_testcases_bulk_problems__problem_id__testcases_bulk_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                problem_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TestCaseCreate"][];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TestCaseAdminOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_testcase_problems__problem_id__testcases__testcase_id__get: {
         parameters: {
             query?: never;
@@ -987,6 +1162,73 @@ export interface operations {
             };
         };
     };
+    update_testcase_flags_problems__problem_id__testcases__testcase_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                problem_id: number;
+                testcase_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TestCaseFlags"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TestCaseAdminOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_testcases_admin_problems__problem_id__testcases_admin_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                problem_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TestCaseAdminOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_problems_problems__get: {
         parameters: {
             query?: never;
@@ -1036,6 +1278,26 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_problem_stats_problems_admin_stats_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemStats"][];
                 };
             };
         };
@@ -1155,6 +1417,68 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SampleOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    publish_problem_problems__problem_id__publish_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                problem_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    unpublish_problem_problems__problem_id__unpublish_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                problem_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemOut"];
                 };
             };
             /** @description Validation Error */

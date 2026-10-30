@@ -37,3 +37,21 @@ def get_current_admin_user(current_user: User = Depends(get_current_user)):
             detail = "User is not an admin"
         )
     return current_user
+
+
+optional_scheme = HTTPBearer(auto_error = False)
+
+
+def get_optional_user(credentials = Depends(optional_scheme), db = Depends(get_db)) -> User | None:
+    """The signed in user, or None for visitors and invalid tokens."""
+    if credentials is None:
+        return None
+
+    try:
+        return get_current_user(credentials, db)
+    except HTTPException:
+        return None
+
+
+def is_admin(user: User | None) -> bool:
+    return user is not None and user.is_admin

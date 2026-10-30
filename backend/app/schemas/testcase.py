@@ -29,3 +29,20 @@ class SampleOut(BaseModel):
     order: int
     input: str
     output: str
+
+
+class TestCaseFlags(BaseModel):
+    is_sample: bool
+    sample_order: int | None = None
+
+
+class TestCaseAdminOut(BaseModel):
+    """What the admin panel lists: sizes and the first characters, not whole files."""
+    id: int
+    problem_id: int
+    is_sample: bool
+    sample_order: int | None
+    input_size: int
+    output_size: int
+    input_preview: str
+    output_preview: str

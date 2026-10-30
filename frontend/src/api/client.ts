@@ -30,6 +30,16 @@ type MockExam = components["schemas"]["MockExamOut"];
 
 type MockExamSummary = components["schemas"]["MockExamSummary"];
 
+type ProblemInput = components["schemas"]["ProblemCreate"];
+
+type ProblemStats = components["schemas"]["ProblemStats"];
+
+type TestCaseAdmin = components["schemas"]["TestCaseAdminOut"];
+
+type TestCaseInput = components["schemas"]["TestCaseCreate"];
+
+type CpePaperInput = components["schemas"]["CpePaperCreate"];
+
 export class ApiError extends Error {
   public readonly status: number;
 
@@ -178,8 +188,74 @@ export const mockExamsApi = {
   },
 };
 
+// Everything here needs an admin token; the backend checks it.
+export const adminApi = {
+  createProblem(data: ProblemInput): Promise<Problem> {
+    return request<Problem>("/problems/", { method: "POST", body: JSON.stringify(data) });
+  },
+
+  updateProblem(id: number, data: ProblemInput): Promise<Problem> {
+    return request<Problem>(`/problems/${id}`, { method: "PUT", body: JSON.stringify(data) });
+  },
+
+  deleteProblem(id: number): Promise<unknown> {
+    return request(`/problems/${id}`, { method: "DELETE" });
+  },
+
+  publish(id: number): Promise<Problem> {
+    return request<Problem>(`/problems/${id}/publish`, { method: "POST" });
+  },
+
+  unpublish(id: number): Promise<Problem> {
+    return request<Problem>(`/problems/${id}/unpublish`, { method: "POST" });
+  },
+
+  stats(): Promise<ProblemStats[]> {
+    return request<ProblemStats[]>("/problems/admin/stats");
+  },
+
+  tests(problemId: number): Promise<TestCaseAdmin[]> {
+    return request<TestCaseAdmin[]>(`/problems/${problemId}/testcases/admin`);
+  },
+
+  addTests(problemId: number, tests: TestCaseInput[]): Promise<TestCaseAdmin[]> {
+    return request<TestCaseAdmin[]>(`/problems/${problemId}/testcases/bulk`, {
+      method: "POST",
+      body: JSON.stringify(tests),
+    });
+  },
+
+  setSample(problemId: number, testId: number, isSample: boolean, order: number | null): Promise<TestCaseAdmin> {
+    return request<TestCaseAdmin>(`/problems/${problemId}/testcases/${testId}`, {
+      method: "PATCH",
+      body: JSON.stringify({ is_sample: isSample, sample_order: order }),
+    });
+  },
+
+  deleteTest(problemId: number, testId: number): Promise<unknown> {
+    return request(`/problems/${problemId}/testcases/${testId}`, { method: "DELETE" });
+  },
+
+  createPaper(data: CpePaperInput): Promise<CpePaper> {
+    return request<CpePaper>("/cpe-papers/", { method: "POST", body: JSON.stringify(data) });
+  },
+
+  updatePaper(id: number, data: CpePaperInput): Promise<CpePaper> {
+    return request<CpePaper>(`/cpe-papers/${id}`, { method: "PUT", body: JSON.stringify(data) });
+  },
+
+  deletePaper(id: number): Promise<unknown> {
+    return request(`/cpe-papers/${id}`, { method: "DELETE" });
+  },
+};
+
 export type {
   CpePaper,
+  CpePaperInput,
+  ProblemInput,
+  ProblemStats,
+  TestCaseAdmin,
+  TestCaseInput,
   MockExam,
   MockExamSummary,
   CurrentUser,
