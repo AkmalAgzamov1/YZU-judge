@@ -69,3 +69,17 @@ def login(user: UserLogin, db = Depends(get_db)):
 @router.get("/me", response_model = UserOut)
 def get_me(current_user: User = Depends(get_current_user)):
     return current_user
+
+
+@router.post("/refresh", response_model = Token)
+def refresh_token(current_user: User = Depends(get_current_user)):
+    """Trades a still valid token for a fresh one, so active users are never signed out."""
+    access_token = create_access_token({
+        "user_id": current_user.id,
+        "username": current_user.username
+    })
+
+    return {
+        "access_token": access_token,
+        "token_type": "bearer"
+    }

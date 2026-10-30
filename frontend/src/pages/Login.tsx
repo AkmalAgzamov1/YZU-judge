@@ -12,7 +12,7 @@ interface Errors {
 }
 
 export default function Login() {
-  const { login } = useAuth();
+  const { login, sessionExpired } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -52,6 +52,12 @@ export default function Login() {
 
   return (
     <AuthLayout title="Welcome back" subtitle="Sign in to keep practicing for the CPE.">
+      {sessionExpired && (
+        <p role="status" className="mb-6 rounded-lg border border-yzu-yellow/40 bg-yzu-yellow/10 px-3 py-2 text-sm text-yzu-yellow">
+          Your session expired. Sign in again to continue where you left off.
+        </p>
+      )}
+
       <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
         <Field
           id="username"

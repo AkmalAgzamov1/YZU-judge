@@ -40,6 +40,8 @@ type TestCaseInput = components["schemas"]["TestCaseCreate"];
 
 type CpePaperInput = components["schemas"]["CpePaperCreate"];
 
+export const SESSION_EXPIRED_EVENT = "yzu-judge:session-expired";
+
 export class ApiError extends Error {
   public readonly status: number;
 
@@ -91,6 +93,12 @@ async function request<T>(
 
   const payload: unknown = await response.json().catch(() => null);
 
+  // A rejected token means the session is over. Tell AuthContext so the app
+  // signs out cleanly instead of failing request after request.
+  if (response.status === 401 && token && path !== "/users/login") {
+    window.dispatchEvent(new Event(SESSION_EXPIRED_EVENT));
+  }
+
   if (!response.ok) {
     throw new ApiError(
       response.status,
@@ -118,6 +126,10 @@ export const authApi = {
 
   me(): Promise<CurrentUser> {
     return request<CurrentUser>("/users/me");
+  },
+
+  refresh(): Promise<LoginResponse> {
+    return request<LoginResponse>("/users/refresh", { method: "POST" });
   },
 };
 
