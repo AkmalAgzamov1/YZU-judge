@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .routers import problems, users, testcases, submissions
+from .routers import problems, users, testcases, submissions, cpe_papers, mock_exams
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -8,6 +8,8 @@ app.include_router(submissions.router)
 app.include_router(testcases.router)
 app.include_router(problems.router)
 app.include_router(users.router)
+app.include_router(cpe_papers.router)
+app.include_router(mock_exams.router)
 
 origins = ["http://localhost:5173"]
 

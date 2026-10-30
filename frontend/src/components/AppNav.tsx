@@ -5,7 +5,7 @@ import Logo from "./Logo";
 import { buttonGhostSmall, buttonPrimarySmall, focusRing } from "./ui";
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
-  `rounded-lg px-3 py-2 text-sm font-medium transition duration-300 ease-soft ${focusRing} ${
+  `rounded-lg px-2 py-2 sm:px-3 text-sm font-medium transition duration-300 ease-soft ${focusRing} ${
     isActive ? "bg-white/10 text-white" : "text-neutral-400 hover:text-white"
   }`;
 
@@ -17,7 +17,11 @@ export default function AppNav() {
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-ink-0/80 px-4 backdrop-blur-xl">
       <nav aria-label="App" className="mx-auto flex h-16 max-w-6xl items-center gap-2">
-        <Link to="/" className={`mr-2 rounded-lg sm:mr-4 ${focusRing}`} aria-label="YZU Judge home">
+        <Link
+          to={user ? "/problems" : "/"}
+          className={`mr-2 rounded-lg sm:mr-4 ${focusRing}`}
+          aria-label={user ? "Problems" : "YZU Judge home"}
+        >
           <Logo compact />
         </Link>
 
@@ -26,6 +30,10 @@ export default function AppNav() {
         </NavLink>
         <NavLink to="/submissions" className={linkClass}>
           Submissions
+        </NavLink>
+        <NavLink to="/mock" className={linkClass}>
+          <span className="sm:hidden">Mock</span>
+          <span className="hidden sm:inline">Mock CPE</span>
         </NavLink>
 
         <div className="ml-auto flex items-center gap-2">

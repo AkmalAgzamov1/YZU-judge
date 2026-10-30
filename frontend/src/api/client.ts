@@ -24,6 +24,12 @@ type SubmissionResult = components["schemas"]["SubmissionResultOut"];
 
 type Sample = components["schemas"]["SampleOut"];
 
+type CpePaper = components["schemas"]["CpePaperOut"];
+
+type MockExam = components["schemas"]["MockExamOut"];
+
+type MockExamSummary = components["schemas"]["MockExamSummary"];
+
 export class ApiError extends Error {
   public readonly status: number;
 
@@ -141,7 +147,41 @@ export const submissionsApi = {
   },
 };
 
+export const cpePapersApi = {
+  list(): Promise<CpePaper[]> {
+    return request<CpePaper[]>("/cpe-papers/");
+  },
+};
+
+export const mockExamsApi = {
+  start(paperId: number): Promise<MockExam> {
+    return request<MockExam>("/mock-exams/", {
+      method: "POST",
+      body: JSON.stringify({ paper_id: paperId }),
+    });
+  },
+
+  list(): Promise<MockExamSummary[]> {
+    return request<MockExamSummary[]>("/mock-exams/");
+  },
+
+  active(): Promise<MockExam | null> {
+    return request<MockExam | null>("/mock-exams/active");
+  },
+
+  get(id: number): Promise<MockExam> {
+    return request<MockExam>(`/mock-exams/${id}`);
+  },
+
+  finish(id: number): Promise<MockExam> {
+    return request<MockExam>(`/mock-exams/${id}/finish`, { method: "POST" });
+  },
+};
+
 export type {
+  CpePaper,
+  MockExam,
+  MockExamSummary,
   CurrentUser,
   LoginRequest,
   RegisterRequest,
