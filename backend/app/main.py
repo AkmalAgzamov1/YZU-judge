@@ -9,7 +9,7 @@ app.include_router(testcases.router)
 app.include_router(problems.router)
 app.include_router(users.router)
 
-origins = ["*"]
+origins = ["http://localhost:5173"]
 
 app.add_middleware(
     CORSMiddleware,
