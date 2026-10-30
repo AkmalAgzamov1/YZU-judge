@@ -1,6 +1,8 @@
 from pydantic import BaseModel, ConfigDict
 from typing import Literal, Optional
 
+from ..topics import Topic
+
 class ProblemCreate(BaseModel):
     title: str
     uva_id: Optional[int] = None
@@ -11,6 +13,7 @@ class ProblemCreate(BaseModel):
     memory_limit_mb: int
 
     is_cpe: bool
+    topics: list[Topic] = []
 
 class ProblemOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -25,6 +28,7 @@ class ProblemOut(BaseModel):
     memory_limit_mb: int
 
     is_cpe: bool
+    topics: list[Topic] = []
     is_published: bool = True
     created_by: int
 
@@ -36,6 +40,7 @@ class ProblemUpdate(BaseModel):
     time_limit_ms: int
     memory_limit_mb: int
     is_cpe: bool
+    topics: list[Topic] = []
 
 
 class ProblemStats(BaseModel):

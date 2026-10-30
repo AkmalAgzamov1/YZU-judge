@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Boolean, Enum, ForeignKey
+from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import relationship
 from ..database import Base
 
@@ -15,6 +16,9 @@ class Problem(Base):
     memory_limit_mb = Column(Integer, nullable = False)
 
     is_cpe = Column(Boolean, nullable = False, default = True)
+
+    # Values come from app/topics.py.
+    topics = Column(ARRAY(String), nullable = False, default = list, server_default = "{}")
 
     # Drafts are visible to admins only, until they are published.
     is_published = Column(Boolean, nullable = False, default = False)

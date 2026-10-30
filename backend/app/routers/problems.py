@@ -11,6 +11,7 @@ from ..schemas.problem import ProblemCreate, ProblemOut, ProblemUpdate, ProblemS
 from ..dependencies import get_current_admin_user, get_optional_user, is_admin
 from ..models.submission import Submission
 from ..models.cpe_paper import CpePaperProblem
+from ..topics import normalize_topics
 
 from ..models.testcase import TestCase
 from ..schemas.testcase import TestCaseCreate, TestCaseOut, SampleOut
@@ -48,7 +49,9 @@ def create_problem(problem: ProblemCreate, current_user: User = Depends(get_curr
 
         created_by = current_user.id,
 
-        is_cpe = problem.is_cpe
+        is_cpe = problem.is_cpe,
+
+        topics = normalize_topics(problem.topics)
     )
 
     db.add(new_problem)
@@ -209,6 +212,7 @@ def update_problem(problem_id: int, problem_data: ProblemUpdate, current_user: U
     problem.time_limit_ms = problem_data.time_limit_ms
     problem.memory_limit_mb = problem_data.memory_limit_mb
     problem.is_cpe = problem_data.is_cpe
+    problem.topics = normalize_topics(problem_data.topics)
 
     db.commit()
     db.refresh(problem)

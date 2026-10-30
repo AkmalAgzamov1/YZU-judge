@@ -13,6 +13,8 @@ import DifficultyLabel, {
 import { buttonSecondary, focusRing } from "../components/ui";
 import { formatTime } from "../lib/format";
 import { buildStatuses, type SolveStatus } from "../lib/progress";
+import { isTopic, TOPICS, topicLabel, type Topic } from "../lib/topics";
+import TopicChips from "../components/TopicChips";
 
 
 type LoadState =
@@ -167,6 +169,16 @@ export default function Problems() {
   const status: StatusFilter | "all" =
     user && statusFilters.includes(statusParam as StatusFilter) ? (statusParam as StatusFilter) : "all";
   const query = params.get("q") ?? "";
+  const topicsParam = params.get("topics") ?? "";
+  const selectedTopics = useMemo(() => topicsParam.split(",").filter(isTopic), [topicsParam]);
+
+  function toggleTopic(topic: Topic) {
+    const next = selectedTopics.includes(topic)
+      ? selectedTopics.filter((item) => item !== topic)
+      : [...selectedTopics, topic];
+    // Keep the canonical order so the same filter always has the same URL.
+    setParam("topics", TOPICS.filter((item) => next.includes(item)).join(","));
+  }
 
   function setParam(key: string, value: string) {
     const next = new URLSearchParams(params);
@@ -182,6 +194,8 @@ export default function Problems() {
 
     return problems
       .filter((problem) => difficulty === "all" || problem.difficulty === difficulty)
+      // Every selected topic must be present: "DP + Graphs" means both.
+      .filter((problem) => selectedTopics.every((topic) => problem.topics?.includes(topic)))
       .filter((problem) => {
         if (status === "all") return true;
         const current = visibleStatuses.get(problem.id);
@@ -197,7 +211,15 @@ export default function Problems() {
         (a, b) =>
           difficultyOrder[a.difficulty] - difficultyOrder[b.difficulty] || a.id - b.id,
       );
-  }, [problems, difficulty, status, query, visibleStatuses]);
+  }, [problems, difficulty, status, query, visibleStatuses, selectedTopics]);
+
+  const topicCounts = useMemo(() => {
+    const counts = new Map<Topic, number>();
+    for (const problem of problems) {
+      for (const topic of problem.topics ?? []) counts.set(topic, (counts.get(topic) ?? 0) + 1);
+    }
+    return counts;
+  }, [problems]);
 
   return (
     <AppShell>
@@ -255,6 +277,30 @@ export default function Problems() {
             />
           </label>
         </div>
+
+        {state.kind === "ready" && topicCounts.size > 0 && (
+          <div role="group" aria-label="Topics" className="mt-3 flex flex-wrap gap-2">
+            {TOPICS.filter((topic) => topicCounts.has(topic) || selectedTopics.includes(topic)).map((topic) => {
+              const on = selectedTopics.includes(topic);
+              return (
+                <button
+                  key={topic}
+                  type="button"
+                  aria-pressed={on}
+                  onClick={() => toggleTopic(topic)}
+                  className={`flex items-center gap-2 rounded-lg border px-3 py-1 text-sm transition duration-300 ease-soft active:scale-[0.98] ${focusRing} ${
+                    on ? "border-white bg-white text-black" : "border-white/10 bg-ink-1 text-neutral-400 hover:text-white"
+                  }`}
+                >
+                  {topicLabel[topic]}
+                  <span className="font-mono text-xs text-neutral-600">
+                    {topicCounts.get(topic) ?? 0}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         <div className="mt-6">
           {state.kind === "loading" && <SkeletonRows />}
@@ -325,6 +371,11 @@ export default function Problems() {
                         <span className="block truncate text-base font-medium text-white">
                           {problem.title}
                         </span>
+                        {problem.topics && problem.topics.length > 0 && (
+                          <span className="mt-1 block">
+                            <TopicChips topics={problem.topics} />
+                          </span>
+                        )}
                         <span className="mt-1 flex gap-3 font-mono text-xs text-neutral-500 md:hidden">
                           {problem.uva_id && <span>UVa {problem.uva_id}</span>}
                           <span className={difficultyColor[problem.difficulty]}>

@@ -599,6 +599,11 @@ export interface components {
             memory_limit_mb: number;
             /** Is Cpe */
             is_cpe: boolean;
+            /**
+             * Topics
+             * @default []
+             */
+            topics: ("implementation" | "math" | "number-theory" | "strings" | "sorting" | "greedy" | "brute-force" | "dp" | "graphs" | "data-structures" | "geometry" | "simulation")[];
         };
         /** ProblemOut */
         ProblemOut: {
@@ -621,6 +626,11 @@ export interface components {
             memory_limit_mb: number;
             /** Is Cpe */
             is_cpe: boolean;
+            /**
+             * Topics
+             * @default []
+             */
+            topics: ("implementation" | "math" | "number-theory" | "strings" | "sorting" | "greedy" | "brute-force" | "dp" | "graphs" | "data-structures" | "geometry" | "simulation")[];
             /**
              * Is Published
              * @default true
@@ -657,6 +667,11 @@ export interface components {
             memory_limit_mb: number;
             /** Is Cpe */
             is_cpe: boolean;
+            /**
+             * Topics
+             * @default []
+             */
+            topics: ("implementation" | "math" | "number-theory" | "strings" | "sorting" | "greedy" | "brute-force" | "dp" | "graphs" | "data-structures" | "geometry" | "simulation")[];
         };
         /** SampleOut */
         SampleOut: {

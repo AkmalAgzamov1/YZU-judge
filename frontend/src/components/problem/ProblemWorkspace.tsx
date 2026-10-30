@@ -13,6 +13,7 @@ import { useAuth } from "../../auth/AuthContext";
 import { loadDraft, saveDraft } from "../../lib/drafts";
 import { formatTime } from "../../lib/format";
 import DifficultyLabel from "../DifficultyLabel";
+import TopicChips from "../TopicChips";
 import { buttonPrimary, buttonSecondary, focusRing } from "../ui";
 import CodeEditor from "./CodeEditor";
 import JudgePanel from "./JudgePanel";
@@ -79,6 +80,8 @@ export default function ProblemWorkspace({
   const [attempt, setAttempt] = useState(0);
   const [code, setCode] = useState(() => loadDraft(problemId, draftScope));
   const [tab, setTab] = useState<"problem" | "code">("problem");
+  // Topics hint at the solution, so they stay hidden until asked for.
+  const [topicsShown, setTopicsShown] = useState(false);
 
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -261,6 +264,22 @@ export default function ProblemWorkspace({
               {metaSlot}
             </div>
             <h1 className="mt-3 text-3xl font-semibold tracking-tight text-white">{state.problem.title}</h1>
+            {/* Never shown during a mock exam: the real CPE gives no hints. */}
+            {mockExamId == null && state.problem.topics && state.problem.topics.length > 0 && (
+              <div className="mt-3">
+                {topicsShown ? (
+                  <TopicChips topics={state.problem.topics} />
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setTopicsShown(true)}
+                    className={`rounded font-mono text-xs text-neutral-500 underline-offset-4 transition duration-300 ease-soft hover:text-white hover:underline ${focusRing}`}
+                  >
+                    Show topics
+                  </button>
+                )}
+              </div>
+            )}
             <div className="mt-8">
               <Statement markdown={state.problem.description} />
             </div>
