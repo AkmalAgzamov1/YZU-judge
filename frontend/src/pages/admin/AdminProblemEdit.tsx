@@ -14,6 +14,7 @@ import Field from "../../components/Field";
 import Statement from "../../components/problem/Statement";
 import { buttonPrimary, buttonSecondary, focusRing } from "../../components/ui";
 import { formatBytes, pairTestFiles, type TestPair } from "../../lib/testFiles";
+import { TOPICS, topicLabel, type Topic } from "../../lib/topics";
 import AdminLayout from "./AdminLayout";
 
 const STATEMENT_TEMPLATE = `Describe the story and the task here.
@@ -38,6 +39,7 @@ interface FormState {
   timeMs: string;
   memoryMb: string;
   isCpe: boolean;
+  topics: Topic[];
   description: string;
 }
 
@@ -50,6 +52,7 @@ const emptyForm: FormState = {
   timeMs: "1000",
   memoryMb: "256",
   isCpe: true,
+  topics: [],
   description: STATEMENT_TEMPLATE,
 };
 
@@ -61,6 +64,7 @@ function toForm(problem: Problem): FormState {
     timeMs: String(problem.time_limit_ms),
     memoryMb: String(problem.memory_limit_mb),
     isCpe: problem.is_cpe,
+    topics: problem.topics ?? [],
     description: problem.description,
   };
 }
@@ -88,6 +92,7 @@ function validate(form: FormState): { errors: FormErrors; input?: ProblemInput }
       time_limit_ms: Number(form.timeMs),
       memory_limit_mb: Number(form.memoryMb),
       is_cpe: form.isCpe,
+      topics: form.topics,
       description: form.description,
     },
   };
@@ -112,6 +117,17 @@ function ProblemForm({
     setForm((previous) => ({ ...previous, [key]: value }));
     setMessage(null);
   };
+
+  // Functional update, so quick clicks never work from a stale list.
+  function toggleTopic(topic: Topic) {
+    setForm((previous) => ({
+      ...previous,
+      topics: previous.topics.includes(topic)
+        ? previous.topics.filter((item) => item !== topic)
+        : [...previous.topics, topic],
+    }));
+    setMessage(null);
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -207,6 +223,30 @@ function ProblemForm({
           />
           Past CPE problem
         </label>
+      </div>
+
+      <div>
+        <p className="text-sm font-medium text-neutral-300">
+          Topics <span className="text-neutral-500">pick what the solution needs</span>
+        </p>
+        <div role="group" aria-label="Topics" className="mt-2 flex flex-wrap gap-2">
+          {TOPICS.map((topic) => {
+            const on = form.topics.includes(topic);
+            return (
+              <button
+                key={topic}
+                type="button"
+                aria-pressed={on}
+                onClick={() => toggleTopic(topic)}
+                className={`rounded-lg border px-3 py-1 text-sm transition duration-300 ease-soft active:scale-[0.98] ${focusRing} ${
+                  on ? "border-white bg-white text-black" : "border-white/10 bg-ink-1 text-neutral-400 hover:text-white"
+                }`}
+              >
+                {topicLabel[topic]}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       <div>
