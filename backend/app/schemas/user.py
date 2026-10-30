@@ -14,6 +14,7 @@ class UserOut(BaseModel):
     email: str
     username: str
     created_at: datetime
+    is_admin: bool = False
 
 class UserLogin(BaseModel):
     username: str

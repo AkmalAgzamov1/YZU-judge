@@ -15,6 +15,9 @@ class Problem(Base):
     memory_limit_mb = Column(Integer, nullable = False)
 
     is_cpe = Column(Boolean, nullable = False, default = True)
+
+    # Drafts are visible to admins only, until they are published.
+    is_published = Column(Boolean, nullable = False, default = False)
     difficulty = Column(Enum("easy", "medium", "hard", name = "problem_difficulty"), nullable = False)
 
     created_by = Column(Integer, ForeignKey("users.id"), nullable = False)

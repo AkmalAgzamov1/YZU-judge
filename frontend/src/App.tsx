@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AuthProvider } from "./auth/AuthContext";
+import RequireAdmin from "./auth/RequireAdmin";
 import RequireAuth from "./auth/RequireAuth";
 import Account from "./pages/Account";
 import Landing from "./pages/Landing";
@@ -16,6 +17,12 @@ import Submissions from "./pages/Submissions";
 const ProblemPage = lazy(() => import("./pages/ProblemPage"));
 const SubmissionDetail = lazy(() => import("./pages/SubmissionDetail"));
 const MockExamPage = lazy(() => import("./pages/MockExamPage"));
+const AdminProblems = lazy(() => import("./pages/admin/AdminProblems"));
+const AdminProblemEdit = lazy(() => import("./pages/admin/AdminProblemEdit"));
+const AdminPapers = lazy(() => import("./pages/admin/AdminPapers"));
+const AdminPaperEdit = lazy(() => import("./pages/admin/AdminPaperEdit"));
+
+const pageFallback = <div className="min-h-svh bg-ink-0" />;
 
 export default function App() {
   return (
@@ -56,6 +63,13 @@ export default function App() {
                 </Suspense>
               }
             />
+          </Route>
+          <Route element={<RequireAdmin />}>
+            <Route path="/admin" element={<Navigate to="/admin/problems" replace />} />
+            <Route path="/admin/problems" element={<Suspense fallback={pageFallback}><AdminProblems /></Suspense>} />
+            <Route path="/admin/problems/:id" element={<Suspense fallback={pageFallback}><AdminProblemEdit /></Suspense>} />
+            <Route path="/admin/papers" element={<Suspense fallback={pageFallback}><AdminPapers /></Suspense>} />
+            <Route path="/admin/papers/:id" element={<Suspense fallback={pageFallback}><AdminPaperEdit /></Suspense>} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

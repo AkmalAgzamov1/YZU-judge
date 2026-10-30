@@ -25,6 +25,7 @@ class ProblemOut(BaseModel):
     memory_limit_mb: int
 
     is_cpe: bool
+    is_published: bool = True
     created_by: int
 
 class ProblemUpdate(BaseModel):
@@ -35,3 +36,9 @@ class ProblemUpdate(BaseModel):
     time_limit_ms: int
     memory_limit_mb: int
     is_cpe: bool
+
+
+class ProblemStats(BaseModel):
+    problem_id: int
+    test_count: int
+    sample_count: int

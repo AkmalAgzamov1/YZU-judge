@@ -42,7 +42,7 @@ def check_mock_exam_submission(db: Session, submission_data: SubmissionCreate, c
 def create_submission(submission_data: SubmissionCreate, current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     problem = db.query(Problem).filter(Problem.id == submission_data.problem_id).first()
 
-    if problem is None:
+    if problem is None or (not problem.is_published and not current_user.is_admin):
         raise HTTPException(status_code = 404, detail = "Problem not found")
 
     if submission_data.mock_exam_id is not None:
