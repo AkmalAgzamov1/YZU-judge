@@ -8,6 +8,7 @@ class Problem(Base):
     id = Column(Integer, primary_key = True, autoincrement = True)
 
     title = Column(String, nullable = False)
+    uva_id = Column(Integer, unique = True, nullable = True)
     description = Column(String, nullable = False)
 
     time_limit_ms = Column(Integer, nullable = False)

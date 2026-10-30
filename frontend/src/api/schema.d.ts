@@ -211,6 +211,8 @@ export interface components {
         ProblemCreate: {
             /** Title */
             title: string;
+            /** Uva Id */
+            uva_id?: number | null;
             /** Description */
             description: string;
             /**
@@ -231,6 +233,8 @@ export interface components {
             id: number;
             /** Title */
             title: string;
+            /** Uva Id */
+            uva_id?: number | null;
             /** Description */
             description: string;
             /**
@@ -251,6 +255,8 @@ export interface components {
         ProblemUpdate: {
             /** Title */
             title: string;
+            /** Uva Id */
+            uva_id?: number | null;
             /** Description */
             description: string;
             /**
