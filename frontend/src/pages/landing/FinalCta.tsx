@@ -29,7 +29,7 @@ export default function FinalCta() {
             alt=""
             width={316}
             height={316}
-            className="hidden h-48 w-48 justify-self-end opacity-90 lg:block"
+            className="hidden h-48 w-48 justify-self-end rounded-full bg-white p-1 lg:block"
           />
         </div>
       </Reveal>

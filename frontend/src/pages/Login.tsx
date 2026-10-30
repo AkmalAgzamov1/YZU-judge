@@ -82,7 +82,7 @@ export default function Login() {
         </button>
       </form>
 
-      <p className="mt-8 text-sm text-neutral-400">
+      <p className="mt-8 text-center text-sm text-neutral-400">
         New to YZU Judge?{" "}
         <Link to="/register" className={`rounded-sm font-semibold text-white underline-offset-4 hover:underline ${focusRing}`}>
           Create a free account

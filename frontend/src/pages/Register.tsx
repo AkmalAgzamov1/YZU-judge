@@ -12,9 +12,15 @@ interface Errors {
   username?: string;
   email?: string;
   password?: string;
+  confirmPassword?: string;
 }
 
-function validate(username: string, email: string, password: string): Errors {
+function validate(
+  username: string,
+  email: string,
+  password: string,
+  confirmPassword: string,
+): Errors {
   const errors: Errors = {};
 
   if (!username.trim()) errors.username = "Choose a username.";
@@ -26,6 +32,9 @@ function validate(username: string, email: string, password: string): Errors {
   if (!password) errors.password = "Choose a password.";
   else if (password.length < 8) errors.password = "Use at least 8 characters.";
 
+  if (!confirmPassword) errors.confirmPassword = "Type your password again.";
+  else if (confirmPassword !== password) errors.confirmPassword = "Passwords do not match.";
+
   return errors;
 }
 
@@ -36,6 +45,7 @@ export default function Register() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState<Errors>({});
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -44,7 +54,7 @@ export default function Register() {
     event.preventDefault();
     setError("");
 
-    const nextErrors = validate(username, email, password);
+    const nextErrors = validate(username, email, password, confirmPassword);
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
@@ -67,7 +77,7 @@ export default function Register() {
   return (
     <AuthLayout
       title="Create your account"
-      subtitle="Free for every YZU student. Your submissions are saved so you can see your progress."
+      subtitle="Free for every YZU student."
     >
       <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
         <Field
@@ -98,6 +108,15 @@ export default function Register() {
           error={errors.password}
           hint="At least 8 characters."
         />
+        <Field
+          id="confirm-password"
+          label="Confirm password"
+          type="password"
+          autoComplete="new-password"
+          value={confirmPassword}
+          onChange={(event) => setConfirmPassword(event.target.value)}
+          error={errors.confirmPassword}
+        />
 
         {error && (
           <p role="alert" className="rounded-lg border border-yzu-red/40 bg-yzu-red/10 px-3 py-2 text-sm text-red-300">
@@ -108,9 +127,21 @@ export default function Register() {
         <button type="submit" disabled={isSubmitting} className={buttonPrimary}>
           {isSubmitting ? "Creating account…" : "Create account"}
         </button>
+
+        <p className="text-center text-xs text-neutral-500">
+          By creating an account, you agree to the{" "}
+          <Link to="/terms" className={`rounded-sm text-neutral-300 underline underline-offset-2 hover:text-white ${focusRing}`}>
+            Terms of use
+          </Link>{" "}
+          and{" "}
+          <Link to="/privacy" className={`rounded-sm text-neutral-300 underline underline-offset-2 hover:text-white ${focusRing}`}>
+            Privacy policy
+          </Link>
+          .
+        </p>
       </form>
 
-      <p className="mt-8 text-sm text-neutral-400">
+      <p className="mt-8 text-center text-sm text-neutral-400">
         Already have an account?{" "}
         <Link to="/login" className={`rounded-sm font-semibold text-white underline-offset-4 hover:underline ${focusRing}`}>
           Sign in
