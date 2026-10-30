@@ -1,1 +1,62 @@
-@import "./styles/global.css";
+@import "tailwindcss";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+
+@theme {
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+
+  /* Dark surfaces, the only background colors allowed */
+  --color-ink-0: #000000;
+  --color-ink-1: #181818;
+  --color-ink-2: #1f1f1f;
+  --color-ink-3: #272727;
+  --color-ink-4: #313131;
+
+  /* Taken from the YZU letters in front of Building 5 */
+  --color-yzu-red: #e5352b;
+  --color-yzu-blue: #2f5bd3;
+  --color-yzu-yellow: #f5c518;
+
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 96px;
+  }
+
+  body {
+    @apply bg-ink-0 font-sans text-neutral-100 antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p,
+  li,
+  dd {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: var(--color-yzu-blue);
+    color: white;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+@utility text-hero {
+  background-image: linear-gradient(to right, #ffffff, #9b9b9b);
+  background-clip: text;
+  color: transparent;
+}

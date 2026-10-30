@@ -2,6 +2,32 @@ import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ApiError } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
+import AuthLayout from "../components/AuthLayout";
+import Field from "../components/Field";
+import { buttonPrimary, focusRing } from "../components/ui";
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+interface Errors {
+  username?: string;
+  email?: string;
+  password?: string;
+}
+
+function validate(username: string, email: string, password: string): Errors {
+  const errors: Errors = {};
+
+  if (!username.trim()) errors.username = "Choose a username.";
+  else if (username.trim().length < 3) errors.username = "Use at least 3 characters.";
+
+  if (!email.trim()) errors.email = "Enter your email address.";
+  else if (!EMAIL_PATTERN.test(email.trim())) errors.email = "That email address looks incomplete.";
+
+  if (!password) errors.password = "Choose a password.";
+  else if (password.length < 8) errors.password = "Use at least 8 characters.";
+
+  return errors;
+}
 
 export default function Register() {
   const { register } = useAuth();
@@ -10,16 +36,22 @@ export default function Register() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<Errors>({});
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError("");
+
+    const nextErrors = validate(username, email, password);
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) return;
+
     setIsSubmitting(true);
 
     try {
-      await register(username, email, password);
+      await register(username.trim(), email.trim(), password);
       navigate("/account", { replace: true });
     } catch (err) {
       if (err instanceof ApiError) {
@@ -33,53 +65,57 @@ export default function Register() {
   }
 
   return (
-    <main>
-      <h1>Create your YZU Judge account</h1>
-      <p>Join the coding arena.</p>
-
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="username">Username</label>
-        <input
+    <AuthLayout
+      title="Create your account"
+      subtitle="Free for every YZU student. Your submissions are saved so you can see your progress."
+    >
+      <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
+        <Field
           id="username"
-          name="username"
+          label="Username"
           autoComplete="username"
           value={username}
           onChange={(event) => setUsername(event.target.value)}
-          required
+          error={errors.username}
         />
-
-        <label htmlFor="email">Email</label>
-        <input
+        <Field
           id="email"
-          name="email"
+          label="Email"
           type="email"
           autoComplete="email"
+          placeholder="s1131234@mail.yzu.edu.tw"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
-          required
+          error={errors.email}
         />
-
-        <label htmlFor="password">Password</label>
-        <input
+        <Field
           id="password"
-          name="password"
+          label="Password"
           type="password"
           autoComplete="new-password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
-          required
+          error={errors.password}
+          hint="At least 8 characters."
         />
 
-        {error && <p role="alert">{error}</p>}
+        {error && (
+          <p role="alert" className="rounded-lg border border-yzu-red/40 bg-yzu-red/10 px-3 py-2 text-sm text-red-300">
+            {error}
+          </p>
+        )}
 
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Creating account..." : "Create account"}
+        <button type="submit" disabled={isSubmitting} className={buttonPrimary}>
+          {isSubmitting ? "Creating account…" : "Create account"}
         </button>
       </form>
 
-      <p>
-        Already have an account? <Link to="/login">Sign in</Link>
+      <p className="mt-8 text-sm text-neutral-400">
+        Already have an account?{" "}
+        <Link to="/login" className={`rounded-sm font-semibold text-white underline-offset-4 hover:underline ${focusRing}`}>
+          Sign in
+        </Link>
       </p>
-    </main>
+    </AuthLayout>
   );
 }
