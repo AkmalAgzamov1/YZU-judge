@@ -66,15 +66,15 @@ export default function SiteNav() {
 
   const accountLinks = user ? (
     <>
+      <Link to="/problems" className={linkClass(false)}>
+        Problems
+      </Link>
       <NavLink to="/account" className={({ isActive }) => linkClass(isActive)} aria-label="Your account">
         <span className="flex items-center gap-2">
           <Avatar name={user.username} />
           {user.username}
         </span>
       </NavLink>
-      <Link to="/problems" className={buttonPrimarySmall}>
-        Open judge
-      </Link>
     </>
   ) : (
     <>
@@ -106,11 +106,11 @@ export default function SiteNav() {
       </Link>
     )),
     user ? (
-      <div key="app" className="flex flex-col gap-3 px-3 pt-6">
-        <Link to="/problems" className={`${buttonPrimarySmall} py-3 text-base`}>
-          Open judge
+      <div key="app" className="flex flex-col gap-1">
+        <Link to="/problems" className={`block rounded-lg px-3 py-3 text-3xl font-semibold tracking-tight text-neutral-400 ${focusRing}`}>
+          Problems
         </Link>
-        <Link to="/account" className={`${buttonGhostSmall} border border-white/10 py-3 text-base`}>
+        <Link to="/account" className={`block rounded-lg px-3 py-3 text-3xl font-semibold tracking-tight text-neutral-400 ${focusRing}`}>
           Your account
         </Link>
       </div>
