@@ -54,7 +54,7 @@ export default function Faq() {
   return (
     <section id="faq" className="px-4 py-24">
       <div className="mx-auto max-w-6xl">
-        <SectionHeader index="04" label="FAQ" title="Questions students ask" />
+        <SectionHeader index="05" label="FAQ" title="Questions students ask" />
 
         <Reveal className="mt-16 lg:ml-[33.333%]">
           <div className="divide-y divide-white/10 border-y border-white/10">

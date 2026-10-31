@@ -1878,5 +1878,79 @@
       "brute-force"
     ],
     "statement": "Count the different three letter strings that appear in a word as a subsequence, that is, with their letters in the same order but not necessarily next to each other.\n\n## Input\n\nThe first line is `T`. Each next line holds a word of 1 to 10⁵ uppercase letters.\n\n## Output\n\nFor each word, print the count."
+  },
+  "315": {
+    "topics": [
+      "graphs"
+    ],
+    "statement": "A connected telephone network joins places numbered 1 to `N`. A place is critical if, when its exchange fails, some of the other places can no longer reach each other. Count the critical places.\n\n## Input\n\nSeveral blocks. Each starts with `N` (`N < 100`), followed by at most `N` lines, each with a place number and then the places it has a direct line to, and ends with a line `0`. Lines are two way, and each line appears in at least one row. A block with `N = 0` ends the input.\n\n## Output\n\nFor each block, print the number of critical places."
+  },
+  "417": {
+    "topics": [
+      "math",
+      "brute-force"
+    ],
+    "statement": "A valid word has 1 to 5 lowercase letters in strictly increasing alphabetical order, like `abc` or `gwz` (but not `aab` or `cat`). All valid words are listed shorter first, and alphabetically within the same length: `a` = 1, `b` = 2, ..., `z` = 26, `ab` = 27, `ac` = 28, ..., `vwxyz` = 83681. Print the position of each word.\n\n## Input\n\nOne word per line until the end of input, 1 to 5 lowercase letters.\n\n## Output\n\nFor each word, print its position, or `0` if it is not valid."
+  },
+  "490": {
+    "topics": [
+      "strings",
+      "implementation"
+    ],
+    "statement": "Rotate a block of sentences 90 degrees clockwise: the last sentence becomes the leftmost column and the first sentence the rightmost column, each read from top to bottom.\n\n## Input\n\nAt most 100 sentences, one per line, each at most 100 characters (letters, digits, spaces and punctuation, no tabs), until the end of input.\n\n## Output\n\nPrint the rotated text. Output line `i` holds the `i`-th character of every sentence, from the last sentence to the first. Where a sentence is too short, use a space, so every output line is exactly as long as the number of sentences, trailing spaces included."
+  },
+  "865": {
+    "topics": [
+      "strings"
+    ],
+    "statement": "Encrypt text with a substitution cipher: every character that appears in the plaintext alphabet is replaced by the character at the same position in the substitution alphabet. Every other character is copied unchanged.\n\n## Input\n\nThe first line is the number of cases, then an empty line; cases are separated by empty lines. Each case has a line with the plaintext alphabet, a line with the substitution alphabet, and then several lines of text. Lines are at most 64 characters.\n\n## Output\n\nFor each case, print the substitution alphabet, then the plaintext alphabet, then the encrypted lines. Put an empty line between cases.\n\n## Notes\n\nThe case of letters matters: `A` is only replaced if `A` itself is in the plaintext alphabet."
+  },
+  "1207": {
+    "topics": [
+      "dp",
+      "strings"
+    ],
+    "statement": "Turn string `x` into string `y` using three operations, each costing 1: delete a letter, insert a letter, or change a letter into another. Find the smallest total cost.\n\n## Input\n\nSeveral data sets until the end of input. Each is two lines: the length of `x` followed by `x`, then the length of `y` followed by `y`.\n\n## Output\n\nFor each data set, print the minimum number of operations."
+  },
+  "1262": {
+    "topics": [
+      "brute-force",
+      "strings"
+    ],
+    "statement": "A password has 5 capital letters. The phone shows a 6 × 5 grid of letters, and the password is accepted when its `i`-th letter appears somewhere in column `i`. A spy saw two such grids for the same password, so the password's `i`-th letter must appear in column `i` of both grids. List every password that fits both grids in alphabetical order and print the `K`-th one.\n\n## Input\n\nThe first line is `T`. Each case has a line with `K` (`1 ≤ K ≤ 7777`), then 6 lines of 5 letters for the first grid, then 6 lines of 5 letters for the second grid.\n\n## Output\n\nFor each case, print the `K`-th password, or `NO` if there are fewer than `K`.\n\n## Notes\n\nThe same letter can appear several times in a column; each password counts only once."
+  },
+  "10062": {
+    "topics": [
+      "strings",
+      "sorting"
+    ],
+    "statement": "For each line of text, count how often each character appears and list them.\n\n## Input\n\nLines of text until the end of input, each at most 1000 characters, made of printable ASCII characters (codes 32 to 127).\n\n## Output\n\nFor each line, print one row per character that appears: its ASCII code and its count, separated by a space. Sort the rows by count from least to most; for equal counts, put the larger ASCII code first. Put an empty line between the outputs of consecutive lines.\n\n## Notes\n\nSpaces count as characters. Line endings do not."
+  },
+  "10142": {
+    "topics": [
+      "simulation"
+    ],
+    "statement": "Voters rank all candidates. First, only first choices are counted. If a candidate has more than 50% of the votes, that candidate wins. Otherwise every candidate tied for the fewest votes is eliminated, and each ballot counts for its highest ranked candidate still in the race. Repeat until someone has more than 50% or all remaining candidates are tied.\n\n## Input\n\nThe first line is the number of cases, then an empty line; cases are separated by empty lines. Each case has `n` (`n ≤ 20`), then `n` candidate names (up to 80 characters, any printable characters), then up to 1000 ballots, one per line, each a permutation of `1` to `n`.\n\n## Output\n\nFor each case, print the winner's name, or the names of all tied candidates in their input order, one per line. Put an empty line between cases."
+  },
+  "10415": {
+    "topics": [
+      "simulation",
+      "implementation"
+    ],
+    "statement": "On a saxophone each note is played by pressing a set of fingers, numbered 1 to 10:\n\n- `c`: 2–4, 7–10; `d`: 2–4, 7–9; `e`: 2–4, 7, 8; `f`: 2–4, 7; `g`: 2–4; `a`: 2, 3; `b`: 2\n- `C`: 3; `D`: 1–4, 7–9; `E`: 1–4, 7, 8; `F`: 1–4, 7; `G`: 1–4; `A`: 1–3; `B`: 1, 2\n\nA finger presses its button when the current note needs it and the previous note did not; for the first note, every needed finger presses. Count the presses of each finger over a song.\n\n## Input\n\nThe first line is `t` (`1 ≤ t ≤ 1000`). Each next line holds a song of at most 200 notes from the letters above.\n\n## Output\n\nFor each song, print the ten counts for fingers 1 to 10, separated by single spaces.\n\n## Notes\n\nA song can be an empty line."
+  },
+  "10922": {
+    "topics": [
+      "math",
+      "strings"
+    ],
+    "statement": "A number is a multiple of 9 exactly when its digit sum is. Applying the digit sum again and again until a single digit remains, the number of steps needed to reach 9 is the 9-degree; the 9-degree of `9` itself is 1. Decide whether `N` is a multiple of 9 and find its 9-degree.\n\n## Input\n\nOne positive number per line, up to 1000 digits. A line with `0` ends the input.\n\n## Output\n\nFor each number print `N is a multiple of 9 and has 9-degree D.` or `N is not a multiple of 9.`, with `N` written as in the input."
+  },
+  "11220": {
+    "topics": [
+      "strings",
+      "implementation"
+    ],
+    "statement": "Decode a secret message line by line. In each line, take the first letter of the first word, the second letter of the next word, the third letter of the next, and so on. If a word is too short to have the letter you need, skip it and try the same position in the next word. The letters taken from one line form one decoded word.\n\n## Input\n\nThe first line is `T` (`1 ≤ T ≤ 30`), followed by an empty line. Each test case is 1 to 100 lines of 1 to 30 words, separated by one or more spaces, and ends with an empty line. Words have at most 30 letters.\n\n## Output\n\nFor case `k`, print `Case #k:`, then the decoded words, one per line. Put an empty line between cases."
   }
 }

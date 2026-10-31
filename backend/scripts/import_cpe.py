@@ -8,7 +8,7 @@ judge sandbox to produce the expected outputs, and stores:
   * test A as the visible sample, tests A and B both used for judging,
   * one Mock CPE paper per exam whose problems all verified.
 
-Problems whose official solution failed stay drafts for an admin to check.
+Problems without official tests, or whose official solution fails, are skipped.
 Running it again is safe: existing problems and papers are left alone.
 
 Run from backend/ with the Celery worker's Docker available:
@@ -49,6 +49,18 @@ REQUEST_PAUSE_SECONDS = 0.3
 # Generous limits for the official solution; students get the problem limits.
 REFERENCE_TIME_LIMIT_MS = 10_000
 REFERENCE_MEMORY_LIMIT_MB = 512
+
+# Behaves like the old gets(): reads one line and drops the newline.
+GETS_SHIM = """\
+#include <cstdio>
+#include <cstring>
+inline char* gets(char* s) {
+    if (!fgets(s, 1 << 30, stdin)) return NULL;
+    size_t n = strlen(s);
+    if (n && s[n - 1] == '\\n') s[n - 1] = 0;
+    return s;
+}
+"""
 DEFAULT_TIME_LIMIT_MS = 3000
 MAX_TIME_LIMIT_MS = 10_000
 DEFAULT_MEMORY_LIMIT_MB = 256
@@ -197,7 +209,7 @@ def generate_outputs(problem: ExamProblem) -> tuple[list[tuple[str, str]] | None
         code = fetch_text_file(problem.code_url)
         inputs = [fetch_text_file(url) for url in problem.test_urls]
     except urllib.error.URLError as error:
-        # The CPE site misses a few files; the problem becomes a draft instead.
+        # The CPE site misses a few files; the problem is skipped instead.
         return None, f"download failed: {error}", 0
 
     compiled = compile_in_docker("cpp", code)
@@ -205,6 +217,10 @@ def generate_outputs(problem: ExamProblem) -> tuple[list[tuple[str, str]] | None
         # Older solutions lean on headers that old compilers included implicitly,
         # like std::find without <algorithm>. Give them every standard header.
         code = "#include <bits/stdc++.h>\n" + code
+        compiled = compile_in_docker("cpp", code)
+    if not compiled["ok"] and "'gets' was not declared" in compiled["output"]:
+        # gets() was removed in C++14, but many older solutions read lines with it.
+        code = GETS_SHIM + code
         compiled = compile_in_docker("cpp", code)
     if not compiled["ok"]:
         return None, "official solution did not compile: " + compiled["output"][:200], 0
@@ -228,17 +244,19 @@ def generate_outputs(problem: ExamProblem) -> tuple[list[tuple[str, str]] | None
 
 # -------------------------------------------------------------------- storing
 
-def import_problem(db, problem: ExamProblem, held_on: date, admin_id: int) -> tuple[Problem, str]:
+def import_problem(db, problem: ExamProblem, held_on: date, admin_id: int) -> tuple[Problem | None, str]:
     existing = db.query(Problem).filter(Problem.uva_id == problem.uva_id).first()
     if existing is not None:
         has_tests = db.query(TestCase).filter(TestCase.problem_id == existing.id).first() is not None
         if existing.is_published or has_tests:
             return existing, "exists"
-        # A draft left by a missing file: this sitting may have complete files.
+        # An unpublished problem without tests: this sitting may have complete files.
         return fill_draft(db, existing, problem, held_on)
 
     tests, note, slowest = generate_outputs(problem)
-    verified = tests is not None
+    if tests is None:
+        # Without official tests there is nothing to judge against, so skip it.
+        return None, note
 
     record = Problem(
         title = problem.title,
@@ -248,13 +266,13 @@ def import_problem(db, problem: ExamProblem, held_on: date, admin_id: int) -> tu
         time_limit_ms = time_limit_for(slowest),
         memory_limit_mb = DEFAULT_MEMORY_LIMIT_MB,
         is_cpe = True,
-        is_published = verified,
+        is_published = True,
         topics = [],
         created_by = admin_id,
     )
     db.add(record)
     db.flush()
-    save_tests(db, record, tests or [])
+    save_tests(db, record, tests)
     db.commit()
     return record, note
 
@@ -321,7 +339,7 @@ def main():
     if admin is None:
         sys.exit("No admin user found. Make one admin first; imported problems need an author.")
 
-    totals = {"verified": 0, "exists": 0, "draft": 0, "papers": 0, "papers_skipped": 0}
+    totals = {"verified": 0, "exists": 0, "skipped": 0, "papers": 0, "papers_skipped": 0}
     print(f"Importing {len(dates)} CPE exams")
 
     try:
@@ -333,10 +351,14 @@ def main():
 
             for problem in exam.problems:
                 record, note = import_problem(db, problem, held_on, admin.id)
+                if record is None:
+                    all_published = False
+                    totals["skipped"] += 1
+                    print(f"  P{problem.position} UVa {problem.uva_id:<6} skipped: {note}")
+                    continue
                 problem_ids.append(record.id)
                 all_published &= record.is_published
-                key = "exists" if note == "exists" else "verified" if note.startswith("verified") else "draft"
-                totals[key] += 1
+                totals["exists" if note == "exists" else "verified"] += 1
                 print(f"  P{problem.position} UVa {problem.uva_id:<6} {record.difficulty:<6} {note}")
 
             if len(problem_ids) == len(exam.problems) and exam.problems and all_published:
@@ -345,12 +367,12 @@ def main():
                 print(f"  -> {outcome}")
             else:
                 totals["papers_skipped"] += 1
-                print("  -> no paper: some problems are drafts")
+                print("  -> no paper: some problems are missing")
     finally:
         db.close()
 
     print(
-        f"\nDone. New verified problems: {totals['verified']}, new drafts: {totals['draft']}, "
+        f"\nDone. New verified problems: {totals['verified']}, skipped: {totals['skipped']}, "
         f"already there: {totals['exists']}, papers created: {totals['papers']}, "
         f"papers skipped: {totals['papers_skipped']}"
     )
