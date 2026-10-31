@@ -48,7 +48,7 @@ def judge_submission_task(submission_id):
             testcases = load_testcases(db, problem.id)
 
             # Must stay lazy, do not delete please bro
-            from app.services.docker_runner import run_code_in_docker
+            from app.services.docker_runner import compile_in_docker, run_code_in_docker
 
             judge_result = judge_submission(
                 run_code=run_code_in_docker,
@@ -56,6 +56,8 @@ def judge_submission_task(submission_id):
                 testcases=testcases,
                 time_limit_ms=problem.time_limit_ms,
                 memory_limit_mb=problem.memory_limit_mb,
+                language=submission.language,
+                compile_code=compile_in_docker,
             )
 
             for result in judge_result["results"]:
@@ -69,6 +71,7 @@ def judge_submission_task(submission_id):
                 db.add(result_record)
 
             submission.status = judge_result["verdict"]
+            submission.compile_output = judge_result.get("compile_output")
             db.commit()
 
         except Exception:

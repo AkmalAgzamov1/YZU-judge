@@ -34,6 +34,7 @@ def judge_code(
     expected_output,
     time_limit_ms,
     memory_limit_mb,
+    **run_options,
 ):
 
     result = run_code(
@@ -41,6 +42,7 @@ def judge_code(
         input_data=input_data,
         time_limit_ms=time_limit_ms,
         memory_limit_mb=memory_limit_mb,
+        **run_options,
     )
 
     if result["timed_out"]:
@@ -73,12 +75,30 @@ def judge_submission(
     testcases,
     time_limit_ms,
     memory_limit_mb,
+    language="python",
+    compile_code=None,
 ):
 
     results = []
 
     if not testcases:
         raise ValueError("Cannot judge a submission without testcases")
+
+    # Compiled languages build once, then every test runs the same binary.
+    run_options = {}
+    if language != "python":
+        if compile_code is None:
+            raise ValueError(f"{language} needs compile_code")
+
+        compiled = compile_code(language, code)
+        if not compiled["ok"]:
+            return {
+                "verdict": "compilation_error",
+                "results": [],
+                "compile_output": compiled["output"],
+            }
+
+        run_options = {"language": language, "binary": compiled["binary"]}
 
     for testcase in testcases:
 
@@ -89,6 +109,7 @@ def judge_submission(
             expected_output=testcase["output"],
             time_limit_ms=time_limit_ms,
             memory_limit_mb=memory_limit_mb,
+            **run_options,
         )
         result["testcase_id"] = testcase["id"]
 

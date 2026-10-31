@@ -1,9 +1,12 @@
+import { cpp } from "@codemirror/lang-cpp";
 import { python } from "@codemirror/lang-python";
 import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { EditorView } from "@codemirror/view";
 import { tags } from "@lezer/highlight";
 import CodeMirror from "@uiw/react-codemirror";
 import { type KeyboardEvent } from "react";
+import type { Extension } from "@codemirror/state";
+import type { Language } from "../../lib/languages";
 
 const editorTheme = EditorView.theme(
   {
@@ -39,11 +42,15 @@ interface CodeEditorProps {
   onChange?: (value: string) => void;
   onSubmit?: () => void;
   readOnly?: boolean;
+  language?: Language;
 }
 
-const extensions = [python(), syntaxHighlighting(highlight)];
+const extensionsFor: Record<Language, Extension[]> = {
+  python: [python(), syntaxHighlighting(highlight)],
+  cpp: [cpp(), syntaxHighlighting(highlight)],
+};
 
-export default function CodeEditor({ value, onChange, onSubmit, readOnly = false }: CodeEditorProps) {
+export default function CodeEditor({ value, onChange, onSubmit, readOnly = false, language = "python" }: CodeEditorProps) {
   // Catch Ctrl/Cmd + Enter before CodeMirror turns it into a new line.
   function handleKeyDownCapture(event: KeyboardEvent<HTMLDivElement>) {
     if (onSubmit && event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
@@ -61,7 +68,7 @@ export default function CodeEditor({ value, onChange, onSubmit, readOnly = false
         editable={!readOnly}
         readOnly={readOnly}
         theme={editorTheme}
-        extensions={extensions}
+        extensions={extensionsFor[language]}
         height={readOnly ? "auto" : "100%"}
         maxHeight={readOnly ? "480px" : undefined}
         className="h-full"
