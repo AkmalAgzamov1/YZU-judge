@@ -1,1 +1,756 @@
-{}
+{
+  "100": {
+    "hints": [
+      "There are at most 9999 numbers in a range, so you can just simulate every one of them. The tricky part is in the input, not the math: read the Notes again."
+    ],
+    "explanation": "Simulate the sequence for every number between `i` and `j` and keep the longest cycle. Before looping, swap the bounds if `i > j`, but print them in the original order. The numbers stay small enough that plain simulation is fast.",
+    "python": "import sys\n\ncache = {1: 1}\n\ndef cycle(n):\n    path = []\n    while n not in cache:\n        path.append(n)\n        n = 3 * n + 1 if n % 2 else n // 2\n    length = cache[n]\n    for value in reversed(path):\n        length += 1\n        cache[value] = length\n    return cache[path[0]] if path else length\n\ndata = sys.stdin.read().split()\nout = []\nfor k in range(0, len(data) - 1, 2):\n    i, j = int(data[k]), int(data[k + 1])\n    low, high = min(i, j), max(i, j)\n    best = max(cycle(n) for n in range(low, high + 1))\n    out.append(f\"{i} {j} {best}\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n#include <algorithm>\nusing namespace std;\n\nint cycle(long long n) {\n    int length = 1;\n    while (n != 1) {\n        n = (n % 2) ? 3 * n + 1 : n / 2;\n        length++;\n    }\n    return length;\n}\n\nint main() {\n    int i, j;\n    while (scanf(\"%d %d\", &i, &j) == 2) {\n        int low = min(i, j), high = max(i, j), best = 0;\n        for (int n = low; n <= high; n++) best = max(best, cycle(n));\n        printf(\"%d %d %d\\n\", i, j, best);\n    }\n}\n",
+    "verified": {
+      "python": "643862de4c33ba3141834ee65fe6946fb036eab497c745451bfbf6c7b914d5c7",
+      "cpp": "f76e56c642988d494c8eeb8aebd8cf019ac16512efcf571f8c8d8f0617907234"
+    }
+  },
+  "264": {
+    "hints": [
+      "Group the terms by diagonal: diagonal d holds the fractions p/q with p + q = d + 1, and it has exactly d terms. Which diagonal does term n fall on?",
+      "The first d diagonals hold d(d+1)/2 terms, so find the smallest d with d(d+1)/2 ≥ n. Then the direction of the zig zag depends on whether d is even or odd."
+    ],
+    "explanation": "Diagonal `d` contains `d` fractions with `p + q = d + 1`. Find the smallest `d` with `d(d+1)/2 ≥ n`, and let `k = n - d(d-1)/2` be the position inside that diagonal. On even diagonals the walk goes down-left, so `p = k`, `q = d + 1 - k`; on odd diagonals it goes the other way, so `p = d + 1 - k`, `q = k`.",
+    "python": "import sys\n\nout = []\nfor token in sys.stdin.read().split():\n    n = int(token)\n    d = 1\n    while d * (d + 1) // 2 < n:\n        d += 1\n    k = n - d * (d - 1) // 2\n    if d % 2 == 0:\n        p, q = k, d + 1 - k\n    else:\n        p, q = d + 1 - k, k\n    out.append(f\"TERM {n} IS {p}/{q}\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    long long n;\n    while (scanf(\"%lld\", &n) == 1) {\n        long long d = 1;\n        while (d * (d + 1) / 2 < n) d++;\n        long long k = n - d * (d - 1) / 2, p, q;\n        if (d % 2 == 0) { p = k; q = d + 1 - k; }\n        else { p = d + 1 - k; q = k; }\n        printf(\"TERM %lld IS %lld/%lld\\n\", n, p, q);\n    }\n}\n",
+    "verified": {
+      "python": "73b2e47c4b5ba6cee5674e4142b063209f36eae91cd386d64ad3b096a0e694cc",
+      "cpp": "8825ba4c366d974c2b9bb5f7df98b2696694b78879697b004142e1dfe3092bf3"
+    }
+  },
+  "299": {
+    "hints": [
+      "Swapping neighbours until everything is in order is exactly what one well known (slow) sorting algorithm does.",
+      "Run bubble sort and count the swaps. Equivalently, count the pairs of carriages that are in the wrong order relative to each other."
+    ],
+    "explanation": "Each swap of two neighbours fixes exactly one pair that is out of order, so the answer is the number of such pairs (inversions). With `L ≤ 50`, checking every pair `i < j` with `a[i] > a[j]` is more than fast enough. Bubble sort with a swap counter gives the same number.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\ncases = int(data[0])\npos = 1\nout = []\nfor _ in range(cases):\n    length = int(data[pos])\n    pos += 1\n    cars = list(map(int, data[pos:pos + length]))\n    pos += length\n    swaps = sum(1 for i in range(length) for j in range(i + 1, length) if cars[i] > cars[j])\n    out.append(f\"Optimal train swapping takes {swaps} swaps.\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    int cases;\n    scanf(\"%d\", &cases);\n    while (cases--) {\n        int length, cars[64];\n        scanf(\"%d\", &length);\n        for (int i = 0; i < length; i++) scanf(\"%d\", &cars[i]);\n        int swaps = 0;\n        for (int i = 0; i < length; i++)\n            for (int j = i + 1; j < length; j++)\n                if (cars[i] > cars[j]) swaps++;\n        printf(\"Optimal train swapping takes %d swaps.\\n\", swaps);\n    }\n}\n",
+    "verified": {
+      "python": "ea27d469bb24681147712f35d2170c7ee762dab4886cbcced426ae1f1adaf37a",
+      "cpp": "daa8766be4f42f9568d4400d03e4a3407e6e0172d015f94e1f6545684fa4308c"
+    }
+  },
+  "382": {
+    "hints": [
+      "Divisors come in pairs: if d divides n, so does n / d. You only need to try d up to the square root of n."
+    ],
+    "explanation": "Add up the proper divisors by trying every `d` up to `√n` and adding both `d` and `n / d` when `d` divides `n` (only once when they are equal), then subtract `n` itself. Compare the sum with `n`. Remember that 1 has no proper divisors, so it is deficient, and mind the exact output format: `%5d`, two spaces, then the word.",
+    "python": "import sys\n\ndef divisor_sum(n):\n    total = 0\n    d = 1\n    while d * d <= n:\n        if n % d == 0:\n            total += d\n            if d != n // d:\n                total += n // d\n        d += 1\n    return total - n\n\nout = [\"PERFECTION OUTPUT\"]\nfor token in sys.stdin.read().split():\n    n = int(token)\n    if n == 0:\n        break\n    s = divisor_sum(n)\n    kind = \"PERFECT\" if s == n else (\"ABUNDANT\" if s > n else \"DEFICIENT\")\n    out.append(f\"{n:5d}  {kind}\")\nout.append(\"END OF OUTPUT\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    printf(\"PERFECTION OUTPUT\\n\");\n    int n;\n    while (scanf(\"%d\", &n) == 1 && n != 0) {\n        long long total = 0;\n        for (long long d = 1; d * d <= n; d++) {\n            if (n % d == 0) {\n                total += d;\n                if (d != n / d) total += n / d;\n            }\n        }\n        total -= n;\n        const char *kind = total == n ? \"PERFECT\" : (total > n ? \"ABUNDANT\" : \"DEFICIENT\");\n        printf(\"%5d  %s\\n\", n, kind);\n    }\n    printf(\"END OF OUTPUT\\n\");\n}\n",
+    "verified": {
+      "python": "b594991901cfe0fbda55c02103c1e275030694874f93cd3a7f0283dcc4523f36",
+      "cpp": "403cc8d4e4e7ae722f35a8e121d61ba08900bcb436710ee041ceab3efc429005"
+    }
+  },
+  "458": {
+    "hints": [
+      "Compare the first character of an encoded line with the first character of its decoded line. How far apart are they in the ASCII table?"
+    ],
+    "explanation": "Every character is shifted by the same amount: `'1'` became `'*'`, so the shift is 7. Subtract 7 from every byte of every line and print it. Work with raw bytes, because some encoded characters are outside the normal printable range.",
+    "python": "import sys\n\nout = bytearray()\nfor byte in sys.stdin.buffer.read():\n    if byte in (10, 13):\n        out.append(byte)\n    else:\n        out.append((byte - 7) % 256)\nsys.stdout.buffer.write(bytes(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    int c;\n    while ((c = getchar()) != EOF) {\n        if (c == '\\n' || c == '\\r') putchar(c);\n        else putchar(c - 7);\n    }\n}\n",
+    "verified": {
+      "python": "fb2781cc6102f53af6c56e424fa742315dfb064d2595f0e567a29d514fa5b06b",
+      "cpp": "b75af1217fd5d8384867cdbe38fb459d34376e60e22f4ce0369cc2643d9e4ab3"
+    }
+  },
+  "483": {
+    "hints": [],
+    "explanation": "Go through each line and reverse every run of non-space characters in place, leaving the spaces exactly where they are. A regular expression that matches non-whitespace runs makes this one line in Python; in C++, scan the line and reverse each word when you reach its end.",
+    "python": "import re\nimport sys\n\nfor line in sys.stdin.read().split(\"\\n\"):\n    sys.stdout.write(re.sub(r\"\\S+\", lambda m: m.group()[::-1], line) + \"\\n\")\n",
+    "cpp": "#include <iostream>\n#include <string>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    string line;\n    while (getline(cin, line)) {\n        size_t i = 0;\n        while (i < line.size()) {\n            if (isspace((unsigned char)line[i])) { i++; continue; }\n            size_t j = i;\n            while (j < line.size() && !isspace((unsigned char)line[j])) j++;\n            reverse(line.begin() + i, line.begin() + j);\n            i = j;\n        }\n        cout << line << \"\\n\";\n    }\n}\n",
+    "verified": {
+      "python": "7a3d6363c8b02227cb86051fc2a65c51acbd807e64b88f84a43a816d79aeaeec",
+      "cpp": "62a872b4c2eab59f5bf7a36010e5b3a90f963117a3bdfdac3ad19c80e687e96c"
+    }
+  },
+  "488": {
+    "hints": [],
+    "explanation": "Build one wave as a list of lines: `1`, `22`, ... up to the amplitude, then back down to `1`. Print it `frequency` times. All waves, across all cases, are separated by exactly one empty line, so the easiest way is to collect every wave and join them with blank lines.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\ncases = int(data[0])\nwaves = []\npos = 1\nfor _ in range(cases):\n    amplitude, frequency = int(data[pos]), int(data[pos + 1])\n    pos += 2\n    rows = [str(k) * k for k in range(1, amplitude + 1)]\n    wave = \"\\n\".join(rows + rows[-2::-1])\n    waves.extend([wave] * frequency)\nprint(\"\\n\\n\".join(waves))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    int cases;\n    scanf(\"%d\", &cases);\n    bool first = true;\n    while (cases--) {\n        int amplitude, frequency;\n        scanf(\"%d %d\", &amplitude, &frequency);\n        for (int f = 0; f < frequency; f++) {\n            if (!first) printf(\"\\n\");\n            first = false;\n            for (int k = 1; k <= amplitude; k++) {\n                for (int r = 0; r < k; r++) printf(\"%d\", k);\n                printf(\"\\n\");\n            }\n            for (int k = amplitude - 1; k >= 1; k--) {\n                for (int r = 0; r < k; r++) printf(\"%d\", k);\n                printf(\"\\n\");\n            }\n        }\n    }\n}\n",
+    "verified": {
+      "python": "15c0fa4e9674401f02e0420178665647a5f192aeb8da5245a1368367d3df60d3",
+      "cpp": "b1f404f24c81b78ad82a4e8f6af070d9222b0be23b51c231269030ab49274ddb"
+    }
+  },
+  "541": {
+    "hints": [
+      "Count how many rows have an odd sum and how many columns have an odd sum.",
+      "Flipping one bit changes the parity of exactly one row and one column. So a single flip can only help when exactly one row and exactly one column are odd."
+    ],
+    "explanation": "Compute the sum of every row and every column. If all are even, print `OK`. If exactly one row `i` and exactly one column `j` are odd, flipping bit `(i, j)` fixes both, so print `Change bit (i,j)`. In every other case one flip cannot fix the matrix, so it is `Corrupt`.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\npos = 0\nout = []\nwhile True:\n    n = int(data[pos])\n    pos += 1\n    if n == 0:\n        break\n    grid = [list(map(int, data[pos + r * n:pos + (r + 1) * n])) for r in range(n)]\n    pos += n * n\n    odd_rows = [r for r in range(n) if sum(grid[r]) % 2]\n    odd_cols = [c for c in range(n) if sum(grid[r][c] for r in range(n)) % 2]\n    if not odd_rows and not odd_cols:\n        out.append(\"OK\")\n    elif len(odd_rows) == 1 and len(odd_cols) == 1:\n        out.append(f\"Change bit ({odd_rows[0] + 1},{odd_cols[0] + 1})\")\n    else:\n        out.append(\"Corrupt\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    int n;\n    while (scanf(\"%d\", &n) == 1 && n != 0) {\n        int row[105] = {0}, col[105] = {0};\n        for (int r = 0; r < n; r++)\n            for (int c = 0; c < n; c++) {\n                int bit;\n                scanf(\"%d\", &bit);\n                row[r] += bit;\n                col[c] += bit;\n            }\n        int oddRows = 0, oddCols = 0, badRow = 0, badCol = 0;\n        for (int k = 0; k < n; k++) {\n            if (row[k] % 2) { oddRows++; badRow = k; }\n            if (col[k] % 2) { oddCols++; badCol = k; }\n        }\n        if (oddRows == 0 && oddCols == 0) printf(\"OK\\n\");\n        else if (oddRows == 1 && oddCols == 1) printf(\"Change bit (%d,%d)\\n\", badRow + 1, badCol + 1);\n        else printf(\"Corrupt\\n\");\n    }\n}\n",
+    "verified": {
+      "python": "5a07a0062ba1f9828a14c3c8148a2c821f299697efda44630ea763496db6ff81",
+      "cpp": "896f3c3f8102e2d721e034085d03ac7db657abd99febfe6c9cf76ba230b0717c"
+    }
+  },
+  "579": {
+    "hints": [
+      "Work out how many degrees each hand turns per minute. The hour hand also moves while the minutes pass: in one hour it turns 30 degrees."
+    ],
+    "explanation": "The minute hand is at `6·M` degrees and the hour hand at `30·H + 0.5·M` degrees (with 12 counted as 0). Take the absolute difference, and if it is more than 180, use `360 - difference` instead. Print it with three decimals.",
+    "python": "import sys\n\nout = []\nfor line in sys.stdin.read().split():\n    hours, minutes = map(int, line.split(\":\"))\n    if hours == 0 and minutes == 0:\n        break\n    angle = abs(30 * (hours % 12) + 0.5 * minutes - 6 * minutes)\n    if angle > 180:\n        angle = 360 - angle\n    out.append(f\"{angle:.3f}\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n#include <cmath>\n\nint main() {\n    int hours, minutes;\n    while (scanf(\"%d:%d\", &hours, &minutes) == 2 && (hours != 0 || minutes != 0)) {\n        double angle = fabs(30.0 * (hours % 12) + 0.5 * minutes - 6.0 * minutes);\n        if (angle > 180) angle = 360 - angle;\n        printf(\"%.3f\\n\", angle);\n    }\n}\n",
+    "verified": {
+      "python": "36ec4f3a29bb80dfe4e59d15589d5d542d09c117570e92db1f815d02b2e53e36",
+      "cpp": "bc3d42057e9539e7d51ec790618df95bf05b11620579aaef80cc8a17cc4b0910"
+    }
+  },
+  "591": {
+    "hints": [
+      "You know the final height of every stack: the average. Which bricks have to move at all?"
+    ],
+    "explanation": "Every stack must end at the average height. Only bricks above the average need to move, and each of them moves exactly once, so the answer is the sum of `height - average` over the stacks taller than the average. Print an empty line after every set.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\npos = 0\ncase = 0\nout = []\nwhile True:\n    n = int(data[pos])\n    pos += 1\n    if n == 0:\n        break\n    heights = list(map(int, data[pos:pos + n]))\n    pos += n\n    case += 1\n    average = sum(heights) // n\n    moves = sum(h - average for h in heights if h > average)\n    out.append(f\"Set #{case}\\nThe minimum number of moves is {moves}.\\n\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    int n, set = 0;\n    while (scanf(\"%d\", &n) == 1 && n != 0) {\n        int heights[64], total = 0;\n        for (int i = 0; i < n; i++) { scanf(\"%d\", &heights[i]); total += heights[i]; }\n        int average = total / n, moves = 0;\n        for (int i = 0; i < n; i++) if (heights[i] > average) moves += heights[i] - average;\n        printf(\"Set #%d\\nThe minimum number of moves is %d.\\n\\n\", ++set, moves);\n    }\n}\n",
+    "verified": {
+      "python": "0407c93208d39f5b216ac821bf14a73f0a118fec2226126131c935d107f4b94c",
+      "cpp": "fd40ab1c80e071f86d5967520d3dc24d5bac7d4c58ea0ca782cdabbbf57c6695"
+    }
+  },
+  "834": {
+    "hints": [
+      "b0 is just the integer part of the fraction. What is left is a fraction smaller than 1; flip it over and repeat.",
+      "Flipping and taking the integer part again and again is exactly the Euclidean algorithm: the terms are the quotients you get while computing gcd(numerator, denominator)."
+    ],
+    "explanation": "Run the Euclidean algorithm on the numerator and denominator and write down every quotient. `b0 = a / b`, then replace `(a, b)` by `(b, a mod b)` and continue until the remainder is 0. The quotients are exactly `b0, b1, ..., bn`, and the last one is automatically greater than 1. Print the first term, a semicolon, then the rest separated by commas.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\nout = []\nfor k in range(0, len(data) - 1, 2):\n    a, b = int(data[k]), int(data[k + 1])\n    terms = []\n    while b:\n        terms.append(a // b)\n        a, b = b, a % b\n    if len(terms) == 1:\n        out.append(f\"[{terms[0]}]\")\n    else:\n        out.append(f\"[{terms[0]};\" + \",\".join(map(str, terms[1:])) + \"]\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n#include <vector>\nusing namespace std;\n\nint main() {\n    long long a, b;\n    while (scanf(\"%lld %lld\", &a, &b) == 2) {\n        vector<long long> terms;\n        while (b) {\n            terms.push_back(a / b);\n            long long r = a % b;\n            a = b;\n            b = r;\n        }\n        printf(\"[%lld\", terms[0]);\n        for (size_t i = 1; i < terms.size(); i++) printf(\"%c%lld\", i == 1 ? ';' : ',', terms[i]);\n        printf(\"]\\n\");\n    }\n}\n",
+    "verified": {
+      "python": "a2700bbbb4503134be5b7eb97479bb9e33c489fd80f050ae7f539822ba3d37df",
+      "cpp": "7f9fec495eecc2f966870d9a5d8487069a012db07959632275fe9bd161a44e28"
+    }
+  },
+  "913": {
+    "hints": [
+      "N can be almost 10⁹, so you can't build the rows. Instead, count: how many odd numbers have been written once the row of length N is finished?",
+      "Rows have lengths 1, 3, 5, ..., N, so after that row (N+1)/2 rows are done and m² odd numbers are written, with m = (N+1)/2. The m²-th odd number is 2m² - 1."
+    ],
+    "explanation": "With `m = (N + 1) / 2`, the rows of lengths 1, 3, ..., N contain `1 + 3 + ... + N = m²` odd numbers, so the last number of the row is `L = 2m² - 1`. The last three numbers are `L`, `L - 2` and `L - 4`, and their sum is `3L - 6 = 6m² - 9`. Use 64 bit integers.",
+    "python": "import sys\n\nout = []\nfor token in sys.stdin.read().split():\n    m = (int(token) + 1) // 2\n    out.append(str(6 * m * m - 9))\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    long long n;\n    while (scanf(\"%lld\", &n) == 1) {\n        long long m = (n + 1) / 2;\n        printf(\"%lld\\n\", 6 * m * m - 9);\n    }\n}\n",
+    "verified": {
+      "python": "d04035bf68f562d5aa138b92e29a5afd0efaff66e385e09f6ee0916cb404e36c",
+      "cpp": "bf27cef523fd03e33aaa73a7992bc28e2754f8b57318603a7aa62d39b41fc88b"
+    }
+  },
+  "1225": {
+    "hints": [],
+    "explanation": "`N` is below 10000, so simply go through every number from 1 to `N`, look at each of its digits and add one to that digit's counter. Print the ten counters separated by spaces.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\nout = []\nfor token in data[1:1 + int(data[0])]:\n    counts = [0] * 10\n    for number in range(1, int(token) + 1):\n        for digit in str(number):\n            counts[ord(digit) - 48] += 1\n    out.append(\" \".join(map(str, counts)))\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    int sets;\n    scanf(\"%d\", &sets);\n    while (sets--) {\n        int n, counts[10] = {0};\n        scanf(\"%d\", &n);\n        for (int number = 1; number <= n; number++)\n            for (int x = number; x > 0; x /= 10) counts[x % 10]++;\n        for (int d = 0; d < 10; d++) printf(\"%d%c\", counts[d], d == 9 ? '\\n' : ' ');\n    }\n}\n",
+    "verified": {
+      "python": "31c6e94a31da6934903bc3c2b8d98166c4bb993111d434545d30a7ce16a42273",
+      "cpp": "f9ad2cfd2fa65bd35886885d5610a2f8ea1ac98400f1ed66afd17c3c8e1b11e4"
+    }
+  },
+  "1260": {
+    "hints": [
+      "n is at most 1000, so comparing every day with every earlier day is only about half a million comparisons per case."
+    ],
+    "explanation": "For every day `j` from the second one on, count the earlier days `i < j` with `sales[i] ≤ sales[j]` and add them up. A double loop is fast enough in C++. In Python, keeping the earlier sales in a sorted list and using binary search (`bisect_right`) to count how many are `≤` today's value is much faster.",
+    "python": "import sys\nfrom bisect import bisect_right, insort\n\ndata = sys.stdin.read().split()\ncases = int(data[0])\npos = 1\nout = []\nfor _ in range(cases):\n    n = int(data[pos])\n    sales = list(map(int, data[pos + 1:pos + 1 + n]))\n    pos += 1 + n\n    seen = []\n    total = 0\n    for value in sales:\n        total += bisect_right(seen, value)\n        insort(seen, value)\n    out.append(str(total))\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    int cases;\n    scanf(\"%d\", &cases);\n    while (cases--) {\n        int n, sales[1005];\n        scanf(\"%d\", &n);\n        for (int i = 0; i < n; i++) scanf(\"%d\", &sales[i]);\n        long long total = 0;\n        for (int j = 1; j < n; j++)\n            for (int i = 0; i < j; i++)\n                if (sales[i] <= sales[j]) total++;\n        printf(\"%lld\\n\", total);\n    }\n}\n",
+    "verified": {
+      "python": "df12bad45c1a8150127631d1ce824960e9f1929186f98ec7a3c349578e2e0f5c",
+      "cpp": "2721c8986877d10f5a3951ad57a69a6d1547597b53b36a0231adfdeac9ccbbaf"
+    }
+  },
+  "1583": {
+    "hints": [
+      "Instead of searching backwards from every N, go forwards: for every possible generator x, compute x + digit sum of x once, and remember the smallest x for each result."
+    ],
+    "explanation": "Precompute the answer for every number up to 100000. Loop `x` from 1 upwards, compute `y = x + (sum of digits of x)`, and if `y` has no generator yet, store `x` for it. Because `x` grows, the first one stored is the smallest. Then each query is just a lookup, with 0 for numbers that never got a generator.",
+    "python": "import sys\n\nLIMIT = 100000\ngenerator = [0] * (LIMIT + 1)\nfor x in range(1, LIMIT + 1):\n    y = x + sum(map(int, str(x)))\n    if y <= LIMIT and generator[y] == 0:\n        generator[y] = x\n\ndata = sys.stdin.read().split()\nprint(\"\\n\".join(str(generator[int(token)]) for token in data[1:1 + int(data[0])]))\n",
+    "cpp": "#include <cstdio>\n\nint generatorOf[100001];\n\nint main() {\n    for (int x = 1; x <= 100000; x++) {\n        int y = x;\n        for (int t = x; t > 0; t /= 10) y += t % 10;\n        if (y <= 100000 && generatorOf[y] == 0) generatorOf[y] = x;\n    }\n    int cases, n;\n    scanf(\"%d\", &cases);\n    while (cases--) {\n        scanf(\"%d\", &n);\n        printf(\"%d\\n\", generatorOf[n]);\n    }\n}\n",
+    "verified": {
+      "python": "fc347bd25b67c69fbd3f81cb5ad024693f7cef3c01a05df590b5f66915349550",
+      "cpp": "24fa86d6caaa9eda9586bb3cf52a8cba32e28239662f50370878bd22480c722c"
+    }
+  },
+  "1585": {
+    "hints": [],
+    "explanation": "Walk through the string while keeping the length of the current run of `O`s. On an `O`, increase the run by one and add it to the score; on an `X`, reset the run to 0.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\nout = []\nfor line in data[1:1 + int(data[0])]:\n    run = score = 0\n    for ch in line:\n        run = run + 1 if ch == \"O\" else 0\n        score += run\n    out.append(str(score))\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    int cases;\n    cin >> cases;\n    while (cases--) {\n        string line;\n        cin >> line;\n        int run = 0, score = 0;\n        for (char ch : line) {\n            run = (ch == 'O') ? run + 1 : 0;\n            score += run;\n        }\n        cout << score << \"\\n\";\n    }\n}\n",
+    "verified": {
+      "python": "717da7036656718903af38f3f080442dc5d49b91bd566bd0a2a95da597a15ea9",
+      "cpp": "9ce868faa8d55b771d55143e75d47ba3bca78305743d573e77f2aadcc2db02ec"
+    }
+  },
+  "1594": {
+    "hints": [
+      "The statement promises that the answer shows up within 1000 steps. So you don't need to detect the loop at all."
+    ],
+    "explanation": "Apply the Ducci step up to 1000 times. If the tuple ever becomes all zeros, print `ZERO`; if it still isn't all zeros after 1000 steps, the statement guarantees it is in a loop, so print `LOOP`.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\ncases = int(data[0])\npos = 1\nout = []\nfor _ in range(cases):\n    n = int(data[pos])\n    values = list(map(int, data[pos + 1:pos + 1 + n]))\n    pos += 1 + n\n    result = \"LOOP\"\n    for _ in range(1001):\n        if not any(values):\n            result = \"ZERO\"\n            break\n        values = [abs(values[i] - values[(i + 1) % n]) for i in range(n)]\n    out.append(result)\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n#include <cstdlib>\n\nint main() {\n    int cases;\n    scanf(\"%d\", &cases);\n    while (cases--) {\n        int n, values[16], next[16];\n        scanf(\"%d\", &n);\n        for (int i = 0; i < n; i++) scanf(\"%d\", &values[i]);\n        bool zero = false;\n        for (int step = 0; step <= 1000 && !zero; step++) {\n            zero = true;\n            for (int i = 0; i < n; i++) if (values[i] != 0) zero = false;\n            if (zero) break;\n            for (int i = 0; i < n; i++) next[i] = abs(values[i] - values[(i + 1) % n]);\n            for (int i = 0; i < n; i++) values[i] = next[i];\n        }\n        printf(zero ? \"ZERO\\n\" : \"LOOP\\n\");\n    }\n}\n",
+    "verified": {
+      "python": "70b7fb889043cc3929abb00f44add53533c2448034e9ed144b5a99d881b14a8a",
+      "cpp": "e6483c75076b98da2f0281fb165f914851d966e71d7ac9fb889f199eab078217"
+    }
+  },
+  "10018": {
+    "hints": [],
+    "explanation": "Repeat: add the number to its reversal and count the step, until the result reads the same both ways. Do at least one addition even if the input is already a palindrome. The results can exceed 32 bit signed range, so use 64 bit integers in C++.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\nout = []\nfor token in data[1:1 + int(data[0])]:\n    n = int(token)\n    steps = 0\n    while True:\n        n += int(str(n)[::-1])\n        steps += 1\n        if str(n) == str(n)[::-1]:\n            break\n    out.append(f\"{steps} {n}\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nlong long reversed(long long n) {\n    long long r = 0;\n    for (; n > 0; n /= 10) r = r * 10 + n % 10;\n    return r;\n}\n\nint main() {\n    int cases;\n    scanf(\"%d\", &cases);\n    while (cases--) {\n        long long n;\n        scanf(\"%lld\", &n);\n        int steps = 0;\n        do {\n            n += reversed(n);\n            steps++;\n        } while (n != reversed(n));\n        printf(\"%d %lld\\n\", steps, n);\n    }\n}\n",
+    "verified": {
+      "python": "f20cfd07e99950aedede2e9648e658529938a3ce90b3d9631a1f11b4546c0af3",
+      "cpp": "3f4729b2e1949818d2c987e36b438d3c27c28917e930cd591efb12f0971e7390"
+    }
+  },
+  "10035": {
+    "hints": [
+      "Add the numbers digit by digit from the right, exactly like on paper, keeping the carry between digits."
+    ],
+    "explanation": "Take the last digits of both numbers plus the current carry. If the sum is 10 or more, that is a carry operation: count it and carry 1 into the next digit, otherwise carry 0. Continue until both numbers are used up. Mind the three output forms: `No carry operation.`, `1 carry operation.` and `n carry operations.`",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\nout = []\nfor k in range(0, len(data) - 1, 2):\n    a, b = int(data[k]), int(data[k + 1])\n    if a == 0 and b == 0:\n        break\n    carry = count = 0\n    while a or b:\n        carry = 1 if a % 10 + b % 10 + carry >= 10 else 0\n        count += carry\n        a //= 10\n        b //= 10\n    if count == 0:\n        out.append(\"No carry operation.\")\n    elif count == 1:\n        out.append(\"1 carry operation.\")\n    else:\n        out.append(f\"{count} carry operations.\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    long long a, b;\n    while (scanf(\"%lld %lld\", &a, &b) == 2 && (a != 0 || b != 0)) {\n        int carry = 0, count = 0;\n        while (a > 0 || b > 0) {\n            carry = (a % 10 + b % 10 + carry >= 10) ? 1 : 0;\n            count += carry;\n            a /= 10;\n            b /= 10;\n        }\n        if (count == 0) printf(\"No carry operation.\\n\");\n        else if (count == 1) printf(\"1 carry operation.\\n\");\n        else printf(\"%d carry operations.\\n\", count);\n    }\n}\n",
+    "verified": {
+      "python": "fb63e37e40a8da7066ccc7e5867ce1fc036f6612bc7634d2e2a8ea15d2754925",
+      "cpp": "56207b5369d0c0a83b83edef86981228d0e4de8054b98db791e7aaf9da46ae5c"
+    }
+  },
+  "10050": {
+    "hints": [
+      "N is at most 3650, so you can simply mark every strike day in an array of days, then count the marked days that are not a Friday or Saturday."
+    ],
+    "explanation": "Make an array of `N` days. For every party, mark days `h, 2h, 3h, ...` up to `N`. Then count the marked days that are not holidays: day 1 is a Sunday, so day `d` is a Friday when `d mod 7 = 6` and a Saturday when `d mod 7 = 0`. Marking (instead of counting per party) makes days with several strikes count only once.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\ncases = int(data[0])\npos = 1\nout = []\nfor _ in range(cases):\n    days, parties = int(data[pos]), int(data[pos + 1])\n    pos += 2\n    strike = [False] * (days + 1)\n    for h in map(int, data[pos:pos + parties]):\n        for day in range(h, days + 1, h):\n            strike[day] = True\n    pos += parties\n    lost = sum(1 for day in range(1, days + 1) if strike[day] and day % 7 not in (6, 0))\n    out.append(str(lost))\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n#include <cstring>\n\nint main() {\n    int cases;\n    scanf(\"%d\", &cases);\n    while (cases--) {\n        int days, parties;\n        bool strike[3700];\n        memset(strike, 0, sizeof strike);\n        scanf(\"%d %d\", &days, &parties);\n        for (int p = 0; p < parties; p++) {\n            int h;\n            scanf(\"%d\", &h);\n            for (int day = h; day <= days; day += h) strike[day] = true;\n        }\n        int lost = 0;\n        for (int day = 1; day <= days; day++)\n            if (strike[day] && day % 7 != 6 && day % 7 != 0) lost++;\n        printf(\"%d\\n\", lost);\n    }\n}\n",
+    "verified": {
+      "python": "b5096d378405077653ad143ba9a4d8120e7c171b0e6c3a163ed9c45d3777ef7e",
+      "cpp": "bb9a6d425ffa1982e9383097555770bafddde2dceb6f356a22457771f9d616ff"
+    }
+  },
+  "10071": {
+    "hints": [
+      "With constant acceleration, the velocity at time t is exactly the average velocity over the interval from 0 to 2t."
+    ],
+    "explanation": "Under constant acceleration the average velocity over `[0, 2t]` equals the velocity at the midpoint `t`, which is `v`. So the displacement is simply `v · 2t`. Print `2 * v * t`.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\nprint(\"\\n\".join(str(2 * int(data[k]) * int(data[k + 1])) for k in range(0, len(data) - 1, 2)))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    int v, t;\n    while (scanf(\"%d %d\", &v, &t) == 2) printf(\"%d\\n\", 2 * v * t);\n}\n",
+    "verified": {
+      "python": "8941b495bef3c6fe4eb3f758c446801b5df51136064f248335e70db84d921536",
+      "cpp": "14cbfc138cc3b8d124db484a5a7e2570b736da1ba719cdbfe6a993d5a25630fe"
+    }
+  },
+  "10079": {
+    "hints": [
+      "Draw a few cuts. How many new pieces can the k-th cut add at most, if it crosses every earlier cut?",
+      "The k-th cut can cross the k-1 earlier cuts, so it passes through k pieces and splits each of them: it adds k pieces. Now add 1 + 1 + 2 + ... + N."
+    ],
+    "explanation": "A new cut that crosses all `k - 1` earlier cuts (at different points) is split into `k` segments, and each segment divides one piece into two, so it adds `k` pieces. Starting from one whole pizza, the maximum is `1 + (1 + 2 + ... + N) = 1 + N(N+1)/2`. Use 64 bit integers: for the largest `N` the answer is about 2.2 × 10¹⁶.",
+    "python": "import sys\n\nout = []\nfor token in sys.stdin.read().split():\n    n = int(token)\n    if n < 0:\n        break\n    out.append(str(1 + n * (n + 1) // 2))\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    long long n;\n    while (scanf(\"%lld\", &n) == 1 && n >= 0) printf(\"%lld\\n\", 1 + n * (n + 1) / 2);\n}\n",
+    "verified": {
+      "python": "97e2074e0eeccd46e28c37b96854b3b3904645ba4efd353247914259de6e6691",
+      "cpp": "e94000de5d48ccd695e9ef58ba32368c38ef4620b0b2587e116cb3e6f4dde5f3"
+    }
+  },
+  "10082": {
+    "hints": [],
+    "explanation": "Write the keyboard rows in one string, for example ``\"`1234567890-=QWERTYUIOP[]\\ASDFGHJKL;'ZXCVBNM,./\"``. For every character, find it in that string and print the character just before it. Characters that are not in the string, like spaces and line breaks, stay as they are.",
+    "python": "import sys\n\nKEYS = \"`1234567890-=QWERTYUIOP[]\\\\ASDFGHJKL;'ZXCVBNM,./\"\nshift = {KEYS[i]: KEYS[i - 1] for i in range(1, len(KEYS))}\ntext = sys.stdin.read()\nsys.stdout.write(\"\".join(shift.get(ch, ch) for ch in text))\n",
+    "cpp": "#include <cstdio>\n#include <cstring>\n\nint main() {\n    const char *keys = \"`1234567890-=QWERTYUIOP[]\\\\ASDFGHJKL;'ZXCVBNM,./\";\n    int c;\n    while ((c = getchar()) != EOF) {\n        const char *p = c ? strchr(keys, c) : nullptr;\n        putchar(p && p != keys ? *(p - 1) : c);\n    }\n}\n",
+    "verified": {
+      "python": "447396aa9c95b0229cdaa5fd5ee61262413e430717d731fe71df65fb11c626be",
+      "cpp": "b526d5778cd9446c1975afb909b15524ecef9de7f8d214a71d5bb12ef9dd05c2"
+    }
+  },
+  "10189": {
+    "hints": [],
+    "explanation": "For every safe cell, look at the up to eight neighbouring cells, skipping the ones outside the grid, and count the mines. Mines stay `*`. Print `Field #x:` before each field and an empty line between fields.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\npos = 0\nfields = []\nwhile pos + 1 < len(data):\n    n, m = int(data[pos]), int(data[pos + 1])\n    pos += 2\n    if n == 0 and m == 0:\n        break\n    grid = data[pos:pos + n]\n    pos += n\n    rows = []\n    for r in range(n):\n        row = []\n        for c in range(m):\n            if grid[r][c] == \"*\":\n                row.append(\"*\")\n                continue\n            count = 0\n            for dr in (-1, 0, 1):\n                for dc in (-1, 0, 1):\n                    rr, cc = r + dr, c + dc\n                    if 0 <= rr < n and 0 <= cc < m and grid[rr][cc] == \"*\":\n                        count += 1\n            row.append(str(count))\n        rows.append(\"\".join(row))\n    fields.append(f\"Field #{len(fields) + 1}:\\n\" + \"\\n\".join(rows))\nprint(\"\\n\\n\".join(fields))\n",
+    "cpp": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n, m, field = 0;\n    while (cin >> n >> m && (n != 0 || m != 0)) {\n        vector<string> grid(n);\n        for (auto &row : grid) cin >> row;\n        if (field > 0) cout << \"\\n\";\n        cout << \"Field #\" << ++field << \":\\n\";\n        for (int r = 0; r < n; r++) {\n            for (int c = 0; c < m; c++) {\n                if (grid[r][c] == '*') { cout << '*'; continue; }\n                int count = 0;\n                for (int dr = -1; dr <= 1; dr++)\n                    for (int dc = -1; dc <= 1; dc++) {\n                        int rr = r + dr, cc = c + dc;\n                        if (rr >= 0 && rr < n && cc >= 0 && cc < m && grid[rr][cc] == '*') count++;\n                    }\n                cout << count;\n            }\n            cout << \"\\n\";\n        }\n    }\n}\n",
+    "verified": {
+      "python": "61ab35e555cb16e888f308770fd7c0c6e9d4f5d99d8f06fd0ac5e79d48f4161c",
+      "cpp": "bbb28b4390a5c7652495d733406061f3b7722b313255ae676affc01e66836411"
+    }
+  },
+  "10190": {
+    "hints": [
+      "The division itself is easy. The trap is the special values: think about what happens when n or m is 0 or 1 before you start dividing."
+    ],
+    "explanation": "If `n < 2` or `m < 2`, the sequence can't strictly decrease down to 1 (dividing by 0 is impossible and dividing by 1 never shrinks), so print `Boring!`. Otherwise keep dividing `n` by `m` while it is divisible, collecting the numbers. If you end at exactly 1, print the collected sequence; if you get stuck at a number that `m` doesn't divide, print `Boring!`.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\nout = []\nfor k in range(0, len(data) - 1, 2):\n    n, m = int(data[k]), int(data[k + 1])\n    if n < 2 or m < 2:\n        out.append(\"Boring!\")\n        continue\n    sequence = [n]\n    while n % m == 0:\n        n //= m\n        sequence.append(n)\n    out.append(\" \".join(map(str, sequence)) if n == 1 else \"Boring!\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n#include <vector>\nusing namespace std;\n\nint main() {\n    long long n, m;\n    while (scanf(\"%lld %lld\", &n, &m) == 2) {\n        if (n < 2 || m < 2) { printf(\"Boring!\\n\"); continue; }\n        vector<long long> sequence = {n};\n        while (n % m == 0) {\n            n /= m;\n            sequence.push_back(n);\n        }\n        if (n != 1) { printf(\"Boring!\\n\"); continue; }\n        for (size_t i = 0; i < sequence.size(); i++) printf(\"%lld%c\", sequence[i], i + 1 == sequence.size() ? '\\n' : ' ');\n    }\n}\n",
+    "verified": {
+      "python": "4fb78943c82746f3fd527aa8a4a698a6f74f600911a67029222cba33b9269792",
+      "cpp": "692c956efded2e9d9ae35af9e446d899e2b452d715eec3a254b8ab44b384a086"
+    }
+  },
+  "10222": {
+    "hints": [],
+    "explanation": "Write the keyboard keys in one lowercase string, for example ``\"`1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./\"``. Convert each input character to lowercase, find it in the string and print the key two positions to its left. Spaces and line breaks stay as they are. The input may start with an empty line before `N`, so skip blank lines first.",
+    "python": "import sys\n\nKEYS = \"`1234567890-=qwertyuiop[]\\\\asdfghjkl;'zxcvbnm,./\"\nshift = {KEYS[i]: KEYS[i - 2] for i in range(2, len(KEYS))}\nlines = sys.stdin.read().split(\"\\n\")\nstart = 0\nwhile not lines[start].strip():\n    start += 1\ncount = int(lines[start])\nout = []\nfor line in lines[start + 1:start + 1 + count]:\n    out.append(\"\".join(shift.get(ch, ch) for ch in line.rstrip(\"\\r\").lower()))\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <iostream>\n#include <string>\n#include <cctype>\nusing namespace std;\n\nint main() {\n    const string keys = \"`1234567890-=qwertyuiop[]\\\\asdfghjkl;'zxcvbnm,./\";\n    string line;\n    while (getline(cin, line) && line.find_first_not_of(\" \\r\\t\") == string::npos) {}\n    int count = stoi(line);\n    while (count-- > 0 && getline(cin, line)) {\n        if (!line.empty() && line.back() == '\\r') line.pop_back();\n        for (char &ch : line) {\n            ch = tolower((unsigned char)ch);\n            size_t at = keys.find(ch);\n            if (at != string::npos && at >= 2) ch = keys[at - 2];\n        }\n        cout << line << \"\\n\";\n    }\n}\n",
+    "verified": {
+      "python": "50853716f2d8de952a8e4fa1e0684e718a1df93f1b8e1c6c21a669d9b33cfd21",
+      "cpp": "f0d21ec585134857e7c56ea9407afb885495cdc57bfdeb46cde243ebb8cc97d3"
+    }
+  },
+  "10235": {
+    "hints": [
+      "There can be many queries below 1000000. Compute which numbers are prime once, before reading the input, with the Sieve of Eratosthenes."
+    ],
+    "explanation": "Sieve all primes below 1000000 once. For each `N`: if it isn't prime, it is `not prime`. Otherwise reverse its digits; if the reversal is a different number and also prime, it is `emirp`, else just `prime`. Note that 11 or 101 reverse to themselves, so they are only `prime`.",
+    "python": "import sys\n\nLIMIT = 1000000\nsieve = bytearray([1]) * LIMIT\nsieve[0] = sieve[1] = 0\nfor i in range(2, int(LIMIT ** 0.5) + 1):\n    if sieve[i]:\n        sieve[i * i::i] = bytearray(len(range(i * i, LIMIT, i)))\n\nout = []\nfor token in sys.stdin.read().split():\n    n = int(token)\n    if not sieve[n]:\n        out.append(f\"{n} is not prime.\")\n        continue\n    r = int(str(n)[::-1])\n    if r != n and r < LIMIT and sieve[r]:\n        out.append(f\"{n} is emirp.\")\n    else:\n        out.append(f\"{n} is prime.\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n#include <vector>\nusing namespace std;\n\nint main() {\n    const int LIMIT = 1000000;\n    vector<bool> prime(LIMIT, true);\n    prime[0] = prime[1] = false;\n    for (int i = 2; (long long)i * i < LIMIT; i++)\n        if (prime[i])\n            for (int j = i * i; j < LIMIT; j += i) prime[j] = false;\n    int n;\n    while (scanf(\"%d\", &n) == 1) {\n        if (!prime[n]) { printf(\"%d is not prime.\\n\", n); continue; }\n        int r = 0;\n        for (int t = n; t > 0; t /= 10) r = r * 10 + t % 10;\n        if (r != n && r < LIMIT && prime[r]) printf(\"%d is emirp.\\n\", n);\n        else printf(\"%d is prime.\\n\", n);\n    }\n}\n",
+    "verified": {
+      "python": "05a03a607f346b413dd492630daf3f10ed80a240a78876b668b4b38470d6d460",
+      "cpp": "fc8a3de6d056bd7a70ed2c551baf57e48d22b84c55c2bf7c1bbe9b05a667596f"
+    }
+  },
+  "10252": {
+    "hints": [
+      "Order doesn't matter at all here, because x only has to appear after some rearrangement. So only the count of each letter in a and in b matters."
+    ],
+    "explanation": "Count how many times each letter appears in `a` and in `b`. Letter `c` can be used `min(count_a[c], count_b[c])` times. Print every letter from `a` to `z` that many times: that is both the longest and the alphabetically smallest answer. Lines can be empty, so read the input line by line instead of word by word.",
+    "python": "import sys\nfrom collections import Counter\n\nlines = sys.stdin.read().split(\"\\n\")\nif lines and lines[-1] == \"\":\n    lines.pop()\nout = []\nfor k in range(0, len(lines) - 1, 2):\n    a, b = Counter(lines[k].strip()), Counter(lines[k + 1].strip())\n    out.append(\"\".join(ch * min(a[ch], b[ch]) for ch in \"abcdefghijklmnopqrstuvwxyz\"))\nsys.stdout.write(\"\".join(line + \"\\n\" for line in out))\n",
+    "cpp": "#include <iostream>\n#include <string>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    string a, b;\n    while (getline(cin, a) && getline(cin, b)) {\n        int countA[26] = {0}, countB[26] = {0};\n        for (char ch : a) if (ch >= 'a' && ch <= 'z') countA[ch - 'a']++;\n        for (char ch : b) if (ch >= 'a' && ch <= 'z') countB[ch - 'a']++;\n        string x;\n        for (int c = 0; c < 26; c++) x += string(min(countA[c], countB[c]), 'a' + c);\n        cout << x << \"\\n\";\n    }\n}\n",
+    "verified": {
+      "python": "2fa8ba07ad279bdfacb9683cb87b16ef073f934d88d25997a68089930d18eb0a",
+      "cpp": "015c3a62f6031b569182f597f241bf42f05efc291e5c7e1599fb3ab81a55c4c6"
+    }
+  },
+  "10327": {
+    "hints": [
+      "Each swap of two neighbours fixes exactly one pair of numbers that are in the wrong order. So what you really need to count is those pairs."
+    ],
+    "explanation": "The answer is the number of inversions: pairs `i < j` with `a[i] > a[j]`, since each neighbour swap removes exactly one. With `N ≤ 1000` a double loop works in C++. In Python, count inversions with merge sort: while merging, every time you take an element from the right half, it jumps over all elements still left in the left half.",
+    "python": "import sys\n\ndef sort_count(values):\n    if len(values) <= 1:\n        return values, 0\n    middle = len(values) // 2\n    left, a = sort_count(values[:middle])\n    right, b = sort_count(values[middle:])\n    merged, count, i, j = [], a + b, 0, 0\n    while i < len(left) and j < len(right):\n        if left[i] <= right[j]:\n            merged.append(left[i])\n            i += 1\n        else:\n            merged.append(right[j])\n            count += len(left) - i\n            j += 1\n    merged.extend(left[i:])\n    merged.extend(right[j:])\n    return merged, count\n\ndata = sys.stdin.read().split()\npos = 0\nout = []\nwhile pos < len(data):\n    n = int(data[pos])\n    values = list(map(int, data[pos + 1:pos + 1 + n]))\n    pos += 1 + n\n    out.append(f\"Minimum exchange operations : {sort_count(values)[1]}\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    int n;\n    while (scanf(\"%d\", &n) == 1) {\n        static int values[1005];\n        for (int i = 0; i < n; i++) scanf(\"%d\", &values[i]);\n        long long swaps = 0;\n        for (int i = 0; i < n; i++)\n            for (int j = i + 1; j < n; j++)\n                if (values[i] > values[j]) swaps++;\n        printf(\"Minimum exchange operations : %lld\\n\", swaps);\n    }\n}\n",
+    "verified": {
+      "python": "9feb47a380afebd62cdcf7c28543183e55cf419f90cee6ff70204fcb7a4feba6",
+      "cpp": "d391913f019c329a37cb0ecf81b5d15b675192c8695069b1d0de2a7bf5ed1fd0"
+    }
+  },
+  "10474": {
+    "hints": [
+      "Do exactly what the statement describes: sort the marbles first. Then, for each query, where does the first marble with that number sit in the sorted list?"
+    ],
+    "explanation": "Sort the marble numbers. For each query, find the first position where it could be inserted (binary search, `lower_bound` / `bisect_left`). If the number at that position equals the query, it was found at that position plus 1; otherwise it is not there. Print `CASE# k:` before each case.",
+    "python": "import sys\nfrom bisect import bisect_left\n\ndata = sys.stdin.read().split()\npos = 0\ncase = 0\nout = []\nwhile pos + 1 < len(data):\n    n, q = int(data[pos]), int(data[pos + 1])\n    pos += 2\n    if n == 0 and q == 0:\n        break\n    marbles = sorted(map(int, data[pos:pos + n]))\n    queries = list(map(int, data[pos + n:pos + n + q]))\n    pos += n + q\n    case += 1\n    out.append(f\"CASE# {case}:\")\n    for x in queries:\n        i = bisect_left(marbles, x)\n        if i < n and marbles[i] == x:\n            out.append(f\"{x} found at {i + 1}\")\n        else:\n            out.append(f\"{x} not found\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n#include <vector>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int n, q, caseNo = 0;\n    while (scanf(\"%d %d\", &n, &q) == 2 && (n != 0 || q != 0)) {\n        vector<int> marbles(n);\n        for (int &x : marbles) scanf(\"%d\", &x);\n        sort(marbles.begin(), marbles.end());\n        printf(\"CASE# %d:\\n\", ++caseNo);\n        while (q--) {\n            int x;\n            scanf(\"%d\", &x);\n            auto it = lower_bound(marbles.begin(), marbles.end(), x);\n            if (it != marbles.end() && *it == x) printf(\"%d found at %d\\n\", x, (int)(it - marbles.begin()) + 1);\n            else printf(\"%d not found\\n\", x);\n        }\n    }\n}\n",
+    "verified": {
+      "python": "43edd5669182c7a0fe9034400c633c1d43c8f1768fe95c7e251edc96a1d26542",
+      "cpp": "964b907f5e50d4f63b7f2f31d49fb8d38d71483ab4ca5001bc7be6629b7b8886"
+    }
+  },
+  "10591": {
+    "hints": [
+      "An unhappy number goes around in a loop forever. How can you notice that you have entered a loop?"
+    ],
+    "explanation": "Apply the digit-square-sum step repeatedly and remember every number you have seen in a set. If you reach 1, the number is happy. If you reach a number you have already seen, you are in a loop that will never hit 1, so it is unhappy. After the first step every value is small (at most 81 × 10), so this ends quickly.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\nout = []\nfor case, token in enumerate(data[1:1 + int(data[0])], start=1):\n    n = int(token)\n    seen = set()\n    x = n\n    while x != 1 and x not in seen:\n        seen.add(x)\n        x = sum(int(d) ** 2 for d in str(x))\n    kind = \"a Happy\" if x == 1 else \"an Unhappy\"\n    out.append(f\"Case #{case}: {n} is {kind} number.\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n#include <set>\nusing namespace std;\n\nint main() {\n    int cases;\n    scanf(\"%d\", &cases);\n    for (int c = 1; c <= cases; c++) {\n        long long n;\n        scanf(\"%lld\", &n);\n        set<long long> seen;\n        long long x = n;\n        while (x != 1 && !seen.count(x)) {\n            seen.insert(x);\n            long long next = 0;\n            for (long long t = x; t > 0; t /= 10) next += (t % 10) * (t % 10);\n            x = next;\n        }\n        printf(\"Case #%d: %lld is %s number.\\n\", c, n, x == 1 ? \"a Happy\" : \"an Unhappy\");\n    }\n}\n",
+    "verified": {
+      "python": "0f1a997625d386fc894fdbac959b05a0a337b026001a2ca3e9ff28a06f18ea65",
+      "cpp": "93c36c985fa2a505f780d301a2c6fb882a57df3fc9541d4e53f63a9c05e366d2"
+    }
+  },
+  "10642": {
+    "hints": [
+      "Don't walk the path step by step: the coordinates go up to 100000. Instead, give every circle its position number in the walk, then subtract.",
+      "The circle (x, y) lies on diagonal k = x + y. The diagonals before it contain 1 + 2 + ... + k circles, and inside its own diagonal it is the x-th one (counting from 0)."
+    ],
+    "explanation": "Number the circles in walking order starting from 0. Circle `(x, y)` is on diagonal `k = x + y`; the earlier diagonals hold `k(k+1)/2` circles, and on its own diagonal the walk reaches it after `x` steps. So its number is `k(k+1)/2 + x`, and the answer is `number(destination) - number(source)`. Use 64 bit integers.",
+    "python": "import sys\n\ndef index(x, y):\n    k = x + y\n    return k * (k + 1) // 2 + x\n\ndata = sys.stdin.read().split()\ncases = int(data[0])\nout = []\nfor case in range(1, cases + 1):\n    x1, y1, x2, y2 = map(int, data[1 + 4 * (case - 1):1 + 4 * case])\n    out.append(f\"Case {case}: {index(x2, y2) - index(x1, y1)}\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nlong long indexOf(long long x, long long y) {\n    long long k = x + y;\n    return k * (k + 1) / 2 + x;\n}\n\nint main() {\n    int cases;\n    scanf(\"%d\", &cases);\n    for (int c = 1; c <= cases; c++) {\n        long long x1, y1, x2, y2;\n        scanf(\"%lld %lld %lld %lld\", &x1, &y1, &x2, &y2);\n        printf(\"Case %d: %lld\\n\", c, indexOf(x2, y2) - indexOf(x1, y1));\n    }\n}\n",
+    "verified": {
+      "python": "a87858caf271a738a4e0d035a997ffbf08adf1058f0e1ea51c950252b3541971",
+      "cpp": "ce32a9c74cc3f71307a1ce3ad8d1d1fb12151bbe451d64ce3d68cacf50fdc6d4"
+    }
+  },
+  "10696": {
+    "hints": [
+      "Try the function by hand (or with a quick recursive program) for a few small N like 1, 50, 99, 100. Do you notice something?"
+    ],
+    "explanation": "Every `N ≤ 100` ends up at 91, which is the famous property of McCarthy's 91 function. So `f91(N) = 91` for `N ≤ 100` and `N - 10` otherwise, with no recursion needed. The input can have 250000 lines, so read all of it at once and print all results at once.",
+    "python": "import sys\n\nout = []\nfor token in sys.stdin.buffer.read().split():\n    n = int(token)\n    if n == 0:\n        break\n    out.append(f\"f91({n}) = {91 if n <= 100 else n - 10}\")\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    int n;\n    while (scanf(\"%d\", &n) == 1 && n != 0) printf(\"f91(%d) = %d\\n\", n, n <= 100 ? 91 : n - 10);\n}\n",
+    "verified": {
+      "python": "ebdffaed8fe34531e7d30455b76bd55492acf0f0327ef06f2146fc9e581dbaa7",
+      "cpp": "9e20254cf2d1d6bfa786c3ce08f3792e82ddca8ace695fea1274a8baef3a9567"
+    }
+  },
+  "10783": {
+    "hints": [],
+    "explanation": "Loop from `a` to `b` and add every odd number. The numbers are at most 100, so nothing more is needed. Print `Case k: s` for each case.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\ncases = int(data[0])\nout = []\nfor case in range(1, cases + 1):\n    a, b = int(data[2 * case - 1]), int(data[2 * case])\n    out.append(f\"Case {case}: {sum(x for x in range(a, b + 1) if x % 2)}\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    int cases;\n    scanf(\"%d\", &cases);\n    for (int c = 1; c <= cases; c++) {\n        int a, b, sum = 0;\n        scanf(\"%d %d\", &a, &b);\n        for (int x = a; x <= b; x++) if (x % 2) sum += x;\n        printf(\"Case %d: %d\\n\", c, sum);\n    }\n}\n",
+    "verified": {
+      "python": "7a4c526503c90069dc43504b3fcc701f03f25fff46e456840b52ea3d9bfc7d1a",
+      "cpp": "065c42adf864dc8a23e594931da83c8f1b18bb972fb7f1369fb95515a871625e"
+    }
+  },
+  "10789": {
+    "hints": [],
+    "explanation": "Count each character of the string. Then go through the characters in increasing ASCII order and keep those whose count is a prime number. Counts are at most 2000, so a simple primality check by trial division is enough. If nothing is left, print `empty`.",
+    "python": "import sys\nfrom collections import Counter\n\ndef is_prime(n):\n    if n < 2:\n        return False\n    d = 2\n    while d * d <= n:\n        if n % d == 0:\n            return False\n        d += 1\n    return True\n\ndata = sys.stdin.read().split()\nout = []\nfor case, line in enumerate(data[1:1 + int(data[0])], start=1):\n    counts = Counter(line)\n    picked = \"\".join(ch for ch in sorted(counts) if is_prime(counts[ch]))\n    out.append(f\"Case {case}: {picked or 'empty'}\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n\nbool isPrime(int n) {\n    if (n < 2) return false;\n    for (int d = 2; d * d <= n; d++) if (n % d == 0) return false;\n    return true;\n}\n\nint main() {\n    int cases;\n    cin >> cases;\n    for (int c = 1; c <= cases; c++) {\n        string line;\n        cin >> line;\n        int counts[128] = {0};\n        for (char ch : line) counts[(unsigned char)ch]++;\n        string picked;\n        for (int ch = 0; ch < 128; ch++) if (isPrime(counts[ch])) picked += (char)ch;\n        cout << \"Case \" << c << \": \" << (picked.empty() ? \"empty\" : picked) << \"\\n\";\n    }\n}\n",
+    "verified": {
+      "python": "f3d822dac8ad758bfe3ecf16c8fba448580ed35c6a7ba4358d40af73dd2a45fb",
+      "cpp": "0ab9f56d6f1f485d7bb3ab4af2c46be9a48d7d833f656c7aef8ae4e96dbb762b"
+    }
+  },
+  "10921": {
+    "hints": [],
+    "explanation": "Map each capital letter to its keypad digit (a lookup string like `\"22233344455566677778889999\"` indexed by `letter - 'A'` does it) and leave hyphens and digits unchanged. While converting, count the letters and the hyphens, then print the number and both counts.",
+    "python": "import sys\n\nKEYPAD = \"22233344455566677778889999\"\nout = []\nfor line in sys.stdin.read().split():\n    number = \"\".join(KEYPAD[ord(ch) - 65] if \"A\" <= ch <= \"Z\" else ch for ch in line)\n    letters = sum(1 for ch in line if \"A\" <= ch <= \"Z\")\n    out.append(f\"{number} {letters} {line.count('-')}\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    const string keypad = \"22233344455566677778889999\";\n    string line;\n    while (cin >> line) {\n        int letters = 0, hyphens = 0;\n        string number = line;\n        for (char &ch : number) {\n            if (ch >= 'A' && ch <= 'Z') { ch = keypad[ch - 'A']; letters++; }\n            else if (ch == '-') hyphens++;\n        }\n        cout << number << \" \" << letters << \" \" << hyphens << \"\\n\";\n    }\n}\n",
+    "verified": {
+      "python": "f2317c89fc7e61656190a26bf21078011777d187bdf3ae26ce547fcfc5e89653",
+      "cpp": "4f7b9d802e896a1a943c451da4b904dd82b90c7386647ee7bb291a2e8808c7d4"
+    }
+  },
+  "10931": {
+    "hints": [],
+    "explanation": "Convert the number to binary (repeatedly take `n mod 2` and divide by 2, then reverse the digits, or use a built in conversion) and count the 1s. Print `The parity of B is P (mod 2).`",
+    "python": "import sys\n\nout = []\nfor token in sys.stdin.read().split():\n    n = int(token)\n    if n == 0:\n        break\n    binary = bin(n)[2:]\n    out.append(f\"The parity of {binary} is {binary.count('1')} (mod 2).\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <iostream>\n#include <string>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    long long n;\n    while (cin >> n && n != 0) {\n        string binary;\n        int ones = 0;\n        for (long long t = n; t > 0; t /= 2) {\n            binary += char('0' + t % 2);\n            ones += t % 2;\n        }\n        reverse(binary.begin(), binary.end());\n        cout << \"The parity of \" << binary << \" is \" << ones << \" (mod 2).\\n\";\n    }\n}\n",
+    "verified": {
+      "python": "d53f3a2a2461dcc9c9aebd09242094f3a1478152465004990ab5e3b2867f0ad7",
+      "cpp": "78d04221f2b233acac223e958e3ed7f7c662bd7d1fb5365ab071a152e32899f3"
+    }
+  },
+  "11000": {
+    "hints": [
+      "Keep two numbers per year: how many females and how many males are alive. Write down how each of them is produced from last year's numbers.",
+      "Next year's males = this year's females + this year's males (every bee has one son). Next year's females = this year's males (only males have daughters) + 1 for the immortal female."
+    ],
+    "explanation": "Start with year 0: one female, no males. Each year, every female and every male has one son, so `males = females + males`; every male has one daughter and the immortal female stays, so `females = old males + 1`. Repeat `N` times and print `males` and `males + females`. The numbers grow like Fibonacci numbers, so use 64 bit integers.",
+    "python": "import sys\n\nout = []\nfor token in sys.stdin.read().split():\n    n = int(token)\n    if n < 0:\n        break\n    females, males = 1, 0\n    for _ in range(n):\n        females, males = males + 1, females + males\n    out.append(f\"{males} {males + females}\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    long long n;\n    while (scanf(\"%lld\", &n) == 1 && n >= 0) {\n        long long females = 1, males = 0;\n        for (long long year = 0; year < n; year++) {\n            long long newFemales = males + 1;\n            males = females + males;\n            females = newFemales;\n        }\n        printf(\"%lld %lld\\n\", males, males + females);\n    }\n}\n",
+    "verified": {
+      "python": "4bc4256b26b451bd94851c71ee6ce28cbcc2d80732e171383197fa2a9b2e0a55",
+      "cpp": "90ef7ab52b09ef66af8ed3fce775d48154b8086ea4c6d05e2bbffde0b098744c"
+    }
+  },
+  "11063": {
+    "hints": [
+      "There are only about 5000 pairs (i ≤ j) for N = 100. Put every sum into a set and watch for a repeat. But first, check the conditions in the Notes."
+    ],
+    "explanation": "First check that the first number is at least 1 and that the sequence is strictly increasing; if not, it is not a B2-Sequence. Then compute every sum `b[i] + b[j]` with `i ≤ j` (including an element with itself) and check that no sum appears twice, using a set or a boolean array of size 20001. Print an empty line after every answer.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\npos = 0\ncase = 0\nout = []\nwhile pos < len(data):\n    n = int(data[pos])\n    b = list(map(int, data[pos + 1:pos + 1 + n]))\n    pos += 1 + n\n    case += 1\n    ok = b[0] >= 1 and all(b[i] < b[i + 1] for i in range(n - 1))\n    if ok:\n        sums = set()\n        for i in range(n):\n            for j in range(i, n):\n                s = b[i] + b[j]\n                if s in sums:\n                    ok = False\n                    break\n                sums.add(s)\n            if not ok:\n                break\n    verdict = \"It is a B2-Sequence.\" if ok else \"It is not a B2-Sequence.\"\n    out.append(f\"Case #{case}: {verdict}\\n\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n#include <cstring>\n\nint main() {\n    int n, caseNo = 0;\n    while (scanf(\"%d\", &n) == 1) {\n        int b[105];\n        for (int i = 0; i < n; i++) scanf(\"%d\", &b[i]);\n        bool ok = b[0] >= 1;\n        for (int i = 0; i + 1 < n; i++) if (b[i] >= b[i + 1]) ok = false;\n        static bool used[20005];\n        memset(used, 0, sizeof used);\n        for (int i = 0; i < n && ok; i++)\n            for (int j = i; j < n && ok; j++) {\n                int s = b[i] + b[j];\n                if (used[s]) ok = false;\n                used[s] = true;\n            }\n        printf(\"Case #%d: It is %sa B2-Sequence.\\n\\n\", ++caseNo, ok ? \"\" : \"not \");\n    }\n}\n",
+    "verified": {
+      "python": "057eb979e6c9d7f5b0b505bfeb368255237a9fe00ad7f4b1c1b3327c484ce530",
+      "cpp": "3239ff5d56b0282018b4bfcb15d94dfe4194d61dcc12c0c434fcbccec7dc67f1"
+    }
+  },
+  "11192": {
+    "hints": [],
+    "explanation": "Each group has length `len(s) / G`. Cut the string into consecutive pieces of that length, reverse every piece and join them back together.",
+    "python": "import sys\n\nout = []\nfor line in sys.stdin.read().split(\"\\n\"):\n    parts = line.split()\n    if not parts:\n        continue\n    if parts[0] == \"0\":\n        break\n    groups, s = int(parts[0]), parts[1]\n    size = len(s) // groups\n    out.append(\"\".join(s[i:i + size][::-1] for i in range(0, len(s), size)))\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <iostream>\n#include <string>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int groups;\n    string s;\n    while (cin >> groups && groups != 0 && cin >> s) {\n        int size = s.size() / groups;\n        for (size_t i = 0; i < s.size(); i += size) reverse(s.begin() + i, s.begin() + min(s.size(), i + size));\n        cout << s << \"\\n\";\n    }\n}\n",
+    "verified": {
+      "python": "3c4cdbe8df201968b6cb7df10377e0194bd6dd9236514a9b7d989bedca591e2c",
+      "cpp": "79df9881af116bfcd3fc21614bcddb29d0d43d8a873fffdef5f2e9ace5e7d21b"
+    }
+  },
+  "11219": {
+    "hints": [
+      "Start with the difference of the years. When is that one too many? Compare the (month, day) of the two dates."
+    ],
+    "explanation": "If the birth date is later than the current date (compare as `(year, month, day)` tuples), print `Invalid birth date`. Otherwise the age is `current year - birth year`, minus 1 if the current `(month, day)` is before the birth `(month, day)` because the birthday hasn't come yet this year. If the age is above 130, print `Check birth date`. Each case is preceded by an empty line, so read the input as whitespace separated tokens.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\ncases = int(data[0])\nout = []\nfor case in range(1, cases + 1):\n    cd, cm, cy = map(int, data[2 * case - 1].split(\"/\"))\n    bd, bm, by = map(int, data[2 * case].split(\"/\"))\n    if (by, bm, bd) > (cy, cm, cd):\n        answer = \"Invalid birth date\"\n    else:\n        age = cy - by - (1 if (cm, cd) < (bm, bd) else 0)\n        answer = \"Check birth date\" if age > 130 else str(age)\n    out.append(f\"Case #{case}: {answer}\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    int cases;\n    scanf(\"%d\", &cases);\n    for (int c = 1; c <= cases; c++) {\n        int cd, cm, cy, bd, bm, by;\n        scanf(\" %d/%d/%d %d/%d/%d\", &cd, &cm, &cy, &bd, &bm, &by);\n        long current = cy * 10000L + cm * 100 + cd, birth = by * 10000L + bm * 100 + bd;\n        printf(\"Case #%d: \", c);\n        if (birth > current) { printf(\"Invalid birth date\\n\"); continue; }\n        int age = cy - by - ((cm * 100 + cd < bm * 100 + bd) ? 1 : 0);\n        if (age > 130) printf(\"Check birth date\\n\");\n        else printf(\"%d\\n\", age);\n    }\n}\n",
+    "verified": {
+      "python": "8b32982b55b03efccff0623db2c0cb4e00db92811134d64d9bc23f1ed4e3933f",
+      "cpp": "e6cc194360ffc31d1ec1fafbbf994df8122b2425c61558df6c8d3b843569fb65"
+    }
+  },
+  "11332": {
+    "hints": [],
+    "explanation": "Sum the digits of `n`, and keep doing it while the result has more than one digit. Even for the largest `n` this takes only two or three rounds.",
+    "python": "import sys\n\nout = []\nfor token in sys.stdin.read().split():\n    if token == \"0\":\n        break\n    n = token\n    while len(n) > 1:\n        n = str(sum(map(int, n)))\n    out.append(n)\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    long long n;\n    while (scanf(\"%lld\", &n) == 1 && n != 0) {\n        while (n >= 10) {\n            long long sum = 0;\n            for (; n > 0; n /= 10) sum += n % 10;\n            n = sum;\n        }\n        printf(\"%lld\\n\", n);\n    }\n}\n",
+    "verified": {
+      "python": "272c591b43cef946cb928d137d096bbbb38ae10866fe56389995956e26ffacbc",
+      "cpp": "f957699ecc1f80ab3674ec93ce7357ccaca367829db86cd9000604a0ea3f05cd"
+    }
+  },
+  "11349": {
+    "hints": [
+      "Two separate conditions must both hold. Check the Notes carefully: the values don't fit in 32 bits, and a negative element alone already makes the answer Non-symmetric."
+    ],
+    "explanation": "Read the matrix with 64 bit integers (the line `N = n` has the size as its third token). The matrix is symmetric only if no element is negative and `M[i][j] = M[n-1-i][n-1-j]` for every cell, which means comparing the flattened matrix with its own reversal.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\ntests = int(data[0])\npos = 1\nout = []\nfor t in range(1, tests + 1):\n    n = int(data[pos + 2])\n    pos += 3\n    cells = list(map(int, data[pos:pos + n * n]))\n    pos += n * n\n    ok = all(x >= 0 for x in cells) and cells == cells[::-1]\n    out.append(f\"Test #{t}: {'Symmetric' if ok else 'Non-symmetric'}.\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int tests;\n    scanf(\"%d\", &tests);\n    for (int t = 1; t <= tests; t++) {\n        int n;\n        scanf(\" N = %d\", &n);\n        vector<long long> cells(n * n);\n        bool ok = true;\n        for (auto &x : cells) {\n            scanf(\"%lld\", &x);\n            if (x < 0) ok = false;\n        }\n        for (int i = 0; i < n * n && ok; i++)\n            if (cells[i] != cells[n * n - 1 - i]) ok = false;\n        printf(\"Test #%d: %s.\\n\", t, ok ? \"Symmetric\" : \"Non-symmetric\");\n    }\n}\n",
+    "verified": {
+      "python": "d6d928e18e0c81c7434d5e026d9ac652bf60f184b853c6aa6157bc88a05e9bd2",
+      "cpp": "88e2dd13a828768fcb2683f7f29ca48abea9683337952eca78bd870752bbb9d7"
+    }
+  },
+  "11364": {
+    "hints": [
+      "Wherever he parks between the leftmost and the rightmost store, he has to walk from one end of the street segment to the other and back."
+    ],
+    "explanation": "Any round trip that visits every store must cover the segment from the smallest position to the largest one twice, and parking anywhere inside that segment achieves exactly that. So the answer is `2 · (max - min)`.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\ncases = int(data[0])\npos = 1\nout = []\nfor _ in range(cases):\n    n = int(data[pos])\n    stores = list(map(int, data[pos + 1:pos + 1 + n]))\n    pos += 1 + n\n    out.append(str(2 * (max(stores) - min(stores))))\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int cases;\n    scanf(\"%d\", &cases);\n    while (cases--) {\n        int n, low = 1000, high = -1;\n        scanf(\"%d\", &n);\n        for (int i = 0; i < n; i++) {\n            int x;\n            scanf(\"%d\", &x);\n            low = min(low, x);\n            high = max(high, x);\n        }\n        printf(\"%d\\n\", 2 * (high - low));\n    }\n}\n",
+    "verified": {
+      "python": "e6adb63e0647cd8ee80c360407e99dde651ea7570b90624ef5959bf99840cce8",
+      "cpp": "ad6559188d87e7b6097669f444179969ac03f67654b2687ee66123b780e62a75"
+    }
+  },
+  "11417": {
+    "hints": [],
+    "explanation": "`N` is at most 500, so add up `gcd(i, j)` for every pair `i < j` directly with the Euclidean algorithm. To answer up to 100 queries fast, compute the answer for every `N` up to 500 once, building each from the previous one: `G(N) = G(N-1) + gcd(1, N) + ... + gcd(N-1, N)`.",
+    "python": "import sys\nfrom math import gcd\n\nanswer = [0] * 501\nfor n in range(2, 501):\n    answer[n] = answer[n - 1] + sum(gcd(i, n) for i in range(1, n))\n\nout = []\nfor token in sys.stdin.read().split():\n    n = int(token)\n    if n == 0:\n        break\n    out.append(str(answer[n]))\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint gcd(int a, int b) { return b ? gcd(b, a % b) : a; }\n\nint main() {\n    static long long answer[501];\n    for (int n = 2; n <= 500; n++) {\n        answer[n] = answer[n - 1];\n        for (int i = 1; i < n; i++) answer[n] += gcd(i, n);\n    }\n    int n;\n    while (scanf(\"%d\", &n) == 1 && n != 0) printf(\"%lld\\n\", answer[n]);\n}\n",
+    "verified": {
+      "python": "b5318c0edad3fee2700ec1d3117fa9960756a07172cab20b1cc7ae6b61829e5e",
+      "cpp": "3b96ae307b861d34d0cef1ccbc3d19ed04fe8fa081c3bd26d3ae489bb725484a"
+    }
+  },
+  "11455": {
+    "hints": [
+      "Sort the four sides first. Squares and rectangles are then easy to spot. For a general quadrangle, think of the triangle inequality: when can four sticks close up into a shape with positive area?"
+    ],
+    "explanation": "Sort the sides `a ≤ b ≤ c ≤ d`. All four equal is a `square`; `a = b` and `c = d` is a `rectangle`. Otherwise four sides form a quadrangle with positive area exactly when the longest side is shorter than the sum of the other three (`d < a + b + c`), else it is `banana`. Use 64 bit integers for the sum.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\ncases = int(data[0])\nout = []\nfor k in range(cases):\n    a, b, c, d = sorted(map(int, data[1 + 4 * k:5 + 4 * k]))\n    if a == d:\n        out.append(\"square\")\n    elif a == b and c == d:\n        out.append(\"rectangle\")\n    elif d < a + b + c:\n        out.append(\"quadrangle\")\n    else:\n        out.append(\"banana\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n#include <algorithm>\nusing namespace std;\n\nint main() {\n    int cases;\n    scanf(\"%d\", &cases);\n    while (cases--) {\n        long long s[4];\n        for (auto &x : s) scanf(\"%lld\", &x);\n        sort(s, s + 4);\n        if (s[0] == s[3]) printf(\"square\\n\");\n        else if (s[0] == s[1] && s[2] == s[3]) printf(\"rectangle\\n\");\n        else if (s[3] < s[0] + s[1] + s[2]) printf(\"quadrangle\\n\");\n        else printf(\"banana\\n\");\n    }\n}\n",
+    "verified": {
+      "python": "11265e855793a0c1af5de083c8d46f529dd6469beb0a2690ca8a8438250f9621",
+      "cpp": "4ad45b394401f5dfe1a541cb00c09c88a0b64f4caeeb2dd817af5ca2504aa13e"
+    }
+  },
+  "11461": {
+    "hints": [
+      "How many perfect squares are there between 1 and b? It is just the integer part of the square root of b."
+    ],
+    "explanation": "The number of squares in `[1, b]` is `⌊√b⌋`. So the count in `[a, b]` is `⌊√b⌋ - ⌊√(a - 1)⌋`. Use an exact integer square root (or adjust the floating point result) to avoid rounding errors.",
+    "python": "import sys\nfrom math import isqrt\n\ndata = sys.stdin.read().split()\nout = []\nfor k in range(0, len(data) - 1, 2):\n    a, b = int(data[k]), int(data[k + 1])\n    if a == 0 and b == 0:\n        break\n    out.append(str(isqrt(b) - isqrt(a - 1)))\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n#include <cmath>\n\nlong long isqrtOf(long long n) {\n    long long r = (long long)sqrt((double)n);\n    while (r * r > n) r--;\n    while ((r + 1) * (r + 1) <= n) r++;\n    return r;\n}\n\nint main() {\n    long long a, b;\n    while (scanf(\"%lld %lld\", &a, &b) == 2 && (a != 0 || b != 0))\n        printf(\"%lld\\n\", isqrtOf(b) - isqrtOf(a - 1));\n}\n",
+    "verified": {
+      "python": "6960cb6e27963e9d0bdcd4e295947486a64a2ba16152b41a4f33a6c278b38dfb",
+      "cpp": "bfb007be23df0550b2d4e412eaebf12c383f284861c637379fda68fea2b84d26"
+    }
+  },
+  "11498": {
+    "hints": [],
+    "explanation": "Compare each house with the division point. If `X = N` or `Y = M`, the house is on a border: `divisa`. Otherwise the first letter is `N` when `Y > M` and `S` otherwise, and the second is `E` when `X > N` and `O` otherwise.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\npos = 0\nout = []\nwhile pos < len(data):\n    k = int(data[pos])\n    if k == 0:\n        break\n    n, m = int(data[pos + 1]), int(data[pos + 2])\n    pos += 3\n    for _ in range(k):\n        x, y = int(data[pos]), int(data[pos + 1])\n        pos += 2\n        if x == n or y == m:\n            out.append(\"divisa\")\n        else:\n            out.append((\"N\" if y > m else \"S\") + (\"E\" if x > n else \"O\"))\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    int k;\n    while (scanf(\"%d\", &k) == 1 && k != 0) {\n        int n, m;\n        scanf(\"%d %d\", &n, &m);\n        while (k--) {\n            int x, y;\n            scanf(\"%d %d\", &x, &y);\n            if (x == n || y == m) printf(\"divisa\\n\");\n            else printf(\"%c%c\\n\", y > m ? 'N' : 'S', x > n ? 'E' : 'O');\n        }\n    }\n}\n",
+    "verified": {
+      "python": "e62536a757086241fd7c2ecb95956b84098672514613732f18fe92a319024319",
+      "cpp": "f084a8ca8a3d719880b326a66004db0fa2bd41ac3d1140d392a63cb94ed95948"
+    }
+  },
+  "11541": {
+    "hints": [],
+    "explanation": "Scan the string: when you see a letter, read all the digits that follow it to get the count (it can have several digits, and it can even be 0), then append the letter that many times. Print `Case k: ` and the result.",
+    "python": "import re\nimport sys\n\ndata = sys.stdin.read().split()\nout = []\nfor case, line in enumerate(data[1:1 + int(data[0])], start=1):\n    decoded = \"\".join(letter * int(count) for letter, count in re.findall(r\"([A-Z])(\\d+)\", line))\n    out.append(f\"Case {case}: {decoded}\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <iostream>\n#include <string>\n#include <cctype>\nusing namespace std;\n\nint main() {\n    int cases;\n    cin >> cases;\n    for (int c = 1; c <= cases; c++) {\n        string line, decoded;\n        cin >> line;\n        for (size_t i = 0; i < line.size();) {\n            char letter = line[i++];\n            int count = 0;\n            while (i < line.size() && isdigit((unsigned char)line[i])) count = count * 10 + (line[i++] - '0');\n            decoded += string(count, letter);\n        }\n        cout << \"Case \" << c << \": \" << decoded << \"\\n\";\n    }\n}\n",
+    "verified": {
+      "python": "9852f2f178833a7a9a0ff46679e0e65d7d91c53e16d7dba2ede30dff1c49448c",
+      "cpp": "e91d2fe40ca60fca430fbf95b4a43f4a6c26aa819ed97936df8efc4bf152b7a2"
+    }
+  },
+  "11636": {
+    "hints": [
+      "Being greedy is optimal: copying everything every time doubles the program. After k pastes you can have up to 2^k lines, and any smaller count too."
+    ],
+    "explanation": "Each paste at most doubles the number of lines, and since you can copy any subset you can also reach any count in between. So the answer is the smallest `k` with `2^k ≥ N`. Start from 1 line and double until you reach `N`, counting the steps.",
+    "python": "import sys\n\nout = []\nfor case, token in enumerate(sys.stdin.read().split(), start=1):\n    n = int(token)\n    if n < 0:\n        break\n    lines, pastes = 1, 0\n    while lines < n:\n        lines *= 2\n        pastes += 1\n    out.append(f\"Case {case}: {pastes}\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    int n, caseNo = 0;\n    while (scanf(\"%d\", &n) == 1 && n >= 0) {\n        int lines = 1, pastes = 0;\n        while (lines < n) {\n            lines *= 2;\n            pastes++;\n        }\n        printf(\"Case %d: %d\\n\", ++caseNo, pastes);\n    }\n}\n",
+    "verified": {
+      "python": "11ffd925ca2270a8beda11891be5efb546e3101a093cb8f604cee40bdc888191",
+      "cpp": "a56d373a7aa762278ddeab2c1385304470b8b403021ee6df55ed4711a01414c1"
+    }
+  },
+  "11677": {
+    "hints": [
+      "Turn both times into minutes since midnight. If the alarm comes earlier, it rings tomorrow, so add a full day of minutes."
+    ],
+    "explanation": "Convert both times to minutes since midnight (`60·H + M`). The answer is `alarm - now`, and if that is negative, add 1440 (the minutes in a day) because the alarm rings the next day. Taking `(alarm - now) mod 1440` does both at once.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\nout = []\nfor k in range(0, len(data) - 3, 4):\n    h1, m1, h2, m2 = map(int, data[k:k + 4])\n    if h1 == m1 == h2 == m2 == 0:\n        break\n    out.append(str((60 * h2 + m2 - 60 * h1 - m1) % 1440))\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    int h1, m1, h2, m2;\n    while (scanf(\"%d %d %d %d\", &h1, &m1, &h2, &m2) == 4 && (h1 || m1 || h2 || m2)) {\n        int diff = (60 * h2 + m2) - (60 * h1 + m1);\n        printf(\"%d\\n\", ((diff % 1440) + 1440) % 1440);\n    }\n}\n",
+    "verified": {
+      "python": "65a7e1123b2f3fe0045dce620ee4832dec3ffdca5266e8275018b36dc2c12096",
+      "cpp": "78f822956a496a53f975b248c3dbeb6cd11d9016b36a4aa483094bbaae9f06b7"
+    }
+  },
+  "11689": {
+    "hints": [
+      "Simulate it with one number: how many empty bottles Tim holds. Don't forget that every soda he drinks becomes a new empty bottle."
+    ],
+    "explanation": "Start with `e + f` empty bottles. While there are at least `c`, exchange as many groups as possible: he gets `empty / c` sodas, adds them to the answer, and afterwards holds `empty mod c` old bottles plus the new empty ones from the sodas he just drank.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\nout = []\nfor k in range(int(data[0])):\n    e, f, c = map(int, data[1 + 3 * k:4 + 3 * k])\n    empty, drunk = e + f, 0\n    while empty >= c:\n        sodas = empty // c\n        drunk += sodas\n        empty = empty % c + sodas\n    out.append(str(drunk))\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    int cases;\n    scanf(\"%d\", &cases);\n    while (cases--) {\n        int e, f, c;\n        scanf(\"%d %d %d\", &e, &f, &c);\n        int empty = e + f, drunk = 0;\n        while (empty >= c) {\n            int sodas = empty / c;\n            drunk += sodas;\n            empty = empty % c + sodas;\n        }\n        printf(\"%d\\n\", drunk);\n    }\n}\n",
+    "verified": {
+      "python": "8cebb2476c39494e85a563adb5f79126b68f019b90ffeb44bb37901546b7273f",
+      "cpp": "3181ab346e2bdeeeefbfe211efac1edf62ff5795b2250641772395a5a5dd3c55"
+    }
+  },
+  "11728": {
+    "hints": [
+      "The sum of factors of n is at least n + 1 (for n > 1), so only numbers up to 1000 can matter. Compute the sum of factors of all of them once."
+    ],
+    "explanation": "Any `n` has sum of factors at least `n`, so with `S ≤ 1000` only `n ≤ 1000` can be an answer. Compute the divisor sum of every `n` from 1 to 1000 once, and for each value `S` remember the largest `n` that produces it (just overwrite as `n` grows). Each query is then a lookup, with `-1` when nothing produces `S`.",
+    "python": "import sys\n\nbest = {}\nfor n in range(1, 1001):\n    best[sum(d for d in range(1, n + 1) if n % d == 0)] = n\n\nout = []\nfor case, token in enumerate(sys.stdin.read().split(), start=1):\n    s = int(token)\n    if s == 0:\n        break\n    out.append(f\"Case {case}: {best.get(s, -1)}\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    static int best[100000];\n    for (int s = 0; s < 100000; s++) best[s] = -1;\n    for (int n = 1; n <= 1000; n++) {\n        int sum = 0;\n        for (int d = 1; d <= n; d++) if (n % d == 0) sum += d;\n        best[sum] = n;\n    }\n    int s, caseNo = 0;\n    while (scanf(\"%d\", &s) == 1 && s != 0) printf(\"Case %d: %d\\n\", ++caseNo, best[s]);\n}\n",
+    "verified": {
+      "python": "42e3d77fd7737c8f571a577f97cef56b375e15eeb02352a4c2b74e676aeca860",
+      "cpp": "2ec707c2a9b65da1deee57c6a19ed899a3fa51adb02dda90ed11cb5dde0cf193"
+    }
+  },
+  "11743": {
+    "hints": [],
+    "explanation": "Join the four groups into one 16 digit string. Going from the right, digits in even positions from the end (the 2nd last, 4th last, ...) are doubled, and the digits of the doubled value are added (for example 7 → 14 → 1 + 4 = 5); the other digits are added as they are. The card is `Valid` if the total is divisible by 10.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\nout = []\nfor k in range(int(data[0])):\n    digits = \"\".join(data[1 + 4 * k:5 + 4 * k])\n    total = 0\n    for i, ch in enumerate(reversed(digits)):\n        d = int(ch)\n        if i % 2 == 1:\n            d *= 2\n            d = d // 10 + d % 10\n        total += d\n    out.append(\"Valid\" if total % 10 == 0 else \"Invalid\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    int cases;\n    cin >> cases;\n    while (cases--) {\n        string digits, group;\n        for (int g = 0; g < 4; g++) { cin >> group; digits += group; }\n        int total = 0;\n        for (int i = 0; i < (int)digits.size(); i++) {\n            int d = digits[digits.size() - 1 - i] - '0';\n            if (i % 2 == 1) {\n                d *= 2;\n                d = d / 10 + d % 10;\n            }\n            total += d;\n        }\n        cout << (total % 10 == 0 ? \"Valid\" : \"Invalid\") << \"\\n\";\n    }\n}\n",
+    "verified": {
+      "python": "83190f652fa06180d2355b5e4be117904695dacd898b502c19508296ff0035cb",
+      "cpp": "73cfb73a796396699790cddd28fb9fee8ea2916a379470b3c54face8f60f7d76"
+    }
+  },
+  "11764": {
+    "hints": [],
+    "explanation": "Compare every wall with the next one. If the next wall is taller, count a high jump; if it is shorter, count a low jump; equal heights count as neither. Print `Case k: h l`.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\ncases = int(data[0])\npos = 1\nout = []\nfor case in range(1, cases + 1):\n    n = int(data[pos])\n    walls = list(map(int, data[pos + 1:pos + 1 + n]))\n    pos += 1 + n\n    high = sum(1 for a, b in zip(walls, walls[1:]) if b > a)\n    low = sum(1 for a, b in zip(walls, walls[1:]) if b < a)\n    out.append(f\"Case {case}: {high} {low}\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    int cases;\n    scanf(\"%d\", &cases);\n    for (int c = 1; c <= cases; c++) {\n        int n, previous, high = 0, low = 0;\n        scanf(\"%d %d\", &n, &previous);\n        for (int i = 1; i < n; i++) {\n            int wall;\n            scanf(\"%d\", &wall);\n            if (wall > previous) high++;\n            else if (wall < previous) low++;\n            previous = wall;\n        }\n        printf(\"Case %d: %d %d\\n\", c, high, low);\n    }\n}\n",
+    "verified": {
+      "python": "5c6556b79ba390005098d013c19eef5159f1b799fd45bb29e8bd437998dde2a6",
+      "cpp": "31bca69e212d7ce85af85689e06067aa5997d703ad82ffc14afb08e76d1482cc"
+    }
+  },
+  "11824": {
+    "hints": [
+      "The exponent grows every year, so the order of buying matters a lot. Which land would you rather have raised to a big power: an expensive one or a cheap one?",
+      "Buy the most expensive land first and the cheapest last, so the big exponents land on the small numbers. Sort the costs in decreasing order."
+    ],
+    "explanation": "Later years have bigger exponents, so the cheapest plan puts the biggest costs on the smallest exponents: sort the costs in decreasing order and buy them in that order. Add up `2 · L^t` for `t = 1, 2, ...` and stop as soon as the total passes 5000000, printing `Too expensive`. Stopping early also avoids overflow in C++, where `L^t` can get huge.",
+    "python": "import sys\n\ndata = list(map(int, sys.stdin.read().split()))\ncases = data[0]\npos = 1\nout = []\nfor _ in range(cases):\n    costs = []\n    while data[pos] != 0:\n        costs.append(data[pos])\n        pos += 1\n    pos += 1\n    costs.sort(reverse=True)\n    total = sum(2 * cost ** year for year, cost in enumerate(costs, start=1))\n    out.append(str(total) if total <= 5000000 else \"Too expensive\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n#include <vector>\n#include <algorithm>\n#include <functional>\nusing namespace std;\n\nint main() {\n    int cases;\n    scanf(\"%d\", &cases);\n    while (cases--) {\n        vector<long long> costs;\n        long long cost;\n        while (scanf(\"%lld\", &cost) == 1 && cost != 0) costs.push_back(cost);\n        sort(costs.begin(), costs.end(), greater<long long>());\n        const long long LIMIT = 5000000;\n        long long total = 0;\n        bool tooExpensive = false;\n        for (size_t t = 0; t < costs.size() && !tooExpensive; t++) {\n            long long power = 1;\n            for (size_t k = 0; k <= t; k++) {\n                power *= costs[t];\n                if (power > LIMIT) { tooExpensive = true; break; }\n            }\n            total += 2 * power;\n            if (total > LIMIT) tooExpensive = true;\n        }\n        if (tooExpensive) printf(\"Too expensive\\n\");\n        else printf(\"%lld\\n\", total);\n    }\n}\n",
+    "verified": {
+      "python": "44c8780c05582ad8d60fd7a59764b889fcf21ccfc997db94f4f05d93309b24f0",
+      "cpp": "a9c098a756016e880e1d13b92b9fe28b919a317f5f99f77b970bd050e0e72da9"
+    }
+  },
+  "11934": {
+    "hints": [],
+    "explanation": "`L` is below 1000, so just evaluate `f(x) = ax² + bx + c` for every `x` from 0 to `L` and count the values with `f(x) mod d = 0`. Use 64 bit integers, since `f(x)` can be around 10⁹ and negative; checking `% d == 0` works for negative numbers too.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\nout = []\nfor k in range(0, len(data) - 4, 5):\n    a, b, c, d, limit = map(int, data[k:k + 5])\n    if a == b == c == d == limit == 0:\n        break\n    out.append(str(sum(1 for x in range(limit + 1) if (a * x * x + b * x + c) % d == 0)))\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    long long a, b, c, d, limit;\n    while (scanf(\"%lld %lld %lld %lld %lld\", &a, &b, &c, &d, &limit) == 5 && (a || b || c || d || limit)) {\n        int count = 0;\n        for (long long x = 0; x <= limit; x++)\n            if ((a * x * x + b * x + c) % d == 0) count++;\n        printf(\"%d\\n\", count);\n    }\n}\n",
+    "verified": {
+      "python": "414f0670dd94cfb2529423038fad2f0a0492a92f10b4b860bbc3e5f3a302489d",
+      "cpp": "af930e9cc2e5cea2b9d663686a71a0acf37ab74ec0a7d96d9bda3712852424d1"
+    }
+  },
+  "11942": {
+    "hints": [],
+    "explanation": "A group is ordered if every beard is longer than the previous one, or every beard is shorter than the previous one. Check both directions over the ten numbers. Print `Lumberjacks:` once before all answers.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\nout = [\"Lumberjacks:\"]\nfor k in range(int(data[0])):\n    beards = list(map(int, data[1 + 10 * k:11 + 10 * k]))\n    pairs = list(zip(beards, beards[1:]))\n    ordered = all(a < b for a, b in pairs) or all(a > b for a, b in pairs)\n    out.append(\"Ordered\" if ordered else \"Unordered\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    int groups;\n    scanf(\"%d\", &groups);\n    printf(\"Lumberjacks:\\n\");\n    while (groups--) {\n        int beards[10];\n        for (int i = 0; i < 10; i++) scanf(\"%d\", &beards[i]);\n        bool up = true, down = true;\n        for (int i = 0; i + 1 < 10; i++) {\n            if (beards[i] >= beards[i + 1]) up = false;\n            if (beards[i] <= beards[i + 1]) down = false;\n        }\n        printf(up || down ? \"Ordered\\n\" : \"Unordered\\n\");\n    }\n}\n",
+    "verified": {
+      "python": "9cab922394381ced7caf8c2d1bb259b956b7ebbcc24bbb6e68dc5a82512f5995",
+      "cpp": "dfcecf78df398d927a64029dd4f1539cf309fd66e11e62b324ca821fd7d09aeb"
+    }
+  },
+  "12019": {
+    "hints": [
+      "Count how many days the date is after (or before) 4 April, using the lengths of the months in 2011. Then the remainder modulo 7 tells you how far from Monday it is."
+    ],
+    "explanation": "Turn each date into its day number in the year using the month lengths of 2011 (February has 28 days). 4 April is day 94 and a Monday, so the weekday of day `n` is `(n - 94) mod 7` positions after Monday in the list `Monday, Tuesday, ..., Sunday`. A modulo that is never negative handles dates before April.",
+    "python": "import sys\n\nDAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]\nNAMES = [\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\", \"Sunday\"]\n\ndef day_of_year(month, day):\n    return sum(DAYS_IN_MONTH[:month - 1]) + day\n\ndata = sys.stdin.read().split()\nout = []\nfor k in range(int(data[0])):\n    month, day = int(data[1 + 2 * k]), int(data[2 + 2 * k])\n    out.append(NAMES[(day_of_year(month, day) - day_of_year(4, 4)) % 7])\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    const int daysInMonth[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};\n    const char *names[7] = {\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"Saturday\", \"Sunday\"};\n    auto dayOfYear = [&](int month, int day) {\n        int n = day;\n        for (int m = 0; m < month - 1; m++) n += daysInMonth[m];\n        return n;\n    };\n    int cases;\n    scanf(\"%d\", &cases);\n    while (cases--) {\n        int month, day;\n        scanf(\"%d %d\", &month, &day);\n        int offset = ((dayOfYear(month, day) - dayOfYear(4, 4)) % 7 + 7) % 7;\n        printf(\"%s\\n\", names[offset]);\n    }\n}\n",
+    "verified": {
+      "python": "a2e81fc386c858cd0c3002ae2062b36c8f223329ca0ecbc1f2bb654bd916c25f",
+      "cpp": "edf69b3cc8e2346c03a29e4bc01ac328a280f6fce5d8e77dc6bd1ca2d70300a5"
+    }
+  },
+  "12250": {
+    "hints": [],
+    "explanation": "Keep a table from greeting to language: `HELLO` → `ENGLISH`, `HOLA` → `SPANISH`, `HALLO` → `GERMAN`, `BONJOUR` → `FRENCH`, `CIAO` → `ITALIAN`, `ZDRAVSTVUJTE` → `RUSSIAN`. Look up every word until `#`, and print `UNKNOWN` for anything not in the table.",
+    "python": "import sys\n\nLANGUAGE = {\n    \"HELLO\": \"ENGLISH\", \"HOLA\": \"SPANISH\", \"HALLO\": \"GERMAN\",\n    \"BONJOUR\": \"FRENCH\", \"CIAO\": \"ITALIAN\", \"ZDRAVSTVUJTE\": \"RUSSIAN\",\n}\nout = []\nfor case, word in enumerate(sys.stdin.read().split(), start=1):\n    if word == \"#\":\n        break\n    out.append(f\"Case {case}: {LANGUAGE.get(word, 'UNKNOWN')}\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <iostream>\n#include <map>\n#include <string>\nusing namespace std;\n\nint main() {\n    map<string, string> language = {\n        {\"HELLO\", \"ENGLISH\"}, {\"HOLA\", \"SPANISH\"}, {\"HALLO\", \"GERMAN\"},\n        {\"BONJOUR\", \"FRENCH\"}, {\"CIAO\", \"ITALIAN\"}, {\"ZDRAVSTVUJTE\", \"RUSSIAN\"},\n    };\n    string word;\n    int caseNo = 0;\n    while (cin >> word && word != \"#\") {\n        auto it = language.find(word);\n        cout << \"Case \" << ++caseNo << \": \" << (it == language.end() ? \"UNKNOWN\" : it->second) << \"\\n\";\n    }\n}\n",
+    "verified": {
+      "python": "fd7c4e1833efacf741bf6b485bd3fbe7a0b46c508297162fa38269d9559e0e84",
+      "cpp": "64d99827d2753b55f015f4e6d42517f8439aa94763133ccd30e997ed735e2464"
+    }
+  },
+  "12602": {
+    "hints": [],
+    "explanation": "Compute the letter value as a base 26 number: start at 0 and for each letter do `value = value · 26 + (letter - 'A')`. The digit part is an ordinary number. The plate is `nice` if the absolute difference is at most 100.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\nout = []\nfor plate in data[1:1 + int(data[0])]:\n    letters, digits = plate.split(\"-\")\n    value = 0\n    for ch in letters:\n        value = value * 26 + ord(ch) - 65\n    out.append(\"nice\" if abs(value - int(digits)) <= 100 else \"not nice\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n#include <cstdlib>\n\nint main() {\n    int n;\n    scanf(\"%d\", &n);\n    while (n--) {\n        char letters[4];\n        int digits;\n        scanf(\" %3[A-Z]-%d\", letters, &digits);\n        int value = 0;\n        for (int i = 0; i < 3; i++) value = value * 26 + (letters[i] - 'A');\n        printf(abs(value - digits) <= 100 ? \"nice\\n\" : \"not nice\\n\");\n    }\n}\n",
+    "verified": {
+      "python": "67cd1945dab5a2541ed209827e2f8a3610b340fe07463c492535ab83c6f7f412",
+      "cpp": "767c73e96d853c93add653ec043c37ec6e53fdf0897a77f6bb3ec9c1641cd76f"
+    }
+  },
+  "12650": {
+    "hints": [
+      "Keep a true/false mark for every diver from 1 to N. Mark the ones who came back, then walk through the marks."
+    ],
+    "explanation": "Make an array of `N` flags, all false, and set the flag of every returned diver. Then print every number whose flag is still false, each followed by a space. If none are missing, print `*`. The line really does end with a space after the last number.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\npos = 0\nout = []\nwhile pos + 1 < len(data):\n    n, r = int(data[pos]), int(data[pos + 1])\n    returned = [False] * (n + 1)\n    for x in data[pos + 2:pos + 2 + r]:\n        returned[int(x)] = True\n    pos += 2 + r\n    missing = [str(k) for k in range(1, n + 1) if not returned[k]]\n    out.append(\"\".join(m + \" \" for m in missing) if missing else \"*\")\nsys.stdout.write(\"\\n\".join(out) + \"\\n\")\n",
+    "cpp": "#include <cstdio>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n, r;\n    while (scanf(\"%d %d\", &n, &r) == 2) {\n        vector<bool> returned(n + 1, false);\n        for (int i = 0; i < r; i++) {\n            int x;\n            scanf(\"%d\", &x);\n            returned[x] = true;\n        }\n        if (r == n) { printf(\"*\\n\"); continue; }\n        for (int k = 1; k <= n; k++) if (!returned[k]) printf(\"%d \", k);\n        printf(\"\\n\");\n    }\n}\n",
+    "verified": {
+      "python": "b5b19b4b6f6a4701b0b0bfcc13d6e0431e9aa6890345fb3b4a7430ef12e97e07",
+      "cpp": "172a79f21f0ff1cc3bca5b371a0b08402b364f9a11138e410da387eb8d2f96bb"
+    }
+  },
+  "12908": {
+    "hints": [
+      "If the book has n pages, the correct sum is n(n+1)/2, and Anita's sum is that minus one page between 1 and n. So s is a little less than n(n+1)/2.",
+      "Find the smallest n with n(n+1)/2 > s. Then the forgotten page is simply n(n+1)/2 - s."
+    ],
+    "explanation": "Since one page `p` (with `1 ≤ p ≤ n`) is missing, `s = n(n+1)/2 - p`, so `n(n+1)/2` is the first triangular number strictly greater than `s`. Find that `n` by increasing it from 1 (at most about 14142 steps for `s ≤ 10⁸`), or start from `√(2s)`. The forgotten page is `n(n+1)/2 - s`.",
+    "python": "import sys\nfrom math import isqrt\n\nout = []\nfor token in sys.stdin.read().split():\n    s = int(token)\n    if s == 0:\n        break\n    n = max(1, isqrt(2 * s) - 1)\n    while n * (n + 1) // 2 <= s:\n        n += 1\n    out.append(f\"{n * (n + 1) // 2 - s} {n}\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nint main() {\n    long long s;\n    while (scanf(\"%lld\", &s) == 1 && s != 0) {\n        long long n = 1;\n        while (n * (n + 1) / 2 <= s) n++;\n        printf(\"%lld %lld\\n\", n * (n + 1) / 2 - s, n);\n    }\n}\n",
+    "verified": {
+      "python": "ed805ce9f1d8ebfa101ead1c6332261cdc5c7acb7738d13af2e309010cc11e0d",
+      "cpp": "2580803473ba284cc89a25c2ae63cb9684d36058541470eebb83f52a2c17a56a"
+    }
+  },
+  "12959": {
+    "hints": [],
+    "explanation": "The plays come in order 1, 2, ..., J, 1, 2, ..., so play number `k` (from 0) belongs to player `k mod J + 1`. Add up each player's points, then pick the largest total; scanning players from 1 to `J` and replacing the winner whenever a total is greater than or equal to the best makes ties go to the higher number.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\npos = 0\nout = []\nwhile pos + 1 < len(data):\n    j, r = int(data[pos]), int(data[pos + 1])\n    pos += 2\n    if j == 0 and r == 0:\n        break\n    totals = [0] * j\n    for k in range(j * r):\n        totals[k % j] += int(data[pos + k])\n    pos += j * r\n    best = 0\n    for p in range(j):\n        if totals[p] >= totals[best]:\n            best = p\n    out.append(str(best + 1))\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int j, r;\n    while (scanf(\"%d %d\", &j, &r) == 2 && (j != 0 || r != 0)) {\n        vector<int> totals(j, 0);\n        for (int k = 0; k < j * r; k++) {\n            int points;\n            scanf(\"%d\", &points);\n            totals[k % j] += points;\n        }\n        int best = 0;\n        for (int p = 0; p < j; p++) if (totals[p] >= totals[best]) best = p;\n        printf(\"%d\\n\", best + 1);\n    }\n}\n",
+    "verified": {
+      "python": "fc059addc25a97a29660de67ca336ecd0bab5868165a4d179debdb843824f0af",
+      "cpp": "b3103d56589c4adb2187fd02e5d7a62ac8c6139b1ff3a155045c8bef5fff4eb7"
+    }
+  },
+  "13055": {
+    "hints": [
+      "Dreams are nested: the last dream entered is the first one left. Which data structure works exactly like that?"
+    ],
+    "explanation": "Use a stack of names. `Sleep X` pushes `X`, `Kick` pops the top if the stack isn't empty, and `Test` prints the top, or `Not in a dream` if the stack is empty.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\nn = int(data[0])\npos = 1\nstack = []\nout = []\nfor _ in range(n):\n    command = data[pos]\n    pos += 1\n    if command == \"Sleep\":\n        stack.append(data[pos])\n        pos += 1\n    elif command == \"Kick\":\n        if stack:\n            stack.pop()\n    else:\n        out.append(stack[-1] if stack else \"Not in a dream\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    vector<string> stack;\n    while (n--) {\n        string command;\n        cin >> command;\n        if (command == \"Sleep\") {\n            string name;\n            cin >> name;\n            stack.push_back(name);\n        } else if (command == \"Kick\") {\n            if (!stack.empty()) stack.pop_back();\n        } else {\n            cout << (stack.empty() ? \"Not in a dream\" : stack.back()) << \"\\n\";\n        }\n    }\n}\n",
+    "verified": {
+      "python": "d68bfff8f752eefd66c71296cf9e9473f610af33d8084b765f308498026f5cde",
+      "cpp": "2f52841359f7de0d107f1a0680c62d3323439d299ffb5c52688ac32d5e6fb6fd"
+    }
+  },
+  "13171": {
+    "hints": [
+      "Count how many units of each primary the whole image needs: every letter adds 1 to some of magenta, yellow and cyan. Then compare with what is available."
+    ],
+    "explanation": "Go through the image and add up the needed paint: `M`, `R`, `V`, `B` each need one magenta; `Y`, `R`, `G`, `B` one yellow; `C`, `G`, `V`, `B` one cyan; `W` needs nothing. If any color needs more than is available, print `NO`; otherwise print `YES` and the three leftovers.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\ncases = int(data[0])\nout = []\nfor k in range(cases):\n    m, y, c = int(data[1 + 4 * k]), int(data[2 + 4 * k]), int(data[3 + 4 * k])\n    image = data[4 + 4 * k]\n    count = {ch: image.count(ch) for ch in \"MYCRGVB\"}\n    need_m = count[\"M\"] + count[\"R\"] + count[\"V\"] + count[\"B\"]\n    need_y = count[\"Y\"] + count[\"R\"] + count[\"G\"] + count[\"B\"]\n    need_c = count[\"C\"] + count[\"G\"] + count[\"V\"] + count[\"B\"]\n    if need_m <= m and need_y <= y and need_c <= c:\n        out.append(f\"YES {m - need_m} {y - need_y} {c - need_c}\")\n    else:\n        out.append(\"NO\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    int cases;\n    cin >> cases;\n    while (cases--) {\n        long long m, y, c;\n        string image;\n        cin >> m >> y >> c >> image;\n        long long needM = 0, needY = 0, needC = 0;\n        for (char ch : image) {\n            if (ch == 'M' || ch == 'R' || ch == 'V' || ch == 'B') needM++;\n            if (ch == 'Y' || ch == 'R' || ch == 'G' || ch == 'B') needY++;\n            if (ch == 'C' || ch == 'G' || ch == 'V' || ch == 'B') needC++;\n        }\n        if (needM <= m && needY <= y && needC <= c)\n            cout << \"YES \" << m - needM << \" \" << y - needY << \" \" << c - needC << \"\\n\";\n        else\n            cout << \"NO\\n\";\n    }\n}\n",
+    "verified": {
+      "python": "c3e111d54fff0d95ee220f777d1f7e2293f2c15162d9b3151a83535261871b9f",
+      "cpp": "d4f3cc7b512cd99e75b239af4b0d0d11a03c4fe7a1c1ab2b83326cef4dcc3334"
+    }
+  }
+}
