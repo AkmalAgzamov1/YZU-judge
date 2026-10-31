@@ -52,6 +52,8 @@ services:
     volumes:
       - test-data:/data/test_data
       - /var/run/docker.sock:/var/run/docker.sock
+    # On a redeploy Celery finishes the submissions it is judging before it stops.
+    stop_grace_period: 2m
     # Each submission gets one CPU, so two at a time fits a 2 vCPU server.
     command: >
       sh -c "python -m scripts.pull_judge_images &&
