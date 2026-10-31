@@ -17,10 +17,16 @@ NEW="$(git rev-parse origin/main)"
 echo "$(date -u +%FT%TZ) deploying ${OLD:0:7} -> ${NEW:0:7}"
 git merge -q --ff-only origin/main
 
+CHANGED="$(git diff --name-only "$OLD" "$NEW")"
+# Docs alone change nothing that runs, so leave the containers (and running judgments) alone.
+if ! grep -qv '\.md$' <<< "$CHANGED"; then
+    echo "$(date -u +%FT%TZ) only docs changed, nothing to rebuild"
+    exit 0
+fi
+
 COMPOSE="docker compose -f docker-compose.prod.yml"
 $COMPOSE up -d --build --remove-orphans
 
-CHANGED="$(git diff --name-only "$OLD" "$NEW")"
 if grep -q "^backend/scripts/cpe_content.json$" <<< "$CHANGED"; then
     $COMPOSE exec -T api python -m scripts.cpe_content apply
 fi
