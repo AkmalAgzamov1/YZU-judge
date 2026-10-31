@@ -2,6 +2,7 @@ import { Plus } from "@phosphor-icons/react";
 import Reveal from "../../components/Reveal";
 import SectionHeader from "../../components/SectionHeader";
 import { focusRing } from "../../components/ui";
+import { CPE_OFFICIAL_URL } from "../../lib/links";
 
 const faqs = [
   {
@@ -31,6 +32,7 @@ const faqs = [
   {
     q: "Is this the official CPE website?",
     a: "No. YZU Judge is a practice site made at Yuan Ze University. Registration for the real exam happens on the official CPE website, usually announced by your department.",
+    link: { href: CPE_OFFICIAL_URL, label: "Go to the official CPE website" },
   },
   {
     q: "I am not a CS major. Is this still for me?",
@@ -56,7 +58,7 @@ export default function Faq() {
 
         <Reveal className="mt-16 lg:ml-[33.333%]">
           <div className="divide-y divide-white/10 border-y border-white/10">
-            {faqs.map(({ q, a }) => (
+            {faqs.map(({ q, a, link }) => (
               <details key={q} className="group">
                 <summary
                   className={`flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-lg font-semibold text-white transition duration-300 ease-soft hover:text-neutral-300 [&::-webkit-details-marker]:hidden ${focusRing}`}
@@ -68,7 +70,22 @@ export default function Faq() {
                     className="shrink-0 text-neutral-500 transition duration-500 ease-soft group-open:rotate-45"
                   />
                 </summary>
-                <p className="max-w-[680px] pb-6 text-base text-neutral-400">{a}</p>
+                <p className="max-w-[680px] pb-6 text-base text-neutral-400">
+                  {a}
+                  {link && (
+                    <>
+                      {" "}
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={`rounded-sm text-white underline underline-offset-2 hover:text-neutral-300 ${focusRing}`}
+                      >
+                        {link.label}
+                      </a>
+                    </>
+                  )}
+                </p>
               </details>
             ))}
           </div>

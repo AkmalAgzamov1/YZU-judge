@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
+import { CPE_OFFICIAL_URL } from "../lib/links";
 import { focusRing } from "./ui";
 
 const linkClass = `rounded-sm text-sm text-neutral-400 transition duration-300 ease-soft hover:text-white ${focusRing}`;
@@ -36,6 +37,9 @@ export default function SiteFooter() {
             className={linkClass}
           >
             Source on GitHub
+          </a>
+          <a href={CPE_OFFICIAL_URL} target="_blank" rel="noreferrer" className={linkClass}>
+            Official CPE website
           </a>
         </nav>
       </div>
