@@ -1,3 +1,4 @@
+import { ArrowSquareOut } from "@phosphor-icons/react";
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { problemsApi } from "../../api/client";
@@ -139,6 +140,10 @@ function StarChip({ problem, problemId, muted }: { problem: StarProblem; problem
       className={`${chip} border-dashed hover:bg-ink-1`}
     >
       {label}
+      <span className="flex items-center gap-1 self-center font-mono text-xs text-neutral-500">
+        UVa PDF
+        <ArrowSquareOut aria-hidden="true" className="h-3 w-3" />
+      </span>
     </a>
   );
 }
@@ -234,7 +239,8 @@ export default function NextCpe() {
               We can&apos;t know which one comes next, but the past exams show a pattern: a
               problem from the list has never come back within {shortestRepeatYears} years. Below
               is the whole list, grouped by when each problem was last asked. Start from the top.
-              Dashed ones are not on YZU Judge yet and open the UVa statement.
+              Dashed ones are not on YZU Judge, because the CPE never published test data for
+              them, so they open the UVa statement instead.
             </p>
           </div>
 
