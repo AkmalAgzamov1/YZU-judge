@@ -4,6 +4,8 @@ An online judge for practicing the **CPE** (Collegiate Programming Examination),
 
 You get 299 real problems from past CPE exams, a judge that runs your Python or C++ code against real test data, and timed mock exams that feel like the real thing.
 
+**Live at [yzujudge.com](https://yzujudge.com).**
+
 ## Why I built this
 
 At a lot of Taiwanese universities, passing the CPE is a graduation requirement. Depending on your department, you have to solve at least two problems in a single exam, or three across separate exams. Some students only find this out late, keep failing it, and end up staying for a fifth or even sixth year.
@@ -127,7 +129,6 @@ After that, updating is `git pull && docker compose -f docker-compose.prod.yml u
 
 - Java support, since some students take the CPE in Java
 - Our own non-CPE problems, for people who want to warm up first
-- Deploying it so YZU students can actually use it
 
 ## Tech stack
 
