@@ -5,6 +5,7 @@ import tarfile
 import time
 import threading
 import re
+import socket
 
 import docker
 
@@ -213,11 +214,19 @@ def _run_container(image, command, files, input_data, time_limit_ms, memory_limi
         stream = container.attach_socket(
             params={"stdin": 1, "stdout": 0, "stderr": 0, "stream": 1}
         )
+        # On Linux this is a SocketIO wrapper without sendall; on Windows it is the
+        # named pipe itself. Write to the real socket either way.
+        raw_stream = getattr(stream, "_sock", stream)
 
         def send_input():
             try:
-                stream.sendall(b"\n")
-                stream.sendall(input_data.encode())
+                raw_stream.sendall(b"\n")
+                raw_stream.sendall(input_data.encode())
+                # Half close so the program sees end of input on a Unix socket.
+                try:
+                    raw_stream.shutdown(socket.SHUT_WR)
+                except (AttributeError, OSError):
+                    pass
             except Exception:
                 # Submissions that exit without consuming stdin can close the
                 # pipe while the writer is sending. The verdict comes from wait().
@@ -254,10 +263,11 @@ def _run_container(image, command, files, input_data, time_limit_ms, memory_limi
             except docker.errors.APIError:
                 # It may have exited naturally at the deadline.
                 pass
-        try:
-            stream.close()
-        except Exception:
-            pass
+        for handle in (stream, raw_stream):
+            try:
+                handle.close()
+            except Exception:
+                pass
 
         if timed_out:
             # Killing the container should release Docker's wait request. Bound

@@ -1,4 +1,3 @@
-from pathlib import Path
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import func
@@ -15,7 +14,7 @@ from ..topics import normalize_topics
 
 from ..models.testcase import TestCase
 from ..schemas.testcase import TestCaseCreate, TestCaseOut, SampleOut
-from ..storage import save_file, read_file
+from ..storage import save_file, read_file, delete_file
 
 router = APIRouter(prefix = "/problems", tags = ["Problems"])
 
@@ -145,8 +144,8 @@ def delete_problem(problem_id: int, current_user: User = Depends(get_current_adm
         )
 
     for testcase in db.query(TestCase).filter(TestCase.problem_id == problem_id).all():
-        Path(testcase.input_path).unlink(missing_ok = True)
-        Path(testcase.output_path).unlink(missing_ok = True)
+        delete_file(testcase.input_path)
+        delete_file(testcase.output_path)
         db.delete(testcase)
 
     db.delete(problem)

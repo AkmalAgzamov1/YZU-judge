@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session 
 from app.tasks import judge_submission_task
@@ -17,6 +19,28 @@ from ..schemas.submission import SubmissionCreate, SubmissionOut, SubmissionResu
 import logging
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix = "/submissions", tags = ["Submissions"])
+
+# One worker judges everyone's code, so a single user must not be able to fill the queue.
+MAX_WAITING_SUBMISSIONS = 3
+MAX_SUBMISSIONS_PER_MINUTE = 10
+
+
+def check_rate_limit(db: Session, user: User):
+    waiting = db.query(Submission).filter(
+        Submission.user_id == user.id,
+        Submission.status.in_(("pending", "running"))
+    ).count()
+
+    recent = db.query(Submission).filter(
+        Submission.user_id == user.id,
+        Submission.created_at > utc_now() - timedelta(minutes = 1)
+    ).count()
+
+    if waiting >= MAX_WAITING_SUBMISSIONS or recent >= MAX_SUBMISSIONS_PER_MINUTE:
+        raise HTTPException(
+            status_code = 429,
+            detail = "Too many submissions at once. Wait for the verdicts, then try again."
+        )
 
 
 def check_mock_exam_submission(db: Session, submission_data: SubmissionCreate, current_user: User):
@@ -47,6 +71,8 @@ def create_submission(submission_data: SubmissionCreate, current_user: User = De
 
     if submission_data.mock_exam_id is not None:
         check_mock_exam_submission(db, submission_data, current_user)
+
+    check_rate_limit(db, current_user)
 
     submission = Submission(
         user_id = current_user.id,

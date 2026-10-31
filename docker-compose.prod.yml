@@ -1,0 +1,80 @@
+# YZU Judge on one server. Fill in .env next to this file (see .env.production.example), then:
+#   docker compose -f docker-compose.prod.yml up -d --build
+name: yzu-judge
+
+x-backend: &backend
+  build: ./backend
+  restart: unless-stopped
+  environment:
+    DATABASE_URL: postgresql://yzu:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}@db:5432/yzu_judge
+    REDIS_URL: redis://redis:6379/0
+    SECRET_KEY: ${SECRET_KEY:?set SECRET_KEY in .env}
+    TEST_DATA_DIR: /data/test_data
+  volumes:
+    - test-data:/data/test_data
+  depends_on:
+    db:
+      condition: service_healthy
+    redis:
+      condition: service_started
+
+services:
+  db:
+    # Same major version as the development database, so its dump loads as is.
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: yzu
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: yzu_judge
+    volumes:
+      - db-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U yzu -d yzu_judge"]
+      interval: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+
+  api:
+    <<: *backend
+    command: >
+      sh -c "alembic upgrade head &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 2
+             --root-path /api --proxy-headers --forwarded-allow-ips '*'"
+
+  worker:
+    <<: *backend
+    # The worker starts sandbox containers next to itself through the host's Docker.
+    # That socket is root on the host, which is why this server runs nothing else.
+    volumes:
+      - test-data:/data/test_data
+      - /var/run/docker.sock:/var/run/docker.sock
+    # Each submission gets one CPU, so two at a time fits a 2 vCPU server.
+    command: >
+      sh -c "python -m scripts.pull_judge_images &&
+             celery -A app.celery_app worker --concurrency=2 --loglevel=info"
+
+  web:
+    build:
+      context: .
+      dockerfile: deploy/web.Dockerfile
+    restart: unless-stopped
+    environment:
+      SITE_ADDRESS: ${SITE_ADDRESS:-localhost}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - api
+
+volumes:
+  db-data:
+  test-data:
+  caddy-data:
+  caddy-config:

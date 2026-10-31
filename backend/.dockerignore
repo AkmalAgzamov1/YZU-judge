@@ -1,0 +1,9 @@
+venv/
+.venv/
+__pycache__/
+*.pyc
+.env
+test_data/
+import_cache/
+tests/
+test_judge_service.py

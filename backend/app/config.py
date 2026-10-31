@@ -14,6 +14,10 @@ if not DATABASE_URL:
 
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
 
+# Comma separated. In production the site and the API share one origin behind Caddy,
+# so this only matters for the Vite dev server.
+CORS_ORIGINS = [origin.strip() for origin in os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",") if origin.strip()]
+
 JWT_ALGORITHM = "HS256"
 
 # 7 days by default. The frontend swaps tokens for fresh ones while the site is in use,

@@ -1,0 +1,23 @@
+# SITE_ADDRESS is the domain, e.g. yzujudge.com. Caddy gets and renews its HTTPS
+# certificate on its own. "localhost" gives a self-signed one for a local test.
+{$SITE_ADDRESS:localhost} {
+	encode zstd gzip
+
+	handle_path /api/* {
+		reverse_proxy api:8000
+	}
+
+	handle {
+		root * /srv
+		# React Router owns the paths, so unknown ones fall back to the app.
+		try_files {path} /index.html
+		file_server
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+}

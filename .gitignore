@@ -29,3 +29,7 @@ Thumbs.db
 
 # Downloaded CPE files used by scripts/import_cpe.py
 /backend/import_cache/
+
+# Deployment data and server backups
+/deploy/out/
+/backups/
