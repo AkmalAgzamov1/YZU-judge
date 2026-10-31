@@ -91,7 +91,7 @@ export default function Benefits() {
     <section id="features" className="px-4 py-24">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
-          index="02"
+          index="03"
           label="Practice"
           title="Real CPE problems, judged like the real exam"
         />

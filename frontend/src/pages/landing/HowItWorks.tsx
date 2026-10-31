@@ -20,7 +20,7 @@ export default function HowItWorks() {
   return (
     <section id="how" className="px-4 py-24">
       <div className="mx-auto max-w-6xl">
-        <SectionHeader index="03" label="How it works" title="Three steps to your first verdict" />
+        <SectionHeader index="04" label="How it works" title="Three steps to your first verdict" />
 
         <ol className="mt-16 grid gap-12 md:grid-cols-3 md:gap-8">
           {steps.map((step, index) => (
