@@ -42,6 +42,8 @@ function Requirement({ done, children }: { done: boolean; children: ReactNode })
 
 interface ProblemHelpProps {
   problemId: number;
+  // Opened from the "Stuck?" link under the title; closed it renders nothing.
+  open: boolean;
   // Changes after each submission, so the solution can unlock without a reload.
   refreshKey: number;
   // Tells the workspace whether to show the "Stuck?" link next to the title.
@@ -50,12 +52,12 @@ interface ProblemHelpProps {
 
 // Hints and the reference solution for easy problems. Never rendered in a mock exam,
 // and the server refuses them there too.
-export default function ProblemHelp({ problemId, refreshKey, onAvailableChange }: ProblemHelpProps) {
+export default function ProblemHelp({ problemId, open, refreshKey, onAvailableChange }: ProblemHelpProps) {
   const { user, isLoading: authLoading } = useAuth();
   const location = useLocation();
 
   const [help, setHelp] = useState<Help | null>(null);
-  const [blocked, setBlocked] = useState<string | null>(null);
+  const [blocked, setBlocked] = useState(false);
   const [visitorHints, setVisitorHints] = useState<string[]>([]);
   const [version, setVersion] = useState(0);
   const [opening, setOpening] = useState(false);
@@ -84,7 +86,7 @@ export default function ProblemHelp({ problemId, refreshKey, onAvailableChange }
         }
       } catch (loadError) {
         if (!cancelled && loadError instanceof ApiError && loadError.status === 403) {
-          setBlocked(loadError.message);
+          setBlocked(true);
           onAvailableChange?.(false);
         }
       }
@@ -96,10 +98,8 @@ export default function ProblemHelp({ problemId, refreshKey, onAvailableChange }
     };
   }, [problemId, user, authLoading, refreshKey, version, onAvailableChange]);
 
-  if (blocked) {
-    return <p className="mt-12 font-mono text-xs text-neutral-500">{blocked}</p>;
-  }
-  if (!help || !help.available) return null;
+  // Blocked means the problem is in the user's running mock exam: show nothing, like topics.
+  if (!open || blocked || !help || !help.available) return null;
 
   const hints = user ? help.hints ?? [] : visitorHints;
   const hintCount = help.hint_count ?? 0;
@@ -130,9 +130,8 @@ export default function ProblemHelp({ problemId, refreshKey, onAvailableChange }
   const solution = help.solution_unlocked ? help.solution : null;
 
   return (
-    <section id="problem-help" aria-label="Hints and solution" className="mt-12 scroll-mt-24 border-t border-white/10 pt-8">
-      <h2 className="text-lg font-semibold text-white">Stuck?</h2>
-      <p className="mt-1 text-sm text-neutral-400">
+    <section id="problem-help" aria-label="Hints and solution" className="mt-4 rounded-lg border border-white/10 p-4">
+      <p className="text-sm text-neutral-400">
         {hintCount > 0
           ? "Give it a real try first. Hints open one at a time, and each one gives away a bit more."
           : "Give it a real try first. This one is simple enough that it has no hints, just a reference solution."}
