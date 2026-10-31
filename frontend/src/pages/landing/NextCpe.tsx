@@ -218,11 +218,25 @@ export default function NextCpe() {
 
         <Reveal className="mt-16 lg:ml-[33.333%]">
           <h3 className="text-2xl font-semibold text-white">Which star problem will it be?</h3>
-          <p className="mt-3 max-w-[680px] text-base text-neutral-400">
-            Nobody knows for sure, but the past exams show a pattern. Here are all{" "}
-            {STAR_PROBLEMS.length} problems on the list, grouped by when they were last asked.
-            Dashed ones are not on YZU Judge yet and open the UVa statement.
-          </p>
+          <div className="mt-3 max-w-[680px] space-y-3 text-base text-neutral-400">
+            <p>
+              The CPE keeps an official list of {STAR_PROBLEMS.length} &quot;one star&quot;
+              problems, the easiest level it has. Here is the trick: every CPE takes exactly one
+              of its seven problems from this list. We checked all {PAST_EXAM_COUNT} past exams,
+              and not a single one broke this rule.
+            </p>
+            <p>
+              So the list is your free point. Practice all {STAR_PROBLEMS.length} and you walk
+              into the exam already knowing one of the problems. You still need a second one to
+              pass in a single sitting, but you start from 1, not from 0.
+            </p>
+            <p>
+              We can&apos;t know which one comes next, but the past exams show a pattern: a
+              problem from the list has never come back within {shortestRepeatYears} years. Below
+              is the whole list, grouped by when each problem was last asked. Start from the top.
+              Dashed ones are not on YZU Judge yet and open the UVa statement.
+            </p>
+          </div>
 
           <div className="mt-10 space-y-10">
             {groups.map((group) => (
