@@ -1,4 +1,4 @@
-import { PaperPlaneRight } from "@phosphor-icons/react";
+import { Lightbulb, PaperPlaneRight } from "@phosphor-icons/react";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -85,6 +85,8 @@ export default function ProblemWorkspace({
   const [tab, setTab] = useState<"problem" | "code">("problem");
   // Topics hint at the solution, so they stay hidden until asked for.
   const [topicsShown, setTopicsShown] = useState(false);
+  // Set by ProblemHelp once it knows this problem has hints, for the link up top.
+  const [helpAvailable, setHelpAvailable] = useState(false);
 
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -235,6 +237,8 @@ export default function ProblemWorkspace({
     );
   }
 
+  const hasTopics = state.kind === "ready" && (state.problem.topics?.length ?? 0) > 0;
+
   const tabClass = (value: "problem" | "code") =>
     `flex-1 rounded px-3 py-2 text-sm font-medium transition duration-300 ease-soft ${focusRing} ${
       tab === value ? "bg-ink-3 text-white" : "text-neutral-400"
@@ -278,17 +282,28 @@ export default function ProblemWorkspace({
             </div>
             <h1 className="mt-3 text-3xl font-semibold tracking-tight text-white">{state.problem.title}</h1>
             {/* Never shown during a mock exam: the real CPE gives no hints. */}
-            {mockExamId == null && state.problem.topics && state.problem.topics.length > 0 && (
-              <div className="mt-3">
-                {topicsShown ? (
-                  <TopicChips topics={state.problem.topics} />
-                ) : (
+            {mockExamId == null && (hasTopics || helpAvailable) && (
+              <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+                {hasTopics &&
+                  (topicsShown ? (
+                    <TopicChips topics={state.problem.topics ?? []} />
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setTopicsShown(true)}
+                      className={`rounded font-mono text-xs text-neutral-500 underline-offset-4 transition duration-300 ease-soft hover:text-white hover:underline ${focusRing}`}
+                    >
+                      Show topics
+                    </button>
+                  ))}
+                {helpAvailable && (
                   <button
                     type="button"
-                    onClick={() => setTopicsShown(true)}
-                    className={`rounded font-mono text-xs text-neutral-500 underline-offset-4 transition duration-300 ease-soft hover:text-white hover:underline ${focusRing}`}
+                    onClick={() => document.getElementById("problem-help")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+                    className={`inline-flex items-center gap-1 rounded font-mono text-xs text-neutral-500 underline-offset-4 transition duration-300 ease-soft hover:text-white hover:underline ${focusRing}`}
                   >
-                    Show topics
+                    <Lightbulb size={14} aria-hidden="true" />
+                    Stuck? Hints and solution
                   </button>
                 )}
               </div>
@@ -298,7 +313,7 @@ export default function ProblemWorkspace({
             </div>
             <Samples samples={state.samples} />
             {/* Like topics, never shown during a mock exam. */}
-            {mockExamId == null && <ProblemHelp problemId={problemId} refreshKey={historyVersion} />}
+            {mockExamId == null && <ProblemHelp problemId={problemId} refreshKey={historyVersion} onAvailableChange={setHelpAvailable} />}
           </>
         )}
       </section>

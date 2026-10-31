@@ -44,11 +44,13 @@ interface ProblemHelpProps {
   problemId: number;
   // Changes after each submission, so the solution can unlock without a reload.
   refreshKey: number;
+  // Tells the workspace whether to show the "Stuck?" link next to the title.
+  onAvailableChange?: (available: boolean) => void;
 }
 
 // Hints and the reference solution for easy problems. Never rendered in a mock exam,
 // and the server refuses them there too.
-export default function ProblemHelp({ problemId, refreshKey }: ProblemHelpProps) {
+export default function ProblemHelp({ problemId, refreshKey, onAvailableChange }: ProblemHelpProps) {
   const { user, isLoading: authLoading } = useAuth();
   const location = useLocation();
 
@@ -70,6 +72,7 @@ export default function ProblemHelp({ problemId, refreshKey }: ProblemHelpProps)
         const data = await problemsApi.help(problemId);
         if (cancelled) return;
         setHelp(data);
+        onAvailableChange?.(Boolean(data.available));
 
         if (!user && data.available) {
           const opened = Math.min(loadOpened(problemId), data.hint_count);
@@ -82,6 +85,7 @@ export default function ProblemHelp({ problemId, refreshKey }: ProblemHelpProps)
       } catch (loadError) {
         if (!cancelled && loadError instanceof ApiError && loadError.status === 403) {
           setBlocked(loadError.message);
+          onAvailableChange?.(false);
         }
       }
     }
@@ -90,7 +94,7 @@ export default function ProblemHelp({ problemId, refreshKey }: ProblemHelpProps)
     return () => {
       cancelled = true;
     };
-  }, [problemId, user, authLoading, refreshKey, version]);
+  }, [problemId, user, authLoading, refreshKey, version, onAvailableChange]);
 
   if (blocked) {
     return <p className="mt-12 font-mono text-xs text-neutral-500">{blocked}</p>;
@@ -126,7 +130,7 @@ export default function ProblemHelp({ problemId, refreshKey }: ProblemHelpProps)
   const solution = help.solution_unlocked ? help.solution : null;
 
   return (
-    <section aria-label="Hints and solution" className="mt-12 border-t border-white/10 pt-8">
+    <section id="problem-help" aria-label="Hints and solution" className="mt-12 scroll-mt-24 border-t border-white/10 pt-8">
       <h2 className="text-lg font-semibold text-white">Stuck?</h2>
       <p className="mt-1 text-sm text-neutral-400">
         {hintCount > 0
