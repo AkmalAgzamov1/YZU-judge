@@ -21,3 +21,12 @@
 		-Server
 	}
 }
+
+# www and the bare IP both lead to the one canonical address.
+www.{$SITE_ADDRESS:localhost} {
+	redir https://{$SITE_ADDRESS:localhost}{uri} permanent
+}
+
+http:// {
+	redir https://{$SITE_ADDRESS:localhost}{uri} permanent
+}
