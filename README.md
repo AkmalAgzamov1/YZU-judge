@@ -38,6 +38,7 @@ I started on September 19, 2026, and I wanted to really understand every layer, 
 - **Take a Mock CPE.** 38 real past exams, 3 hours each, with a timer and your results at the end. Topics and tags are hidden during the exam, so you have to figure out the approach yourself, just like in the real one.
 - **Track your progress.** Your account page shows what you solved and your recent activity.
 - **Avoid spoilers.** Topics are hidden behind a "Show topics" button, because sometimes knowing it's a DP problem is half the answer.
+- **Get unstuck on easy problems.** Easy problems have up to two hints that open one at a time, and a reference solution in Python and C++. The solution unlocks only after you've opened every hint and submitted at least once. Every reference solution passes our own judge on the real tests before it goes on the site, and none of it shows up during a Mock CPE.
 
 ## How it works
 
@@ -97,6 +98,7 @@ Import the past CPE exams and the statements:
 ```bash
 python -m scripts.import_cpe
 python -m scripts.cpe_content apply
+python -m scripts.cpe_help apply
 ```
 
 **Frontend**, in `frontend/`:

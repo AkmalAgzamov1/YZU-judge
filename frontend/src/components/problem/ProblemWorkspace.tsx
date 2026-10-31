@@ -24,6 +24,7 @@ import TopicChips from "../TopicChips";
 import { buttonPrimary, buttonSecondary, focusRing } from "../ui";
 import CodeEditor from "./CodeEditor";
 import JudgePanel from "./JudgePanel";
+import ProblemHelp from "./ProblemHelp";
 import Samples from "./Samples";
 import Statement from "./Statement";
 import SubmissionHistory from "./SubmissionHistory";
@@ -296,6 +297,8 @@ export default function ProblemWorkspace({
               <Statement markdown={state.problem.description} />
             </div>
             <Samples samples={state.samples} />
+            {/* Like topics, never shown during a mock exam. */}
+            {mockExamId == null && <ProblemHelp problemId={problemId} refreshKey={historyVersion} />}
           </>
         )}
       </section>
