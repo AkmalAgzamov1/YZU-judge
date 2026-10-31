@@ -17,11 +17,7 @@ export default function AppNav() {
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-ink-0/80 px-4 backdrop-blur-xl">
       <nav aria-label="App" className="mx-auto flex h-16 max-w-6xl items-center gap-2">
-        <Link
-          to={user ? "/problems" : "/"}
-          className={`mr-2 rounded-lg sm:mr-4 ${focusRing}`}
-          aria-label={user ? "Problems" : "YZU Judge home"}
-        >
+        <Link to="/" className={`mr-2 rounded-lg sm:mr-4 ${focusRing}`} aria-label="YZU Judge home">
           <Logo compact />
         </Link>
 

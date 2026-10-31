@@ -1,5 +1,7 @@
+import { ArrowSquareOut, FilePdf } from "@phosphor-icons/react";
 import Markdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { buttonSecondary } from "../ui";
 
 // Problem statements are Markdown. Raw HTML is not rendered.
 const components: Components = {
@@ -9,11 +11,19 @@ const components: Components = {
   p: ({ children }) => <p className="mt-4 text-base text-neutral-300">{children}</p>,
   ul: ({ children }) => <ul className="mt-4 list-disc space-y-2 pl-6 text-base text-neutral-300">{children}</ul>,
   ol: ({ children }) => <ol className="mt-4 list-decimal space-y-2 pl-6 text-base text-neutral-300">{children}</ol>,
-  a: ({ children, href }) => (
-    <a href={href} target="_blank" rel="noreferrer" className="text-white underline underline-offset-2">
-      {children}
-    </a>
-  ),
+  a: ({ children, href }) =>
+    // Official statements are PDFs on the CPE site; make that link a clear button.
+    href?.toLowerCase().endsWith(".pdf") ? (
+      <a href={href} target="_blank" rel="noreferrer" className={`${buttonSecondary} my-2 no-underline`}>
+        <FilePdf size={18} aria-hidden="true" />
+        {children}
+        <ArrowSquareOut size={14} className="text-neutral-500" aria-hidden="true" />
+      </a>
+    ) : (
+      <a href={href} target="_blank" rel="noreferrer" className="text-white underline underline-offset-2">
+        {children}
+      </a>
+    ),
   strong: ({ children }) => <strong className="font-semibold text-white">{children}</strong>,
   em: ({ children }) => <span className="text-white">{children}</span>,
   code: ({ children, className }) =>

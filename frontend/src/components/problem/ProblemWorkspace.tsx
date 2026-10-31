@@ -11,6 +11,13 @@ import {
 } from "../../api/client";
 import { useAuth } from "../../auth/AuthContext";
 import { loadDraft, saveDraft } from "../../lib/drafts";
+import {
+  isLanguage,
+  LANGUAGES,
+  loadPreferredLanguage,
+  savePreferredLanguage,
+  type Language,
+} from "../../lib/languages";
 import { formatTime } from "../../lib/format";
 import DifficultyLabel from "../DifficultyLabel";
 import TopicChips from "../TopicChips";
@@ -26,12 +33,6 @@ type LoadState =
   | { kind: "missing" }
   | { kind: "error"; message: string }
   | { kind: "ready"; problem: Problem; samples: Sample[] };
-
-const languages = [
-  { label: "Python", version: "3.11", enabled: true },
-  { label: "C++", enabled: false },
-  { label: "Java", enabled: false },
-];
 
 interface ProblemWorkspaceProps {
   // Render with key={problemId} so drafts and judge state reset per problem.
@@ -78,7 +79,8 @@ export default function ProblemWorkspace({
 
   const [state, setState] = useState<LoadState>({ kind: "loading" });
   const [attempt, setAttempt] = useState(0);
-  const [code, setCode] = useState(() => loadDraft(problemId, draftScope));
+  const [language, setLanguage] = useState<Language>(() => loadPreferredLanguage());
+  const [code, setCode] = useState(() => loadDraft(problemId, draftScope, language));
   const [tab, setTab] = useState<"problem" | "code">("problem");
   // Topics hint at the solution, so they stay hidden until asked for.
   const [topicsShown, setTopicsShown] = useState(false);
@@ -136,9 +138,17 @@ export default function ProblemWorkspace({
     };
   }, [user, authLoading, problemId, mockExamId, historyVersion]);
 
-  function handleCodeChange(value: string) {
+  function handleCodeChange(value: string, forLanguage: Language = language) {
     setCode(value);
-    saveDraft(problemId, value, draftScope);
+    saveDraft(problemId, value, draftScope, forLanguage);
+  }
+
+  // Each language keeps its own draft, so switching never loses code.
+  function switchLanguage(next: Language) {
+    if (next === language) return;
+    setLanguage(next);
+    savePreferredLanguage(next);
+    setCode(loadDraft(problemId, draftScope, next));
   }
 
   async function submit() {
@@ -158,7 +168,7 @@ export default function ProblemWorkspace({
     try {
       const submission = await submissionsApi.create({
         problem_id: problemId,
-        language: "python",
+        language,
         code,
         mock_exam_id: mockExamId ?? null,
       });
@@ -187,7 +197,9 @@ export default function ProblemWorkspace({
   function selectSubmission(submission: Submission) {
     setSubmitError(null);
     setActiveId(submission.id);
-    handleCodeChange(submission.code);
+    const submittedIn = isLanguage(submission.language) ? submission.language : language;
+    setLanguage(submittedIn);
+    handleCodeChange(submission.code, submittedIn);
   }
 
   if (state.kind === "missing" || state.kind === "error") {
@@ -294,20 +306,18 @@ export default function ProblemWorkspace({
       >
         <div className="flex items-center justify-between gap-3">
           <div role="group" aria-label="Language" className="flex rounded-lg border border-white/10 bg-ink-1 p-1">
-            {languages.map((language) => (
+            {LANGUAGES.map((option) => (
               <button
-                key={language.label}
+                key={option.id}
                 type="button"
-                disabled={!language.enabled}
-                aria-pressed={language.enabled}
-                title={language.enabled ? undefined : "Coming soon"}
-                className={`whitespace-nowrap rounded px-3 py-1 text-sm font-medium ${
-                  language.enabled ? "bg-ink-3 text-white" : "hidden cursor-not-allowed text-neutral-600 sm:block"
+                aria-pressed={language === option.id}
+                onClick={() => switchLanguage(option.id)}
+                className={`whitespace-nowrap rounded px-3 py-1 text-sm font-medium transition duration-300 ease-soft ${focusRing} ${
+                  language === option.id ? "bg-ink-3 text-white" : "text-neutral-400 hover:text-white"
                 }`}
               >
-                {language.label}
-                {"version" in language && <span className="hidden sm:inline"> {language.version}</span>}
-                {!language.enabled && <span className="ml-1 font-mono text-xs">soon</span>}
+                {option.label}
+                <span className="hidden text-neutral-500 sm:inline"> {option.version}</span>
               </button>
             ))}
           </div>
@@ -319,7 +329,7 @@ export default function ProblemWorkspace({
         </div>
 
         <div className="h-96 overflow-hidden rounded-lg border border-white/10 lg:h-auto lg:min-h-80 lg:flex-1">
-          <CodeEditor value={code} onChange={handleCodeChange} onSubmit={submit} />
+          <CodeEditor value={code} onChange={(value) => handleCodeChange(value)} onSubmit={submit} language={language} />
         </div>
 
         <JudgePanel

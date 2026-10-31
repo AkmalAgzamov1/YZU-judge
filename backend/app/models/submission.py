@@ -14,6 +14,9 @@ class Submission(Base):
     language = Column(Enum("python", "java", "cpp", name = "submission_language"), nullable = False)
     code = Column(Text, nullable = False)
 
+    # Compiler messages, trimmed, when the verdict is compilation_error.
+    compile_output = Column(Text, nullable = True)
+
     # Set when the submission was sent during a mock CPE exam.
     mock_exam_id = Column(Integer, ForeignKey("mock_exams.id"), nullable = True, index = True)
 

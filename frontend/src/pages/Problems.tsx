@@ -165,6 +165,8 @@ export default function Problems() {
   const difficulty: Difficulty | "all" = difficulties.includes(difficultyParam as Difficulty)
     ? (difficultyParam as Difficulty)
     : "all";
+  const sourceParam = params.get("source");
+  const source: "all" | "cpe" | "other" = sourceParam === "cpe" || sourceParam === "other" ? sourceParam : "all";
   const statusParam = params.get("status");
   const status: StatusFilter | "all" =
     user && statusFilters.includes(statusParam as StatusFilter) ? (statusParam as StatusFilter) : "all";
@@ -194,6 +196,7 @@ export default function Problems() {
 
     return problems
       .filter((problem) => difficulty === "all" || problem.difficulty === difficulty)
+      .filter((problem) => source === "all" || (source === "cpe") === problem.is_cpe)
       // Every selected topic must be present: "DP + Graphs" means both.
       .filter((problem) => selectedTopics.every((topic) => problem.topics?.includes(topic)))
       .filter((problem) => {
@@ -211,7 +214,7 @@ export default function Problems() {
         (a, b) =>
           difficultyOrder[a.difficulty] - difficultyOrder[b.difficulty] || a.id - b.id,
       );
-  }, [problems, difficulty, status, query, visibleStatuses, selectedTopics]);
+  }, [problems, difficulty, source, status, query, visibleStatuses, selectedTopics]);
 
   const topicCounts = useMemo(() => {
     const counts = new Map<Topic, number>();
@@ -229,7 +232,7 @@ export default function Problems() {
             <h1 className="text-4xl font-semibold tracking-tight text-white">Problems</h1>
             <p className="mt-2 text-base text-neutral-400">
               {state.kind === "ready"
-                ? `${problems.length} past CPE problems, sorted from easy to hard.`
+                ? `${problems.length} problems, ${problems.filter((problem) => problem.is_cpe).length} of them from past CPE exams. Sorted from easy to hard.`
                 : "Past CPE problems, sorted from easy to hard."}
             </p>
           </div>
@@ -246,6 +249,16 @@ export default function Problems() {
             options={[
               { value: "all", label: "All" },
               ...difficulties.map((value) => ({ value, label: difficultyLabel[value] })),
+            ]}
+          />
+          <Segmented<"cpe" | "other">
+            label="Source"
+            value={source}
+            onChange={(value) => setParam("source", value)}
+            options={[
+              { value: "all", label: "All" },
+              { value: "cpe", label: "Past CPE" },
+              { value: "other", label: "Other" },
             ]}
           />
           {user && (
@@ -371,9 +384,14 @@ export default function Problems() {
                         <span className="block truncate text-base font-medium text-white">
                           {problem.title}
                         </span>
-                        {problem.topics && problem.topics.length > 0 && (
-                          <span className="mt-1 block">
-                            <TopicChips topics={problem.topics} />
+                        {(problem.is_cpe || (problem.topics?.length ?? 0) > 0) && (
+                          <span className="mt-1 flex flex-wrap gap-1">
+                            {problem.is_cpe && (
+                              <span className="rounded bg-yzu-blue/20 px-1 py-0.5 font-mono text-xs text-sky-300">
+                                CPE
+                              </span>
+                            )}
+                            <TopicChips topics={problem.topics ?? []} />
                           </span>
                         )}
                         <span className="mt-1 flex gap-3 font-mono text-xs text-neutral-500 md:hidden">

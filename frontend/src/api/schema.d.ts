@@ -688,9 +688,9 @@ export interface components {
             problem_id: number;
             /**
              * Language
-             * @constant
+             * @enum {string}
              */
-            language: "python";
+            language: "python" | "cpp";
             /** Mock Exam Id */
             mock_exam_id?: number | null;
             /** Code */
@@ -713,6 +713,8 @@ export interface components {
             code: string;
             /** Mock Exam Id */
             mock_exam_id?: number | null;
+            /** Compile Output */
+            compile_output?: string | null;
             /**
              * Status
              * @enum {string}

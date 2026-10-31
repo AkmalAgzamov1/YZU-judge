@@ -1,5 +1,7 @@
 import Reveal from "../../components/Reveal";
 import SectionHeader from "../../components/SectionHeader";
+import { focusRing } from "../../components/ui";
+import { CPE_OFFICIAL_URL } from "../../lib/links";
 
 const spec = [
   { term: "Duration", value: "3 hours", note: "One computer, no internet, no notes." },
@@ -38,7 +40,16 @@ export default function WhyCpe() {
           </dl>
           <p className="mt-6 text-sm text-neutral-500">
             Requirements differ by department and enrollment year. Confirm yours
-            with your department office.
+            with your department office. Exam dates and registration are on the{" "}
+            <a
+              href={CPE_OFFICIAL_URL}
+              target="_blank"
+              rel="noreferrer"
+              className={`rounded-sm text-neutral-300 underline underline-offset-2 hover:text-white ${focusRing}`}
+            >
+              official CPE website
+            </a>
+            .
           </p>
         </Reveal>
       </div>

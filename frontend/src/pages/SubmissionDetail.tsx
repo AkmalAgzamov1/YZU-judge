@@ -8,6 +8,7 @@ import PendingMessage from "../components/problem/PendingMessage";
 import TestResults from "../components/problem/TestResults";
 import { buttonPrimary, buttonSecondary, focusRing } from "../components/ui";
 import { saveDraft } from "../lib/drafts";
+import { isLanguage, savePreferredLanguage } from "../lib/languages";
 import { formatDateTime, languageLabel, problemLabel } from "../lib/format";
 import useJudge from "../lib/useJudge";
 import { isFinished, verdictColor, verdictLabel } from "../lib/verdicts";
@@ -49,7 +50,10 @@ function SubmissionView({ submissionId }: { submissionId: number }) {
 
   function openInEditor() {
     if (!submission) return;
-    saveDraft(submission.problem_id, submission.code);
+    // Open the problem in the language this code was written in.
+    const language = isLanguage(submission.language) ? submission.language : "python";
+    saveDraft(submission.problem_id, submission.code, undefined, language);
+    savePreferredLanguage(language);
     navigate(`/problems/${submission.problem_id}`);
   }
 
@@ -124,7 +128,11 @@ function SubmissionView({ submissionId }: { submissionId: number }) {
 
           <div className="mt-8 grid items-start gap-4 lg:grid-cols-[3fr_2fr]">
             <section aria-label="Submitted code" className="overflow-hidden rounded-lg border border-white/10">
-              <CodeEditor value={submission.code} readOnly />
+              <CodeEditor
+                value={submission.code}
+                readOnly
+                language={isLanguage(submission.language) ? submission.language : "python"}
+              />
             </section>
 
             <section

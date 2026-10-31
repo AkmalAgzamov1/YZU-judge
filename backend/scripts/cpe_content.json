@@ -1,0 +1,1882 @@
+{
+  "10079": {
+    "topics": [
+      "math"
+    ],
+    "statement": "Each straight cut goes all the way across a round pizza. Given how many cuts are made, find the largest number of pieces the pizza can end up in.\n\n## Input\n\nOne integer `N` per line, the number of cuts, with `0 ≤ N ≤ 210000000`. A negative number ends the input and is not processed.\n\n## Output\n\nFor every `N`, print the maximum number of pieces on its own line, with no extra spaces.\n\n## Notes\n\nThe answer for the largest `N` does not fit in a 32 bit integer."
+  },
+  "11321": {
+    "topics": [
+      "sorting",
+      "implementation"
+    ],
+    "statement": "Sort a list of integers by a custom rule based on their remainder modulo `M`.\n\nOrder the numbers by `x mod M` from smallest to largest, where the remainder follows C rules: a negative number gives a remainder that is zero or negative, for example `-100 mod 3 = -1`. When two numbers have the same remainder:\n\n- an odd number comes before an even number,\n- two odd numbers go from larger to smaller,\n- two even numbers go from smaller to larger.\n\n## Input\n\nSeveral test sets. Each starts with a line `N M` (`0 < N ≤ 10000`, `0 < M ≤ 10000`), followed by `N` lines with one 32 bit signed integer each. A line `0 0` ends the input.\n\n## Output\n\nFor each set, print the line `N M`, then the `N` numbers in sorted order, one per line. Finish by printing the closing `0 0` as well."
+  },
+  "706": {
+    "topics": [
+      "implementation",
+      "strings"
+    ],
+    "statement": "Draw numbers the way a seven segment calculator display shows them, at a chosen size.\n\nWith size `s`, every digit is `s + 2` characters wide and `2s + 3` lines tall. Horizontal segments are `s` dashes `-`, vertical segments are `s` bars `|`, and every unused position is a space. Neighbouring digits are separated by exactly one column of spaces. Pad every digit to its full width, including the last one on a line.\n\n## Input\n\nEach line holds two integers `s n` with `1 ≤ s ≤ 10` and `0 ≤ n ≤ 99999999`. The line `0 0` ends the input and is not drawn.\n\n## Output\n\nFor each line, draw `n` at size `s`, then print one empty line."
+  },
+  "1203": {
+    "topics": [
+      "data-structures",
+      "simulation"
+    ],
+    "statement": "A stream system runs several registered queries at the same time. A query with period `P` first reports `P` seconds after registration, then every `P` seconds after that. Find the first `K` reports in time order.\n\nWhen several queries report at the same moment, the one with the smaller query number goes first.\n\n## Input\n\nFirst, up to 1000 lines of the form `Register Q P`, where `Q` is a unique query number and `P` its period, both between 1 and 3000. A line with `#` ends this part. The last line holds one integer `K` (`K ≤ 10000`).\n\n## Output\n\nPrint the query numbers of the first `K` reports, one per line."
+  },
+  "10405": {
+    "title": "Longest Common Subsequence",
+    "topics": [
+      "dp",
+      "strings"
+    ],
+    "statement": "Given two strings, find the length of their longest common subsequence: the longest sequence of characters that appears in both strings in the same order, not necessarily next to each other.\n\nFor example, `abcdgh` and `aedfhr` share `adh`, so the answer is 3.\n\n## Input\n\nPairs of lines until the end of input. Each line of a pair is one string of at most 1000 characters.\n\n## Output\n\nFor each pair, print the length of the longest common subsequence on its own line.\n\n## Notes\n\nStrings may contain any visible characters, and a line can be empty. Read whole lines rather than words."
+  },
+  "11806": {
+    "topics": [
+      "math",
+      "brute-force"
+    ],
+    "statement": "Place exactly `K` cheerleaders on an `M × N` grid, at most one per cell, so that every one of the four border sides has at least one cheerleader on it. A corner cell counts for both sides it touches. Count how many different placements exist.\n\n## Input\n\nThe first line is `T` (`T ≤ 50`). Each of the next `T` lines holds `M N K` with `2 ≤ M, N ≤ 20` and `K ≤ 500`.\n\n## Output\n\nFor test case `i`, print `Case i: ` followed by the number of placements modulo `1000007`.\n\n## Notes\n\nThe count can be very large, so only its remainder modulo `1000007` is printed."
+  },
+  "1660": {
+    "topics": [
+      "graphs"
+    ],
+    "statement": "A network of `n` relays is joined by two way cables. Its safety factor is the smallest number of relays whose removal leaves the network disconnected. If no set of removals disconnects it, the safety factor is `n`. An empty network or a single relay counts as connected.\n\nCompute the safety factor of each network.\n\n## Input\n\nSeveral data sets until the end of input. Each starts with `n m` (`0 ≤ n ≤ 50`), the number of relays and cables, followed by `m` pairs written as `(u,v)` with `0 ≤ u < v < n`. Apart from inside a pair, spacing and line breaks can appear anywhere.\n\n## Output\n\nFor each data set, print its safety factor on its own line."
+  },
+  "100": {
+    "topics": [
+      "brute-force",
+      "simulation"
+    ],
+    "statement": "Start from a number `n` and repeat: if `n` is 1, stop; if it is odd, replace it by `3n + 1`; otherwise halve it. The cycle length of `n` is how many numbers appear in this sequence, counting `n` itself and the final 1. For example, 22 gives 16 numbers.\n\nFor each pair `i j`, find the largest cycle length among all numbers between `i` and `j`, inclusive.\n\n## Input\n\nPairs of integers `i j`, one pair per line, until the end of input. Every number is between 1 and 9999.\n\n## Output\n\nFor each pair, print `i`, `j` and the largest cycle length on one line, separated by spaces. Print `i` and `j` in the same order as in the input.\n\n## Notes\n\n`i` can be larger than `j`."
+  },
+  "105": {
+    "topics": [
+      "implementation"
+    ],
+    "statement": "Rectangular buildings stand on a flat ground line. Building `k` is given as `(L, H, R)`: it spans from x = `L` to x = `R` and has height `H`. Describe the outline you see when all buildings are drawn together.\n\nWrite the outline as one sequence that alternates x coordinates and heights: start at the leftmost x, give the height that begins there, then the next x where the height changes, the new height, and so on. The sequence always ends with height 0.\n\n## Input\n\nBetween 1 and 5000 lines, each with three integers `L H R` (`0 < L < R`, all below 10000). Lines are sorted by `L`.\n\n## Output\n\nOne line with the outline sequence, numbers separated by single spaces."
+  },
+  "108": {
+    "topics": [
+      "dp"
+    ],
+    "statement": "Given an `N × N` grid of integers, find the rectangular block of adjacent cells (at least 1 × 1) with the largest total sum.\n\n## Input\n\nSeveral test cases. Each starts with `N` (`N ≤ 100`), followed by `N²` integers in row order, separated by any whitespace. Every value is between -127 and 127. `N = 0` ends the input.\n\n## Output\n\nFor each test case, print the largest sum on its own line."
+  },
+  "111": {
+    "topics": [
+      "dp"
+    ],
+    "statement": "A history exam asks students to put `n` events in order. A student scores the length of the longest group of events they placed in the same relative order as the correct answer; the events in the group do not have to be next to each other.\n\nBoth the correct answer and each student answer are given as rankings: the `i`th number is the position assigned to event `i`, not the event placed at position `i`.\n\n## Input\n\nSeveral test cases. Each starts with `n` (`2 ≤ n ≤ 20`), then a line with the correct ranking, then any number of lines with student rankings. Every ranking is a permutation of 1 to `n`.\n\n## Output\n\nFor each student ranking, print the score on its own line."
+  },
+  "118": {
+    "topics": [
+      "simulation"
+    ],
+    "statement": "Robots move on a rectangular grid from `(0, 0)` to the given upper right corner. Each robot has a position and a facing (`N`, `E`, `S` or `W`) and follows a string of commands: `L` turns left, `R` turns right, `F` moves one step forward. North means `y` increases.\n\nA robot that steps off the grid is lost, and it leaves a scent on the last cell it stood on. Later robots ignore any `F` command that would take them off the grid from a scented cell. Robots run one after another.\n\n## Input\n\nThe first line gives the upper right corner. Then, for each robot, one line with `x y facing` and one line with its commands, until the end of input.\n\n## Output\n\nFor each robot, print its final `x y facing`. If it was lost, print the last position before it fell off, followed by `LOST`."
+  },
+  "122": {
+    "topics": [
+      "data-structures",
+      "implementation"
+    ],
+    "statement": "Build binary trees from a list of nodes and print each one level by level.\n\nEach node is written as `(v,path)`: value `v` (a positive integer) sits at the place reached from the root by following `path`, a string of `L` (left) and `R` (right). The root has an empty path, `(v,)`. A tree is listed as several nodes and ends with `()`.\n\nA tree is complete only if every node on every path from the root has exactly one value.\n\n## Input\n\nTrees until the end of input. Nodes are separated by whitespace and a tree can span several lines. Each tree has between 1 and 256 nodes.\n\n## Output\n\nFor each tree, print its values level by level, left to right within a level, separated by spaces. If the tree is not complete, print `not complete` instead."
+  },
+  "141": {
+    "topics": [
+      "simulation",
+      "implementation"
+    ],
+    "statement": "Two players take turns on an `N × N` board. Each move either places a spot on an empty square or removes one. A player loses the moment they create a board pattern that has appeared before, either exactly or rotated by 90 or 180 degrees. If no pattern repeats in `2N` moves, the game is a draw.\n\n## Input\n\nSeveral games. Each starts with `N` (`2 ≤ N ≤ 50`), followed by `2N` moves, one per line, written as `row column +` or `row column -`. All `2N` moves are listed even if the game ends earlier. A line with `0` ends the input.\n\n## Output\n\nFor each game, print `Player p wins on move m` or `Draw`, where `p` is the winner and `m` the losing move."
+  },
+  "160": {
+    "topics": [
+      "number-theory",
+      "math"
+    ],
+    "statement": "Write `N!` by how many times each prime divides it, listed for every prime up to `N` in increasing order. For example `5! = 120` has three 2s, one 3 and one 5.\n\n## Input\n\nOne integer `N` per line (`2 ≤ N ≤ 100`). A line with `0` ends the input.\n\n## Output\n\nFor each `N`, print `N` right aligned in 3 characters, then `! =`, then the prime counts, each right aligned in 3 characters. At most 15 counts go on one line; continuation lines are indented to line up under the first count. Match the sample output exactly."
+  },
+  "165": {
+    "topics": [
+      "brute-force"
+    ],
+    "statement": "A document may carry at most `h` stamps and there are `k` different stamp values. Choose the `k` values so that every amount from 1 up to some `n` can be paid with at most `h` stamps, and `n` is as large as possible. For example, with `h = 3, k = 2`, values 1 and 3 reach every amount up to 7, which is the best possible.\n\n## Input\n\nOne pair `h k` per line, with `h + k ≤ 9`. The line `0 0` ends the input.\n\n## Output\n\nFor each pair, print the largest possible `n` on its own line."
+  },
+  "240": {
+    "topics": [
+      "greedy",
+      "data-structures"
+    ],
+    "statement": "Build a Huffman code that uses the first `R` decimal digits as code symbols for the first `N` uppercase letters, given each letter's frequency.\n\nIn each step, take the `R` letters or groups with the lowest frequencies and merge them into one group; they receive digits 0 to `R - 1` in order of increasing frequency. Ties go to the group whose earliest letter comes first in the alphabet. If `N` does not allow every step to merge exactly `R` items, add extra letters of frequency 0 after the real ones first. A letter's code is the digits it received, read from the last merge back to the first.\n\n## Input\n\nSeveral data sets. Each line starts with `R` and `N`, followed by the `N` frequencies. A line with `0` ends the input.\n\n## Output\n\nFor data set `k`, print `Set k; average length x` with the average code length (weighted by frequency) to two decimal places, then one line per real letter with the letter and its code, indented as in the sample. Print an empty line after each set. Follow the official statement for the exact layout."
+  },
+  "242": {
+    "topics": [
+      "dp",
+      "brute-force"
+    ],
+    "statement": "An envelope holds at most `S` stamps. For a set of stamp values, its coverage is the largest amount `m` such that every amount from 1 to `m` can be paid with at most `S` stamps from that set.\n\nFor each data set, among several candidate sets pick the one with the largest coverage. Break ties by fewer values, then by the smaller largest value.\n\n## Input\n\nSeveral data sets. Each begins with `S` (`S ≤ 10`), then `N` (`N ≤ 10`), then `N` lines that each start with a count followed by that many increasing stamp values (at most 100). A data set with `S = 0` ends the input.\n\n## Output\n\nFor each data set, print `max coverage =` followed by the coverage, a colon and the chosen values. The numbers are right aligned in fixed width fields; copy the spacing from the sample output."
+  },
+  "255": {
+    "topics": [
+      "simulation"
+    ],
+    "statement": "A king and a queen stand on an 8 × 8 board whose squares are numbered 0 to 63, row by row. Pieces move only horizontally or vertically: the king one step, the queen any number of steps, and neither may pass through or land on the other piece. A move is allowed only if the destination is not a square the other piece could also move to.\n\nGiven the king's square, the queen's square and the square the queen moves to, judge the move.\n\n## Input\n\nOne line per case with three integers from 0 to 63: king, queen, queen's new square. Input ends at the end of the file.\n\n## Output\n\nFor each line print one of:\n\n- `Illegal state` if king and queen share a square,\n- `Illegal move` if the queen cannot legally reach the new square,\n- `Move not allowed` if the king could also move to that square,\n- `Stop` if after the move the king has no allowed move,\n- `Continue` otherwise."
+  },
+  "263": {
+    "topics": [
+      "implementation",
+      "simulation"
+    ],
+    "statement": "Build a number chain from a starting number: sort its digits in descending order to get `a`, in ascending order to get `b`, and replace the number by `a - b`. Repeat until you produce a number that is already in the chain. The chain length is the count of distinct numbers produced.\n\n## Input\n\nUp to 5000 positive numbers below 10⁹, one per line. A line with `0` ends the input.\n\n## Output\n\nFor each number, print `Original number was n`, then one line `a - b = c` for every step, then `Chain length L`, then an empty line. Match the sample exactly."
+  },
+  "264": {
+    "topics": [
+      "math"
+    ],
+    "statement": "List all fractions `p/q` in a grid where row `p` and column `q` hold `p/q`, and walk the grid diagonally in a zig zag: 1/1, 1/2, 2/1, 3/1, 2/2, 1/3, 1/4, 2/3, and so on. Find the term at a given position.\n\n## Input\n\nOne integer per line, between 1 and 10⁷, until the end of input.\n\n## Output\n\nFor each number `n`, print `TERM n IS p/q`."
+  },
+  "288": {
+    "topics": [
+      "math",
+      "implementation"
+    ],
+    "statement": "Evaluate an expression on very large non negative integers using `+`, `-`, `*` and `**` (power). Usual precedence applies: `**` first, then `*`, then `+` and `-` from left to right. There are no parentheses or spaces.\n\nThe base of a power is a single digit from 1 to 9 and the exponent is positive. Other numbers can have up to 1000 digits.\n\n## Input\n\nOne expression per line, until the end of input, with at most 100 operators each.\n\n## Output\n\nFor each expression, print its exact value on one line.\n\n## Notes\n\nResults can have thousands of digits and can be negative."
+  },
+  "294": {
+    "topics": [
+      "number-theory",
+      "math"
+    ],
+    "statement": "In the range from `L` to `U`, find the number with the most positive divisors. If several tie, take the smallest.\n\n## Input\n\nThe first line is `N`. Each of the next `N` lines holds `L U` with `1 ≤ L ≤ U ≤ 10⁹` and `U - L ≤ 10000`.\n\n## Output\n\nFor each range, print `Between L and U, P has a maximum of D divisors.` where `P` is the number found and `D` its divisor count."
+  },
+  "297": {
+    "topics": [
+      "data-structures",
+      "implementation"
+    ],
+    "statement": "A 32 × 32 black and white image is stored as a quadtree written in preorder: `p` is a node split into four quadrants (listed next, in a fixed order), `f` is an all black quadrant and `e` is an all white one.\n\nOverlay two such images: a pixel is black if it is black in at least one of them. Count the black pixels in the result.\n\n## Input\n\nThe first line is the number of test cases. Each case has two lines, each a quadtree string. Trees are at most 5 levels deep.\n\n## Output\n\nFor each case, print `There are X black pixels.`"
+  },
+  "299": {
+    "topics": [
+      "sorting",
+      "brute-force"
+    ],
+    "statement": "A train's carriages are numbered 1 to `L` but stand in some order. One operation swaps two neighbouring carriages. Find the fewest swaps needed to put them in order 1, 2, ..., `L`.\n\n## Input\n\nThe first line is the number of test cases. Each case has a line with `L` (`0 ≤ L ≤ 50`) and a line with a permutation of 1 to `L`.\n\n## Output\n\nFor each case, print `Optimal train swapping takes S swaps.`"
+  },
+  "300": {
+    "topics": [
+      "math",
+      "implementation"
+    ],
+    "statement": "Convert dates from the Maya Haab calendar to the Tzolkin calendar.\n\n**Haab:** a year has 19 months. The first 18 have 20 days numbered 0 to 19 and are named `pop, no, zip, zotz, tzec, xul, yoxkin, mol, chen, yax, zac, ceh, mac, kankin, muan, pax, koyab, cumhu`. The last month, `uayet`, has 5 days numbered 0 to 4. A date is written `day. month year`.\n\n**Tzolkin:** each day has a number cycling 1 to 13 and a name cycling through `imix, ik, akbal, kan, chicchan, cimi, manik, lamat, muluk, ok, chuen, eb, ben, ix, mem, cib, caban, eznab, canac, ahau`, both advancing every day. A year is 260 days. A date is written `number name year`.\n\nThe first day of the world is `0. pop 0` in Haab and `1 imix 0` in Tzolkin.\n\n## Input\n\nThe first line is `n`, followed by `n` Haab dates, one per line. Years are below 5000.\n\n## Output\n\nPrint `n` on the first line, then the Tzolkin date for each input date, in order."
+  },
+  "302": {
+    "topics": [
+      "graphs"
+    ],
+    "statement": "A town has junctions and two way streets, each street with a unique number. Find a round trip that uses every street exactly once and ends where it started. Among all such trips, print the one whose sequence of street numbers is smallest in lexicographic order.\n\nThe trip starts at the smaller of the two junctions of the first street listed in the input.\n\n## Input\n\nSeveral blocks. Each line of a block is `x y z`: street `z` connects junctions `x` and `y` (they may be equal). A line `0 0` ends a block, and an empty block `0 0` ends the input. Junctions are at most 44 and streets fewer than 1995.\n\n## Output\n\nFor each block, print the street numbers of the trip separated by spaces, or `Round trip does not exist.`, followed by an empty line."
+  },
+  "337": {
+    "topics": [
+      "simulation",
+      "implementation"
+    ],
+    "statement": "Simulate a 10 × 10 text terminal. The cursor starts at row 0, column 0 in overwrite mode on a blank screen. Normal characters are written at the cursor, then the cursor moves right if it can. In insert mode, characters from the cursor to the end of the row first shift right by one and the last one is lost.\n\nA `^` starts a control sequence:\n\n- `^b` cursor to the start of its row; `^c` clear the screen, cursor stays; `^d`, `^u`, `^l`, `^r` move down, up, left, right if possible;\n- `^e` erase from the cursor to the end of its row; `^h` cursor to row 0, column 0;\n- `^i` insert mode, `^o` overwrite mode; `^^` writes a `^` as a normal character;\n- `^` followed by two digits moves the cursor to that row and column.\n\n## Input\n\nSeveral tests. Each starts with `N`, followed by `N` lines whose characters are fed to the terminal in order (line breaks themselves are ignored). `N = 0` ends the input. Every test starts with a fresh terminal.\n\n## Output\n\nFor test `k`, print `Case k`, then the screen framed with `+----------+` above and below and `|` on both sides of every row. Match the sample exactly."
+  },
+  "357": {
+    "topics": [
+      "dp"
+    ],
+    "statement": "Count the different ways to make an amount of money with US coins of 1, 5, 10, 25 and 50 cents. Ways differ in how many coins of each value are used, not in order.\n\n## Input\n\nOne amount per line, from 0 to 30000 cents, until the end of input.\n\n## Output\n\nFor each amount `n` with `m` ways, print `There are m ways to produce n cents change.` When `m` is 1, print `There is only 1 way to produce n cents change.` instead.\n\n## Notes\n\nThe number of ways does not fit in a 32 bit integer for large amounts."
+  },
+  "378": {
+    "topics": [
+      "geometry"
+    ],
+    "statement": "Each case gives two lines in the plane, each through two distinct points. Decide whether the lines are parallel, the same line, or cross in one point, and give the point.\n\n## Input\n\nThe first line is `N` (`1 ≤ N ≤ 10`). Each of the next `N` lines has eight integers `x1 y1 x2 y2 x3 y3 x4 y4`: the first line passes through the first two points, the second line through the last two. Values are between -1000 and 1000.\n\n## Output\n\nPrint `INTERSECTING LINES OUTPUT`, then one line per case: `NONE` for parallel lines, `LINE` for the same line, or `POINT x y` with both coordinates to two decimal places. Finish with `END OF OUTPUT`."
+  },
+  "380": {
+    "topics": [
+      "graphs",
+      "simulation"
+    ],
+    "statement": "Simulate call forwarding in an office phone system. A request `source time duration target` forwards calls for extension `source` to `target` from hour `time` to `time + duration`, inclusive. Forwarding can chain: if the target also forwards at that moment, follow it on. If the chain comes back to the extension that was originally called, the call goes to the dead end extension `9999`.\n\n## Input\n\nThe first line is the number of systems (at most 10). Each system lists up to 100 requests as four digit numbers `source time duration target`, ended by a line whose source is `0000`. Then come calls `time extension` in non decreasing time order, ended by a line whose time is `9000`.\n\n## Output\n\nPrint `CALL FORWARDING OUTPUT`. For system `k` print `SYSTEM k`, then for each call `AT time CALL TO extension RINGS final`, with all numbers as four digits. Finish with `END OF OUTPUT`."
+  },
+  "382": {
+    "topics": [
+      "number-theory",
+      "math"
+    ],
+    "statement": "Classify each number by the sum of its proper divisors (all positive divisors except the number itself): it is perfect if the sum equals the number, abundant if the sum is larger, and deficient if it is smaller. For example 6 = 1 + 2 + 3 is perfect.\n\n## Input\n\nBetween 1 and 99 positive integers, each at most 60000, separated by whitespace. A `0` ends the list.\n\n## Output\n\nPrint `PERFECTION OUTPUT`. For each number, print it right aligned in 5 characters, two spaces, then `PERFECT`, `DEFICIENT` or `ABUNDANT`. Finish with `END OF OUTPUT`."
+  },
+  "389": {
+    "topics": [
+      "math",
+      "implementation"
+    ],
+    "statement": "Convert a number from one base to another. Bases go from 2 to 16 and use the digits `0` to `9` and `A` to `F`.\n\nThe result is shown on a 7 digit display: pad it with leading zeros to exactly 7 digits, and if it is longer than 7 digits keep only the rightmost 7.\n\n## Input\n\nOne conversion per line until the end of input: the number (it may have leading zeros), the base it is in, and the base to convert to, separated by one or more spaces.\n\n## Output\n\nFor each line, print the 7 digit result.\n\n## Notes\n\nThis version always prints exactly 7 digits, which differs from the original UVa problem."
+  },
+  "397": {
+    "topics": [
+      "implementation",
+      "strings"
+    ],
+    "statement": "Solve a simple equation one operation at a time. The left side is an integer expression with `+`, `-`, `*` and `/`, and the right side is a variable name.\n\nPerform `*` and `/` first, left to right, then `+` and `-`, left to right. After every single operation, print the whole equation again with that operation replaced by its result.\n\n## Input\n\nOne equation per line until the end of input, with 1 to 20 operations. Numbers can carry a sign such as `-3` or `+4`. Spaces are optional anywhere. Variable names have 1 to 8 letters. Every division is exact.\n\n## Output\n\nFor each equation, print the original equation and then one line per step, ending with `value = variable`. Separate equations with an empty line. Spacing inside a line is not important, but write negative numbers like `-6` and positive ones without a sign."
+  },
+  "401": {
+    "topics": [
+      "strings"
+    ],
+    "statement": "Classify each string as a palindrome, a mirrored string, both, or neither.\n\nA palindrome reads the same backwards. A mirrored string becomes itself when every character is replaced by its mirror image and the result is read backwards. Mirror pairs: `A-A, E-3, H-H, I-I, J-L, M-M, O-O, S-2, T-T, U-U, V-V, W-W, X-X, Y-Y, Z-5, 1-1, 8-8`. Every other character has no mirror, so a string containing one cannot be mirrored. The digit `0` never appears; only the letter `O` does.\n\n## Input\n\nOne string per line until the end of input, 1 to 20 valid characters each.\n\n## Output\n\nFor each string print the string followed by one of `-- is not a palindrome.`, `-- is a regular palindrome.`, `-- is a mirrored string.` or `-- is a mirrored palindrome.`, then an empty line."
+  },
+  "406": {
+    "topics": [
+      "number-theory"
+    ],
+    "statement": "List the primes from 1 to `N`; in this problem 1 counts as a prime. Print the middle part of that list: the `2C` middle primes if the list has an even length, or the `2C - 1` middle primes if it is odd. If that is more than the whole list, print the whole list.\n\n## Input\n\nOne line per case with `N C` (`1 ≤ N ≤ 1000`, `1 ≤ C ≤ N`), until the end of input.\n\n## Output\n\nFor each case print `N C:` followed by the chosen primes, each preceded by one space, then an empty line."
+  },
+  "409": {
+    "title": "Excuses, Excuses!",
+    "topics": [
+      "strings"
+    ],
+    "statement": "Find the excuses that contain the most keywords. A keyword counts each time it appears as a whole word, ignoring upper or lower case. A whole word means it is surrounded by the start or end of the line or by characters that are not letters.\n\n## Input\n\nSeveral sets until the end of input. Each starts with `K E` (`1 ≤ K, E ≤ 20`), then `K` lines with one lowercase keyword each, then `E` lines with one excuse each (up to 70 characters of letters, digits, spaces and `\".,!?`).\n\n## Output\n\nFor set `k`, print `Excuse Set #k`, then every excuse with the highest count, exactly as given, one per line, then an empty line. If several excuses tie, print them in input order."
+  },
+  "437": {
+    "topics": [
+      "dp"
+    ],
+    "statement": "You have `n` kinds of boxes, unlimited copies of each, with sides `x y z`. A box can be turned so that any side is the height. A box can sit on another only if both sides of its base are strictly smaller than the two base sides of the box below. Find the tallest possible tower.\n\n## Input\n\nSeveral test cases. Each starts with `n` (`n ≤ 30`), then `n` lines with three integers each. `n = 0` ends the input.\n\n## Output\n\nFor test case `k`, print `Case k: maximum height = h`."
+  },
+  "439": {
+    "topics": [
+      "graphs"
+    ],
+    "statement": "Find the fewest knight moves between two squares of a standard 8 × 8 chessboard.\n\n## Input\n\nOne case per line until the end of input: two squares separated by a space, each written as a column letter `a` to `h` and a row digit `1` to `8`.\n\n## Output\n\nFor each case, print `To get from xx to yy takes n knight moves.`"
+  },
+  "441": {
+    "topics": [
+      "brute-force"
+    ],
+    "statement": "Given a set `S` of `k` numbers, print every way to choose 6 of them.\n\n## Input\n\nOne case per line: `k` (`6 < k < 13`) followed by the `k` numbers of `S` in increasing order. A line with `0` ends the input.\n\n## Output\n\nPrint each choice on its own line, its numbers increasing and separated by single spaces, with all choices in lexicographic order. Separate test cases by one empty line, with no empty line after the last one."
+  },
+  "455": {
+    "topics": [
+      "strings",
+      "brute-force"
+    ],
+    "statement": "A string has period `k` if it is made of one piece of length `k` repeated one or more times. For example `abcabcabcabc` has periods 3, 6 and 12. Find the smallest period of each string.\n\n## Input\n\nThe first line is `N`, followed by an empty line. Then `N` strings of up to 80 non blank characters, with an empty line between consecutive strings.\n\n## Output\n\nFor each string print its smallest period, with an empty line between consecutive answers."
+  },
+  "458": {
+    "topics": [
+      "strings",
+      "implementation"
+    ],
+    "statement": "Each line of the input is a message in which every character has been shifted by the same fixed amount in the ASCII table. Decode the messages. The example below the statement is enough to work out the shift.\n\n## Input\n\nEncoded lines until the end of input.\n\n## Output\n\nPrint each decoded line."
+  },
+  "482": {
+    "topics": [
+      "sorting",
+      "implementation"
+    ],
+    "statement": "Rearrange a list of numbers with an index array: if the index array is `p`, the `i`th input number moves to position `p[i]`.\n\n## Input\n\nThe first line is the number of cases, then an empty line. Each case has two lines: a permutation of 1 to `n`, and `n` decimal numbers. Cases are separated by empty lines.\n\n## Output\n\nFor each case, print the rearranged numbers one per line, each written exactly as it appeared in the input. Separate cases with an empty line."
+  },
+  "483": {
+    "topics": [
+      "strings"
+    ],
+    "statement": "Reverse the characters of every word while keeping the words in their original order. A word is any run of printable characters between whitespace, so punctuation is reversed with it.\n\n## Input\n\nSeveral lines of words until the end of input.\n\n## Output\n\nThe same lines with each word reversed and spacing between words kept as in the input."
+  },
+  "488": {
+    "topics": [
+      "implementation"
+    ],
+    "statement": "Draw a triangle wave with a given amplitude, repeated a given number of times. One wave with amplitude `A` is the lines `1`, `22`, `333`, ... up to the digit `A` written `A` times, then back down to `1`.\n\n## Input\n\nThe first line is the number of cases, followed by an empty line. Each case has two lines: the amplitude (at most 9) and the frequency, the number of waves. Cases are separated by empty lines.\n\n## Output\n\nFor each case, print the waves with an empty line between consecutive waves, and an empty line between consecutive cases. Do not print extra empty lines after the last wave of the last case."
+  },
+  "494": {
+    "topics": [
+      "strings"
+    ],
+    "statement": "Count the words on each line, where a word is a maximal run of letters (`A` to `Z` or `a` to `z`). Any other character separates words.\n\n## Input\n\nLines of text until the end of input.\n\n## Output\n\nFor each line, print its word count."
+  },
+  "496": {
+    "topics": [
+      "implementation",
+      "data-structures"
+    ],
+    "statement": "Compare two sets of distinct integers.\n\n## Input\n\nPairs of lines until the end of input: the first line of a pair lists set A, the second set B.\n\n## Output\n\nFor each pair print exactly one of:\n\n- `A equals B`\n- `A is a proper subset of B`\n- `B is a proper subset of A`\n- `A and B are disjoint`\n- `I'm confused!` when none of the above holds.\n\n## Notes\n\nA set line can be empty."
+  },
+  "499": {
+    "topics": [
+      "strings"
+    ],
+    "statement": "For each line of text, find the letters that occur most often. Uppercase and lowercase letters count separately, and characters that are not letters are ignored.\n\n## Input\n\nLines of text until the end of input.\n\n## Output\n\nFor each line, print all letters with the highest count, uppercase letters first in alphabetical order, then lowercase letters in alphabetical order, with no spaces between them. Then a space and the count."
+  },
+  "501": {
+    "topics": [
+      "data-structures"
+    ],
+    "statement": "A black box starts empty with a counter `i = 0` and handles two operations: `ADD(x)` puts `x` in the box, and `GET` increases `i` by one and reports the `i`th smallest number currently in the box.\n\nThe operations are given as two lists: `A`, the numbers added in order, and `u`, where `u(p)` means the `p`th `GET` happens right after the first `u(p)` numbers have been added.\n\n## Input\n\nThe first line is `K`, then an empty line, then `K` data sets separated by empty lines. Each data set holds `M N`, then `A(1..M)`, then `u(1..N)`, all separated by spaces or line breaks. `M, N ≤ 30000`, `|A| ≤ 2·10⁹`, `u` is non decreasing and `p ≤ u(p) ≤ M`.\n\n## Output\n\nFor each data set, print the answer of each `GET` on its own line. Put an empty line between data sets."
+  },
+  "512": {
+    "topics": [
+      "simulation",
+      "implementation"
+    ],
+    "statement": "Track where spreadsheet cells end up after a series of edits. Rows and columns are numbered from 1.\n\nOperations:\n\n- `EX r1 c1 r2 c2` swaps the contents of two cells.\n- `DR A x1 ... xA` deletes the listed rows; `DC` does the same for columns.\n- `IR A x1 ... xA` inserts an empty row before each listed row; `IC` does the same for columns.\n\nAll labels in one insert or delete command refer to the sheet before that command.\n\n## Input\n\nSeveral spreadsheets. Each starts with `rows columns` (at most 50 each), then the number of operations and the operations, then the number of queries and that many `r c` pairs about original cells. The line `0 0` ends the input.\n\n## Output\n\nFor spreadsheet `k`, print `Spreadsheet #k`, then for each query either `Cell data in (r,c) moved to (r2,c2)` or `Cell data in (r,c) GONE`. Put an empty line between spreadsheets."
+  },
+  "514": {
+    "topics": [
+      "data-structures",
+      "simulation"
+    ],
+    "statement": "Coaches 1 to `N` arrive in that order and enter a dead end station that works like a stack: the last coach in is the first one out. Coaches leave toward the other side one at a time. Decide whether a given outgoing order is possible.\n\n## Input\n\nSeveral blocks. Each starts with `N` (`N ≤ 1000`), then one or more lines with a permutation of 1 to `N`, then a line with `0`. A block made only of `0` ends the input.\n\n## Output\n\nFor each permutation print `Yes` or `No`. Print an empty line after each block."
+  },
+  "516": {
+    "topics": [
+      "number-theory"
+    ],
+    "statement": "A number is written by its prime factorisation: pairs `p e` meaning prime `p` raised to `e`, listed from the largest prime to the smallest. For each given number `x`, print `x - 1` in the same form.\n\n## Input\n\nOne number per line, written as its prime factor pairs, where `2 < x ≤ 32767`. A line with `0` ends the input.\n\n## Output\n\nFor each line, print the factor pairs of `x - 1` from the largest prime to the smallest, all separated by single spaces."
+  },
+  "534": {
+    "topics": [
+      "graphs"
+    ],
+    "statement": "A frog wants to get from stone 1 to stone 2 by jumping between stones. The difficulty of a route is its longest single jump. Find the smallest possible difficulty over all routes.\n\n## Input\n\nSeveral test cases. Each starts with `n` (`2 ≤ n ≤ 200`), then `n` lines with the integer coordinates of the stones (0 to 1000). An empty line follows each case. `n = 0` ends the input.\n\n## Output\n\nFor test case `k`, print `Scenario #k`, then `Frog Distance = d` with `d` to three decimal places, then an empty line, also after the last case."
+  },
+  "536": {
+    "topics": [
+      "data-structures"
+    ],
+    "statement": "A binary tree has a different uppercase letter in every node. Given its preorder traversal (root, left, right) and its inorder traversal (left, root, right), print its postorder traversal (left, right, root).\n\n## Input\n\nOne case per line until the end of input: the preorder string and the inorder string, separated by a space.\n\n## Output\n\nFor each case, print the postorder string."
+  },
+  "540": {
+    "topics": [
+      "data-structures",
+      "simulation"
+    ],
+    "statement": "Simulate a team queue. Every element belongs to a team. A new element walks along the queue and stands right behind the last member of its team already waiting; if none is waiting, it joins at the back. Elements leave from the front as usual.\n\n## Input\n\nSeveral test cases. Each starts with the number of teams `t` (`t ≤ 1000`), then one line per team: its size followed by its elements (integers up to 999999). Then commands: `ENQUEUE x`, `DEQUEUE` and `STOP`, which ends the case. `t = 0` ends the input.\n\n## Output\n\nFor test case `k`, print `Scenario #k`, then each element removed by `DEQUEUE` on its own line, then an empty line, also after the last case.\n\n## Notes\n\nA test case can have up to 200000 commands."
+  },
+  "541": {
+    "topics": [
+      "implementation"
+    ],
+    "statement": "A 0/1 matrix has the parity property when every row and every column contains an even number of 1s. Check a matrix: is it fine already, can it be fixed by flipping exactly one bit, or is it corrupt?\n\n## Input\n\nSeveral matrices. Each starts with `n` (`n < 100`), followed by `n` lines of `n` values, each 0 or 1. `n = 0` ends the input.\n\n## Output\n\nFor each matrix print `OK`, or `Change bit (i,j)` with the 1 based row `i` and column `j` to flip, or `Corrupt`."
+  },
+  "543": {
+    "topics": [
+      "number-theory"
+    ],
+    "statement": "Write each even number `n` as the sum of two odd primes `a + b`. If there are several ways, choose the one where `b - a` is largest.\n\n## Input\n\nEven integers `n` with `6 ≤ n < 1000000`, one per line. A `0` ends the input.\n\n## Output\n\nFor each `n` print `n = a + b` with single spaces around `=` and `+`. If no pair exists, print `Goldbach's conjecture is wrong.`"
+  },
+  "544": {
+    "topics": [
+      "graphs"
+    ],
+    "statement": "Roads between cities each have a weight limit. A truck's load must not exceed the limit of any road it drives on. Find the heaviest load that can be carried from the start city to the destination.\n\n## Input\n\nSeveral test cases. Each starts with `n r` (`2 ≤ n ≤ 200` cities, `1 ≤ r ≤ 19900` roads), then `r` lines `cityA cityB limit` (two way roads, limits 0 to 10000), then a line with the start and destination names. Names have at most 30 characters and no spaces. `0 0` ends the input.\n\n## Output\n\nFor test case `k`, print `Scenario #k`, then `y tons` with the maximum load, then an empty line."
+  },
+  "579": {
+    "topics": [
+      "math",
+      "geometry"
+    ],
+    "statement": "Find the smaller angle between the hour hand and the minute hand of an analog clock at a given time. The hour hand moves smoothly as the minutes pass.\n\n## Input\n\nOne time per line in the form `H:MM` with `1 ≤ H ≤ 12` and `00 ≤ MM ≤ 59`. The line `0:00` ends the input.\n\n## Output\n\nFor each time, print the angle in degrees, between 0 and 180, with three digits after the decimal point."
+  },
+  "591": {
+    "topics": [
+      "math"
+    ],
+    "statement": "Stacks of bricks have different heights. Move bricks one at a time so that every stack ends up the same height, using as few moves as possible. The total always divides evenly.\n\n## Input\n\nSeveral sets. Each has a line with `n` (`1 ≤ n ≤ 50`) and a line with the `n` heights (1 to 100). `n = 0` ends the input.\n\n## Output\n\nFor set `k`, print `Set #k`, then `The minimum number of moves is m.`, then an empty line."
+  },
+  "612": {
+    "topics": [
+      "sorting",
+      "strings"
+    ],
+    "statement": "The unsortedness of a string is the number of pairs of positions `i < j` whose letters are in the wrong order (`s[i] > s[j]`). Sort DNA strings from least to most unsorted.\n\n## Input\n\nThe first line is `M`, then an empty line, then `M` data sets separated by empty lines. Each data set starts with `n m` (`n ≤ 50` is the length, `m ≤ 100` the count), followed by `m` strings of length `n` using only `A`, `C`, `G`, `T`.\n\n## Output\n\nFor each data set, print the strings from least to most unsorted. Strings with the same value keep their input order. Put an empty line between data sets."
+  },
+  "615": {
+    "topics": [
+      "graphs",
+      "data-structures"
+    ],
+    "statement": "Decide whether a set of directed edges forms a tree: exactly one node (the root) has no edge pointing to it, every other node has exactly one edge pointing to it, and every node can be reached from the root.\n\n## Input\n\nSeveral test cases. Each is a list of pairs `a b` (an edge from `a` to `b`, node numbers 1 to 100), spread over any number of lines and ended by `0 0`. The pair `-1 -1` ends the input.\n\n## Output\n\nFor test case `k`, print `Case k is a tree. Root is r.` or `Case k is not a tree.`"
+  },
+  "630": {
+    "topics": [
+      "strings",
+      "sorting"
+    ],
+    "statement": "Two words are anagrams if one is a rearrangement of the letters of the other. For each test word, list every word in the vocabulary that is an anagram of it, including the word itself if it is in the vocabulary.\n\n## Input\n\nThe first line is `T`, then an empty line, then `T` test cases separated by empty lines. Each case has `N` (`N < 1000`), then `N` vocabulary words, then test words one per line, ended by `END`. Words are lowercase with at most 20 letters.\n\n## Output\n\nFor each test word, print `Anagrams for: word`, then the matching vocabulary words in vocabulary order, each as `k) word` with `k` right aligned in 3 characters. If there are none, print `No anagrams for: word` instead. Put an empty line between test cases."
+  },
+  "657": {
+    "topics": [
+      "graphs"
+    ],
+    "statement": "A picture shows dice: `.` is background, `*` is part of a die and `X` is part of a dot on a die. Pixels belong together only if they share a side. A die is a group of connected `*` and `X` pixels; a dot is a group of connected `X` pixels. Count the dots on every die.\n\n## Input\n\nSeveral pictures. Each starts with `w h` (`5 ≤ w, h ≤ 50`), followed by `h` lines of `w` characters. `0 0` ends the input.\n\n## Output\n\nFor picture `k`, print `Throw k`, then the dot counts of all dice in increasing order on one line, separated by spaces, then an empty line."
+  },
+  "665": {
+    "topics": [
+      "brute-force",
+      "implementation"
+    ],
+    "statement": "Among `N` coins exactly one is fake: it is either lighter or heavier than the others, which all weigh the same. Given the results of several weighings on a balance, find the fake coin if the results identify it uniquely.\n\n## Input\n\nThe first line is `M`, then an empty line, then `M` data sets separated by empty lines. Each starts with `N K` (`N, K ≤ 100`). Each of the `K` weighings takes two lines: `P` followed by `P` coins on the left pan and `P` coins on the right pan; then `<`, `>` or `=` for the result.\n\n## Output\n\nFor each data set, print the fake coin's number, or `0` if it cannot be determined. Put an empty line between data sets."
+  },
+  "673": {
+    "topics": [
+      "data-structures",
+      "strings"
+    ],
+    "statement": "A string of `(`, `)`, `[` and `]` is correct if it is empty, or two correct strings joined together, or a correct string wrapped in `( )` or `[ ]`. Check each string.\n\n## Input\n\nThe first line is `n`, followed by `n` strings, one per line, each up to 128 characters.\n\n## Output\n\nFor each string print `Yes` or `No`.\n\n## Notes\n\nA line can be empty, and the empty string is correct."
+  },
+  "674": {
+    "topics": [
+      "dp"
+    ],
+    "statement": "Count the different ways to make an amount using coins of 1, 5, 10, 25 and 50 cents. Ways differ in how many coins of each value are used. There is exactly one way to make 0 cents.\n\n## Input\n\nOne amount per line, at most 7489 cents, until the end of input.\n\n## Output\n\nFor each amount, print the number of ways on its own line."
+  },
+  "679": {
+    "topics": [
+      "simulation",
+      "math"
+    ],
+    "statement": "A full binary tree of depth `D` has nodes numbered level by level, left to right, starting with 1 at the root. Every inner node has a switch that starts pointing left. A ball dropped from the root goes down until it reaches a leaf; at each inner node it flips the switch and goes the way the switch pointed before the flip. Balls are dropped one after another. Find the leaf where ball number `I` stops.\n\n## Input\n\nThe first line is the number of test cases. Each next line holds `D I` with `2 ≤ D ≤ 20` and `1 ≤ I ≤ 524288`, never more than the number of leaves. A line with `-1` ends the input.\n\n## Output\n\nFor each test case, print the number of the leaf."
+  },
+  "686": {
+    "topics": [
+      "number-theory"
+    ],
+    "statement": "Count the ways to write an even number `n` as the sum of two primes `p1 + p2`. A pair and its reverse count once.\n\n## Input\n\nOne even number per line with `4 ≤ n < 32768`. A `0` ends the input.\n\n## Output\n\nFor each number, print the count on its own line."
+  },
+  "696": {
+    "topics": [
+      "math"
+    ],
+    "statement": "Find the largest number of knights that can be placed on an `M × N` chessboard so that no knight attacks another. A knight attacks squares two rows and one column away, or one row and two columns away.\n\n## Input\n\nPairs `M N` (each at most 500), one per line. `0 0` ends the input.\n\n## Output\n\nFor each pair print `k knights may be placed on a M row N column board.`"
+  },
+  "709": {
+    "topics": [
+      "dp",
+      "strings"
+    ],
+    "statement": "Rewrap each paragraph so that every line is exactly `n` characters wide, including the last one. Words stay in order and are never split; lines start and end with a word.\n\nEvery gap of `g` spaces between two words costs `(g - 1)²`. A line with a single word is left aligned, and costs 500 if it is shorter than `n`. Choose the layout with the smallest total cost. If several layouts tie, compare them gap by gap from the start and prefer the one whose first differing gap is smaller.\n\n## Input\n\nSeveral paragraphs. Each starts with a line holding `n` (`1 ≤ n ≤ 80`), then one or more lines of words separated by spaces, then one empty line. Words use characters with codes 33 to 126 and are never longer than `n`. A paragraph with `n = 0` ends the input.\n\n## Output\n\nPrint each formatted paragraph followed by an empty line."
+  },
+  "714": {
+    "topics": [
+      "greedy",
+      "brute-force"
+    ],
+    "statement": "Split a row of `m` books into `k` consecutive groups, each with at least one book, so that the largest total number of pages in a group is as small as possible. Among all best splits, give the first group as little as possible, then the second, and so on.\n\n## Input\n\nThe first line is the number of cases. Each case has a line `m k` (`1 ≤ k ≤ m ≤ 500`) and a line with the `m` page counts, each below 10⁷.\n\n## Output\n\nFor each case, print the page counts in order with ` / ` between groups: one space between numbers and one space on each side of every slash.\n\n## Notes\n\nSums can exceed a 32 bit integer."
+  },
+  "725": {
+    "topics": [
+      "brute-force"
+    ],
+    "statement": "Find every pair of five digit numbers `abcde / fghij = N` such that the ten digits are all different, so 0 to 9 each appear once. Either number may start with 0.\n\n## Input\n\nOne integer `N` per line with `2 ≤ N ≤ 79`. A `0` ends the input.\n\n## Output\n\nFor each `N`, print every solution as `abcde / fghij = N` in increasing order of the first number, writing both numbers with five digits. If there are none, print `There are no solutions for N.` Put an empty line between the outputs of different `N`."
+  },
+  "748": {
+    "topics": [
+      "math",
+      "implementation"
+    ],
+    "statement": "Compute `R` to the power `n` exactly, where `R` is a decimal number with `0.0 < R < 99.999` and `n` is an integer with `0 < n ≤ 25`.\n\n## Input\n\nOne pair per line until the end of input: `R` in the first six columns, then `n`.\n\n## Output\n\nFor each pair, print the exact value of `R` to the power `n`. Leave out leading zeros, including the zero before the decimal point for values below 1 (print `.0512`, not `0.0512`), and trailing zeros after the decimal point. If the value is a whole number, print it without a decimal point."
+  },
+  "753": {
+    "topics": [
+      "graphs"
+    ],
+    "statement": "A room has one outlet of each listed type. Devices each need an outlet of a certain plug type. Adapters convert one plug type into another, can be chained, and are available in unlimited numbers, but each outlet still serves one device. Plug in as many devices as possible and report how many are left without power.\n\n## Input\n\nThe first line is the number of cases, then an empty line. Each case lists `n` outlet types, then `m` devices as `name plugType`, then `k` adapter kinds as `outletType plugType` meaning the adapter offers `outletType` and plugs into `plugType`. Counts are at most 100 and names at most 24 characters. Cases are separated by empty lines.\n\n## Output\n\nFor each case, print the smallest number of devices that cannot be plugged in. Put an empty line between cases."
+  },
+  "798": {
+    "title": "Tile Puzzle",
+    "topics": [
+      "brute-force"
+    ],
+    "statement": "Rebuild a `w × h` rectangle using every tile from a collection. Tiles with the same size form a group and are indistinguishable from each other; tiles are placed without rotating. Count the different arrangements, where two arrangements differ if some group's tiles occupy different positions.\n\n## Input\n\nData sets until the end of input. Each is `w h n` (`0 < w, h ≤ 100`, `0 < n ≤ 10`) followed by `n` groups `m wk hk`: `m` tiles of width `wk` and height `hk`. The tiles always fill the rectangle exactly.\n\n## Output\n\nFor each data set, print the number of arrangements."
+  },
+  "815": {
+    "topics": [
+      "sorting",
+      "math"
+    ],
+    "statement": "A region is a grid of 10 m × 10 m squares with given elevations. A given volume of water collects in the lowest squares first and spreads evenly, as if all squares were connected. Find the water level and the share of squares that end up strictly below it.\n\n## Input\n\nSeveral regions. Each starts with `m n` (both below 30), then `m` lines of `n` elevations in meters, then the water volume in cubic meters. `0 0` ends the input.\n\n## Output\n\nFor region `k`, print `Region k`, then `Water level is x meters.`, then `y percent of the region is under water.`, both numbers to two decimal places, then an empty line."
+  },
+  "820": {
+    "topics": [
+      "graphs"
+    ],
+    "statement": "A network has `n` nodes joined by two way connections, each with a bandwidth (the total in both directions). Find the largest total amount of data per time that can flow from node `s` to node `t`, splitting it over several paths if needed.\n\n## Input\n\nSeveral networks. Each starts with `n` (`2 ≤ n ≤ 100`), then `s t c`, then `c` lines `a b bandwidth` (bandwidth 0 to 1000). Two nodes can share several connections. A line with `0` ends the input.\n\n## Output\n\nFor network `k`, print `Network k`, then `The bandwidth is x.`, then an empty line."
+  },
+  "828": {
+    "topics": [
+      "strings",
+      "implementation"
+    ],
+    "statement": "Decrypt messages made with this cipher. The key is a letter list `L` and a shift `N` (1 to 25). `ciph(p)` moves a letter `N` places forward in the alphabet, wrapping from `Z` to `A`.\n\nEach word is encrypted from left to right. A letter not in `L` becomes `ciph(p)`. A letter in `L` becomes three letters: the `m`th letter of `L`, then `ciph(p)`, then the `(m+1)`th letter of `L`, after which `m` increases by one; `L` wraps around. `m` starts at 1 for every message and continues across its words. Spaces are kept.\n\n## Input\n\nThe first line is the number of cases, then an empty line. Each case gives `L`, then `N`, then the number of messages, then one encrypted message per line. Cases are separated by empty lines.\n\n## Output\n\nFor each message, print the original text, or `error in encryption` if it cannot be the result of this cipher. Put an empty line between cases."
+  },
+  "834": {
+    "topics": [
+      "math"
+    ],
+    "statement": "Write a fraction as a continued fraction `[b0; b1, b2, ..., bn]`, meaning `b0 + 1/(b1 + 1/(b2 + ... + 1/bn))`, where `b1` to `bn` are positive. To make the answer unique, the last term `bn` must be greater than 1 (unless the expansion has only `b0`). For example `43/19 = [2;3,1,4]`.\n\n## Input\n\nPairs `numerator denominator` until the end of input.\n\n## Output\n\nFor each pair, print the expansion as `[b0;b1,b2,...,bn]` with no spaces: a semicolon after the first term and commas between the others."
+  },
+  "846": {
+    "topics": [
+      "math"
+    ],
+    "statement": "You walk along the number line from `x` to `y`. Each step's length is a non negative integer that is one more, the same, or one less than the previous step's length. The first and the last step must both have length 1. Find the fewest steps needed.\n\n## Input\n\nThe first line is `n`, the number of cases. Each case is a line `x y` with `0 ≤ x ≤ y < 2³¹`.\n\n## Output\n\nFor each case, print the minimum number of steps."
+  },
+  "855": {
+    "topics": [
+      "sorting",
+      "math"
+    ],
+    "statement": "Friends live at street and avenue corners of a grid city, where walking one block costs one unit. Choose a meeting corner that minimises the total walking distance of everyone. If several corners tie, choose the one with the smallest street number, then the smallest avenue number.\n\n## Input\n\nThe first line is `T`. Each test case starts with `S A F`: streets and avenues (each at most 1000) and the number of friends (`0 < F ≤ 50000`), followed by `F` lines `street avenue`.\n\n## Output\n\nFor each test case, print `(Street: s, Avenue: a)`."
+  },
+  "907": {
+    "topics": [
+      "dp",
+      "greedy"
+    ],
+    "statement": "A trail has `N` campsites; you know the distance from the start to the first campsite, between consecutive campsites, and from the last campsite to the end. You must camp exactly `K` nights, always at a campsite, so the hike takes `K + 1` days. Plan the stops so that the longest single day of walking is as short as possible.\n\n## Input\n\nSeveral test cases until the end of input. Each starts with `N K` (`0 < N ≤ 600`, `0 ≤ K ≤ 300`), followed by `N + 1` distances, one per line.\n\n## Output\n\nFor each test case, print the smallest possible longest day."
+  },
+  "913": {
+    "topics": [
+      "math"
+    ],
+    "statement": "Joana writes the odd numbers in rows of growing odd length: `1`, then `3 5 7`, then `9 11 13 15 17`, and so on. Given the length `N` of a row, find the sum of the last three numbers in that row.\n\n## Input\n\nOne odd number `N` per line (`1 < N < 10⁹`) until the end of input.\n\n## Output\n\nFor each `N`, print the sum. It always fits in a signed 64 bit integer."
+  },
+  "929": {
+    "topics": [
+      "graphs"
+    ],
+    "statement": "A grid of digits 0 to 9 is a maze; entering a cell costs its digit, including the starting cell. Moving is allowed up, down, left and right. Find the smallest total cost from the top left cell to the bottom right cell.\n\n## Input\n\nThe first line is the number of mazes. Each maze gives the number of rows `N`, then the number of columns `M` (`1 ≤ N, M ≤ 999`), then `N` lines of `M` digits separated by spaces.\n\n## Output\n\nFor each maze, print the minimum cost."
+  },
+  "948": {
+    "topics": [
+      "math",
+      "greedy"
+    ],
+    "statement": "Every positive integer can be written uniquely as a sum of different Fibonacci numbers (1, 2, 3, 5, 8, 13, ...) where no two consecutive Fibonacci numbers are used. Write that sum as a binary string: from right to left the positions stand for 1, 2, 3, 5, 8, ..., and a `1` marks a number that is used. For example `17 = 13 + 3 + 1 = 100101`.\n\n## Input\n\nThe first line is `N` (`1 ≤ N ≤ 500`), followed by `N` positive integers below 10⁸, one per line.\n\n## Output\n\nFor each number `d`, print `d = s (fib)` where `s` is its representation without leading zeros."
+  },
+  "967": {
+    "topics": [
+      "number-theory"
+    ],
+    "statement": "A circular prime stays prime every time its first digit is moved to the end. For example 19937, 99371, 93719, 37199 and 71993 are all prime, so 19937 is a circular prime. Count the circular primes in a range.\n\n## Input\n\nOne pair `i j` per line with `100 ≤ i ≤ j < 1000000`. A line with `-1` ends the input.\n\n## Output\n\nFor each pair print `No Circular Primes.`, `1 Circular Prime.` or `n Circular Primes.`"
+  },
+  "993": {
+    "topics": [
+      "greedy",
+      "math"
+    ],
+    "statement": "For a non negative integer `N`, find the smallest positive integer `Q` whose digits multiply to exactly `N`.\n\n## Input\n\nThe first line is the number of data sets. Each next line holds one `N` with `0 ≤ N ≤ 10⁹`.\n\n## Output\n\nFor each `N`, print `Q`, or `-1` if no such number exists."
+  },
+  "1056": {
+    "topics": [
+      "graphs"
+    ],
+    "statement": "In a network of people with two way relationships, the separation of two people is the fewest relationships linking them. Find the largest separation over all pairs of people, or report that some pair is not connected at all.\n\n## Input\n\nSeveral networks. Each starts with `P R` (`2 ≤ P ≤ 50` people, `R ≥ 1` relationships), followed by `R` pairs of names, which may be spread over several lines. Names have no spaces. `0 0` ends the input.\n\n## Output\n\nFor network `k`, print `Network k: d` with the largest separation, or `Network k: DISCONNECTED`, then an empty line.\n\n## Notes\n\nSome of the `P` people may not appear in any relationship."
+  },
+  "1062": {
+    "topics": [
+      "greedy"
+    ],
+    "statement": "Containers arrive one by one, each labeled with the letter of the ship it belongs to. Each new container goes on top of an existing stack or starts a new one. Afterwards the ships are loaded in alphabetical order, and a ship can only take containers from the tops of stacks. Find the fewest stacks that make this possible.\n\n## Input\n\nOne test case per line: 1 to 1000 uppercase letters in arrival order. A line with `end` ends the input.\n\n## Output\n\nFor test case `k`, print `Case k: s`."
+  },
+  "1101": {
+    "title": "To Add or to Multiply",
+    "topics": [
+      "brute-force",
+      "greedy"
+    ],
+    "statement": "A processor knows two instructions: `A` adds `a` and `M` multiplies by `m`. Every input lies between `p` and `q`, and every output must lie between `r` and `s`. Find the shortest program that works for all inputs in the range; if several have the same length, choose the first in lexicographic order of `A` and `M`.\n\n## Input\n\nOne case per line: `a m p q r s`, all between 1 and 10⁹, with `p ≤ q` and `r ≤ s`. Six zeros end the input.\n\n## Output\n\nFor case `k` print `Case k: ` followed by the program written as alternating groups like `1A 2M`, or `empty` if no instruction is needed, or `impossible` if no program works."
+  },
+  "1200": {
+    "topics": [
+      "math",
+      "strings"
+    ],
+    "statement": "Solve a linear equation in one variable `x`. Each side is a sum of terms joined by `+` or `-`; a term is an integer, an integer followed by `x`, or just `x` (meaning `1x`). There are no unary signs and no spaces.\n\n## Input\n\nThe first line is `t` (`1 ≤ t ≤ 10`), followed by `t` equations, each at most 255 characters. Coefficients are between 0 and 1000.\n\n## Output\n\nFor each equation, print the floor of the solution (the largest integer not above it), `IMPOSSIBLE` if there is no solution, or `IDENTITY` if every `x` is a solution."
+  },
+  "1208": {
+    "topics": [
+      "graphs",
+      "greedy"
+    ],
+    "statement": "Cities named `A`, `B`, `C`, ... are joined by tunnels, and protecting each tunnel needs some number of guards. Choose tunnels to protect so that all cities stay connected through protected tunnels, using the fewest guards in total.\n\n## Input\n\nThe first line is the number of test cases. Each case starts with the number of cities `n`, followed by an `n × n` matrix with values separated by commas and spaces: entry `(i, j)` is the guards needed for the tunnel between city `i` and city `j`, or 0 if there is no tunnel.\n\n## Output\n\nFor test case `k` print `Case k:`, then each chosen tunnel as `X-Y w`, with the earlier letter first, in increasing order of `w` and alphabetically for equal `w`."
+  },
+  "1225": {
+    "topics": [
+      "implementation"
+    ],
+    "statement": "Write all integers from 1 to `N` one after another and count how often each digit 0 to 9 appears.\n\n## Input\n\nThe first line is the number of data sets (at most 20). Each next line holds one `N` with `1 < N < 10000`.\n\n## Output\n\nFor each `N`, print the ten counts for digits 0 to 9 on one line, separated by spaces."
+  },
+  "1234": {
+    "topics": [
+      "graphs",
+      "greedy"
+    ],
+    "statement": "A connected road network has junctions and two way roads, and putting a camera on a road has a cost. A circuit is any route of three or more roads that returns to its start without reusing a road. Choose roads for cameras so that every possible circuit has at least one camera, at the smallest total cost.\n\n## Input\n\nThe first line is the number of data sets `c`. Each data set starts with `n m` (`0 < n < 10000` junctions, `0 < m < 100000` roads), followed by `m` lines `a b cost` (cost 1 to 1000). A line with `0` follows the last data set.\n\n## Output\n\nFor each data set, print the minimum total cost."
+  },
+  "1237": {
+    "topics": [
+      "implementation"
+    ],
+    "statement": "A database lists car makers, each with the lowest and highest price of any car they made. For each queried price, find the maker whose range contains it. If no maker or more than one maker matches, the answer is undetermined.\n\n## Input\n\nThe first line is `T` (`T ≤ 10`). Each case gives `D` (`D < 10000`), then `D` lines `name L H` (`0 < L < H < 1000000`, names without spaces), then `Q` (`Q < 1000`), then `Q` prices, one per line. Ranges include both ends.\n\n## Output\n\nFor each query, print the maker's name or `UNDETERMINED`. Put an empty line between cases."
+  },
+  "1260": {
+    "topics": [
+      "brute-force"
+    ],
+    "statement": "For each day after the first, count how many earlier days had sales less than or equal to that day's sales. Print the total of these counts.\n\n## Input\n\nThe first line is `T`. Each case has a line with `n` (`2 ≤ n ≤ 1000`) and a line with `n` sales values between 1 and 5000.\n\n## Output\n\nFor each case, print the total."
+  },
+  "1316": {
+    "topics": [
+      "greedy",
+      "data-structures"
+    ],
+    "statement": "Each product brings a profit if it is sold by its deadline. Selling a product takes exactly one time unit, one product at a time, starting at time 0; a product with deadline `d` must finish by time `d`. Choose which products to sell and in what order to make the most profit.\n\n## Input\n\nProduct sets until the end of input. Each set is `n` (`0 ≤ n ≤ 10000`) followed by `n` pairs `profit deadline`, each value between 1 and 10000. Whitespace, including line breaks, can appear anywhere.\n\n## Output\n\nFor each set, print the best total profit on its own line."
+  },
+  "1339": {
+    "topics": [
+      "strings",
+      "sorting"
+    ],
+    "statement": "A message was encrypted in two steps: first every letter was replaced by another letter (different letters always map to different letters), then the letters were shuffled into a new order. Given an encrypted message and a candidate original of the same length, decide whether the candidate could have produced it.\n\n## Input\n\nPairs of lines until the end of input: the encrypted message, then the candidate original. Both use only uppercase letters and have the same length, at most 100.\n\n## Output\n\nFor each pair, print `YES` or `NO`."
+  },
+  "1366": {
+    "topics": [
+      "dp"
+    ],
+    "statement": "A grid of `n` rows and `m` columns holds two minerals; each cell has an amount of each. One refinery is to the west and one is to the north. In each cell you build at most one conveyor: a westward belt for the first mineral or a northward belt for the second. A cell's mineral only counts if it rides an unbroken straight line of belts of the right type all the way to its refinery. Maximise the total mineral delivered.\n\n## Input\n\nSeveral test cases. Each starts with `n m` (`1 ≤ n, m ≤ 500`). The next `n` lines give the first mineral and the following `n` lines the second, row by row from north to south, each row from west to east, with values from 0 to 1000. `0 0` ends the input.\n\n## Output\n\nFor each test case, print the maximum total."
+  },
+  "1368": {
+    "topics": [
+      "strings",
+      "greedy"
+    ],
+    "statement": "Given `m` DNA strings of length `n`, find a string `y` of length `n` that minimises the total Hamming distance to all of them (the number of positions where `y` and each string differ, summed over all strings). If several strings tie, choose the smallest in alphabetical order.\n\n## Input\n\nThe first line is `T`. Each case starts with `m n` (`4 ≤ m ≤ 50`, `4 ≤ n ≤ 1000`), followed by `m` strings over `A`, `C`, `G`, `T`.\n\n## Output\n\nFor each case, print the chosen string on one line and its total distance on the next."
+  },
+  "1513": {
+    "topics": [
+      "data-structures"
+    ],
+    "statement": "A stack holds movies 1 to `n` with movie 1 on top. To watch a movie, it is taken out of the stack and afterwards put back on top. For every request, report how many movies were above the requested one just before it was taken out.\n\n## Input\n\nThe first line is the number of test cases (at most 100). Each case has a line `n m` (`1 ≤ n, m ≤ 100000`) and a line with the `m` requested movie numbers.\n\n## Output\n\nFor each case, print the `m` answers on one line, separated by spaces."
+  },
+  "1583": {
+    "topics": [
+      "brute-force"
+    ],
+    "statement": "The digit sum of `N` here means `N` plus the sum of its digits; for example 245 gives 245 + 2 + 4 + 5 = 256, so 245 is a generator of 256. Find the smallest generator of a given number.\n\n## Input\n\nThe first line is `T`. Each next line holds one `N` with `1 ≤ N ≤ 100000`.\n\n## Output\n\nFor each `N`, print its smallest generator, or `0` if it has none."
+  },
+  "1585": {
+    "topics": [
+      "implementation"
+    ],
+    "statement": "A test result is a string of `O` (correct) and `X` (wrong). A correct answer scores the length of the run of consecutive `O`s ending at it, so `OOO` scores 1 + 2 + 3; a wrong answer scores 0. Find the total score.\n\n## Input\n\nThe first line is `T`. Each next line holds one string of `O` and `X`, with length between 1 and 79.\n\n## Output\n\nFor each string, print the total score."
+  },
+  "1587": {
+    "topics": [
+      "implementation",
+      "sorting"
+    ],
+    "statement": "Six rectangular boards are given by their width and height. Decide whether they can be the six faces of a box, using each board for one face. Boards may be turned.\n\n## Input\n\nTest cases until the end of input, six lines each, every line holding `w h` (1 to 10000).\n\n## Output\n\nFor each test case, print `POSSIBLE` or `IMPOSSIBLE`."
+  },
+  "1594": {
+    "topics": [
+      "simulation"
+    ],
+    "statement": "From a tuple `(a1, ..., an)`, the next tuple is `(|a1 - a2|, |a2 - a3|, ..., |an - a1|)`. Repeating this either reaches all zeros or falls into a repeating loop. Decide which happens.\n\n## Input\n\nThe first line is `T`. Each case has a line with `n` (`3 ≤ n ≤ 15`) and a line with `n` integers from 0 to 1000. Either outcome shows up within 1000 steps.\n\n## Output\n\nFor each case, print `ZERO` or `LOOP`."
+  },
+  "1632": {
+    "topics": [
+      "dp"
+    ],
+    "statement": "Treasures lie at different points of a straight road, each with a deadline after which it vanishes. You start at any point you like at time 0, walk one unit of distance per time unit, and pick up a treasure instantly when you reach it. Collect all treasures before their deadlines, finishing as early as possible.\n\n## Input\n\nData sets until the end of input. Each is `n` (`n ≤ 10000`) followed by `n` pairs `position deadline`, in increasing order of position. Whitespace can appear anywhere.\n\n## Output\n\nFor each data set, print the earliest time all treasures can be collected, or `No solution`."
+  },
+  "1640": {
+    "topics": [
+      "math",
+      "dp"
+    ],
+    "statement": "Write down every integer between `a` and `b`, inclusive, and count how many times each digit 0 to 9 appears.\n\n## Input\n\nUp to 500 lines with `a b`, both between 1 and 10⁸ exclusive. `0 0` ends the input.\n\n## Output\n\nFor each line, print the ten counts for digits 0 to 9, separated by single spaces.\n\n## Notes\n\n`a` can be larger than `b`."
+  },
+  "1644": {
+    "topics": [
+      "number-theory"
+    ],
+    "statement": "Between two consecutive primes `p` and `p + n` lie `n - 1` composite numbers; they form a prime gap of length `n`. For a given number `k`, print the length of the prime gap containing it, or 0 if `k` is prime.\n\n## Input\n\nOne integer per line, greater than 1 and at most 1299709. A line with `0` ends the input.\n\n## Output\n\nFor each number, print the gap length or 0."
+  },
+  "1650": {
+    "topics": [
+      "dp"
+    ],
+    "statement": "The signature of a permutation of 1 to `n` is the string of `n - 1` letters where each letter is `I` if the next element is larger and `D` if it is smaller. For example `3 1 2 7 4 6 5` has signature `DIIDID`. Given a signature in which some letters may be `?` (either `I` or `D`), count the permutations that match.\n\n## Input\n\nOne signature per line until the end of input, 1 to 1000 characters from `I`, `D` and `?`.\n\n## Output\n\nFor each signature, print the count modulo `1000000007`."
+  },
+  "1657": {
+    "topics": [
+      "brute-force"
+    ],
+    "statement": "A game master picks two different integers `X` and `Y` from 1 to `N`, tells their sum to player S and their product to player P. Both players know `N`, think perfectly and know the other does too. Taking turns, S first, each says either that they do not know the pair yet or that they now know it.\n\nGiven `N` and the number `M` of times \"I don't know\" was said in total before a player finally knew the numbers, list every pair that could have been chosen.\n\n## Input\n\nData sets until the end of input, each a line `N M` (`2 ≤ N ≤ 200`, `0 ≤ M ≤ 100`).\n\n## Output\n\nFor each data set, print the number of possible pairs, then each pair as `x y` with `x < y`, one per line. Pairs may be printed in any order."
+  },
+  "1714": {
+    "topics": [
+      "graphs"
+    ],
+    "statement": "A virtual keyboard is a grid; each key covers one or more connected cells. The cursor starts at the top left cell. The four arrows move it to the next cell in that direction belonging to a different key (it stays put if there is none), and a fifth button types the key under the cursor. Each button press is one stroke. Find the fewest strokes to type a text and then the Enter key `*`.\n\n## Input\n\nTest cases until the end of input. Each gives `r c` (`1 ≤ r, c ≤ 50`), then `r` lines of `c` characters (uppercase letters, digits, `-`, and `*` for Enter), then the text to type: up to 10000 available characters other than `*`.\n\n## Output\n\nFor each test case, print the minimum number of strokes, including the final Enter."
+  },
+  "1730": {
+    "topics": [
+      "number-theory",
+      "math"
+    ],
+    "statement": "For a number `N`, consider all sets of distinct positive integers whose least common multiple is exactly `N`. `MSLCM(N)` is the largest possible sum of such a set. Given `N`, compute `MSLCM(2) + MSLCM(3) + ... + MSLCM(N)`.\n\n## Input\n\nUp to 200 lines, each with `N` (`1 < N ≤ 20000000`). A line with `0` ends the input.\n\n## Output\n\nFor each `N`, print the sum.\n\n## Notes\n\nThe answer does not fit in a 32 bit integer."
+  },
+  "1746": {
+    "topics": [
+      "brute-force",
+      "strings"
+    ],
+    "statement": "A 1-quotation is a quote character, some non quote text, and a quote character. For `k > 1`, a k-quotation is `k` quote characters, then a non empty sequence of (k-1)-quotations with optional non quote text around and between them, then `k` quote characters.\n\nA string is given only as the lengths of its blocks of consecutive quote characters, with non quote text between consecutive blocks. Find the largest `k` for which it is a k-quotation.\n\n## Input\n\nTest cases until the end of input. Each is a line with `n` (`1 ≤ n ≤ 100`) and a line with `n` block lengths (1 to 100).\n\n## Output\n\nFor each test case, print the largest `k`, or `no quotation`."
+  },
+  "10004": {
+    "topics": [
+      "graphs"
+    ],
+    "statement": "Decide whether the nodes of a connected undirected graph can be colored with two colors so that every edge joins nodes of different colors.\n\n## Input\n\nSeveral test cases. Each gives `n` (`1 < n < 200`) on one line, the number of edges on the next, then one edge per line as two node numbers from 0 to `n - 1`. `n = 0` ends the input.\n\n## Output\n\nFor each graph, print `BICOLORABLE.` or `NOT BICOLORABLE.`"
+  },
+  "10010": {
+    "topics": [
+      "strings",
+      "brute-force"
+    ],
+    "statement": "Find words in a grid of letters. A word may run in any of the eight directions (horizontal, vertical or diagonal, forwards or backwards) and letter case is ignored. For each word, report where its first letter is.\n\n## Input\n\nThe first line is the number of cases, then an empty line. Each case gives `m n` (`1 ≤ m, n ≤ 50`), then `m` lines of `n` letters, then `k` (`1 ≤ k ≤ 20`), then `k` words. Cases are separated by empty lines. Every word appears at least once.\n\n## Output\n\nFor each word print `row column` (1 based) of its first letter. If it appears several times, use the occurrence whose first letter is highest, and among those the leftmost. Put an empty line between cases."
+  },
+  "10018": {
+    "topics": [
+      "simulation",
+      "math"
+    ],
+    "statement": "Repeatedly add a number to its digit reversal until the result is a palindrome. For example 195 gives 786, 1473, 5214 and then 9339 after four additions.\n\n## Input\n\nThe first line is `N` (`0 < N ≤ 100`), followed by `N` numbers. Every case reaches a palindrome in fewer than 1000 additions, and the palindrome is at most 4294967295.\n\n## Output\n\nFor each number, print the number of additions and the palindrome, separated by a space.\n\n## Notes\n\nAt least one addition is always performed, even if the starting number is already a palindrome."
+  },
+  "10025": {
+    "topics": [
+      "math"
+    ],
+    "statement": "Put `+` or `-` in front of each of `1, 2, ..., n` so that the total equals `k`. For example `-1 + 2 + 3 + 4 + 5 + 6 - 7 = 12`. Find the smallest `n` for which this is possible.\n\n## Input\n\nThe first line is the number of test cases, then an empty line. Each test case is one integer `k` with `|k| ≤ 10⁹`, and test cases are separated by empty lines.\n\n## Output\n\nFor each `k`, print the smallest `n` (at least 1). Put an empty line between consecutive outputs."
+  },
+  "10026": {
+    "topics": [
+      "greedy",
+      "sorting"
+    ],
+    "statement": "A shoemaker has `N` jobs and works on one at a time. Job `i` takes `T` days, and for every day before work on it starts he pays a fine of `S` cents. Find the order of jobs with the smallest total fine; if several orders are best, give the lexicographically smallest list of job numbers.\n\n## Input\n\nThe first line is the number of cases, then an empty line. Each case gives `N` (`1 ≤ N ≤ 1000`), then `N` lines `T S` (`1 ≤ T ≤ 1000`, `1 ≤ S ≤ 10000`). Cases are separated by empty lines.\n\n## Output\n\nFor each case, print the job numbers (1 based) in order on one line, separated by spaces. Put an empty line between cases."
+  },
+  "10032": {
+    "topics": [
+      "dp"
+    ],
+    "statement": "Split `n` people into two teams whose sizes differ by at most one, so that the total weights of the teams are as close as possible.\n\n## Input\n\nThe first line is the number of cases, then an empty line. Each case gives `n` (at most 100), then `n` weights, one per line, each between 1 and 450. Cases are separated by empty lines.\n\n## Output\n\nFor each case, print the two team weights, smaller first. Put an empty line between cases."
+  },
+  "10035": {
+    "topics": [
+      "implementation",
+      "math"
+    ],
+    "statement": "Count how many carries happen when two numbers are added digit by digit from the right, the way it is taught in school.\n\n## Input\n\nPairs of non negative integers with fewer than 10 digits, one pair per line. `0 0` ends the input.\n\n## Output\n\nFor each pair print `No carry operation.`, `1 carry operation.` or `n carry operations.`"
+  },
+  "10038": {
+    "topics": [
+      "implementation"
+    ],
+    "statement": "A sequence of `n` integers is jolly if the absolute differences between neighbours include every value from 1 to `n - 1`. A single number is always jolly.\n\n## Input\n\nOne sequence per line until the end of input: `n` (`n ≤ 3000`) followed by the `n` integers.\n\n## Output\n\nFor each sequence, print `Jolly` or `Not jolly`."
+  },
+  "10050": {
+    "topics": [
+      "simulation"
+    ],
+    "statement": "Each political party calls a strike every `h` days: on days `h`, `2h`, `3h`, and so on. Day 1 is a Sunday, and Fridays and Saturdays are holidays on which nobody strikes. Count the working days lost to strikes in the first `N` days; a day with several strikes counts once.\n\n## Input\n\nThe first line is `T`. Each case gives `N` (`7 ≤ N ≤ 3650`), then `P` (`1 ≤ P ≤ 100`), then `P` values `h`, one per line, none a multiple of 7.\n\n## Output\n\nFor each case, print the number of lost working days."
+  },
+  "10056": {
+    "topics": [
+      "math"
+    ],
+    "statement": "`N` players take turns, player 1 first, then 2, up to `N`, then player 1 again. On each throw the thrower wins with probability `p`, and the game ends at the first win. Find the probability that player `I` wins.\n\n## Input\n\nThe first line is `S` (`S ≤ 1000`). Each next line holds `N p I` with `N ≤ 1000` and `1 ≤ I ≤ N`.\n\n## Output\n\nFor each line, print the probability with four digits after the decimal point.\n\n## Notes\n\n`p` can be 0."
+  },
+  "10066": {
+    "topics": [
+      "dp"
+    ],
+    "statement": "Two towers are stacks of round tiles, listed by radius from top to bottom. Remove tiles from both so that the two remaining towers are identical, keeping the tiles in their original order. Find the largest number of tiles each remaining tower can have.\n\n## Input\n\nSeveral blocks. Each has `N1 N2` (`1 ≤ N1, N2 ≤ 100`), then a line with the `N1` radii of the first tower and a line with the `N2` radii of the second. `0 0` ends the input.\n\n## Output\n\nFor block `k`, print `Twin Towers #k`, then `Number of Tiles : t`, then an empty line."
+  },
+  "10071": {
+    "topics": [
+      "math"
+    ],
+    "statement": "A particle starts with some velocity and moves with constant acceleration. After time `t` its velocity is `v`. Find how far it has moved after time `2t`.\n\n## Input\n\nOne pair `v t` per line until the end of input, with `-100 ≤ v ≤ 100` and `0 ≤ t ≤ 200`.\n\n## Output\n\nFor each pair, print the displacement as an integer."
+  },
+  "10074": {
+    "topics": [
+      "dp"
+    ],
+    "statement": "A map of a forest is a grid of `1` (a tree) and `0` (no tree). Find the largest rectangle of cells that contains no tree, measured by its number of cells.\n\n## Input\n\nSeveral test cases. Each starts with `M N` (`1 ≤ M, N ≤ 100`), followed by `M` lines of `N` symbols separated by single spaces. `0 0` ends the input.\n\n## Output\n\nFor each test case, print the largest area."
+  },
+  "10082": {
+    "topics": [
+      "strings",
+      "implementation"
+    ],
+    "statement": "Text was typed with both hands placed one key too far to the right on a QWERTY keyboard, so every key pressed is the right neighbour of the intended one. Decode the text by replacing each character with the key immediately to its left.\n\n## Input\n\nLines of text until the end of input, made of digits, spaces, uppercase letters (never `Q`, `A` or `Z`) and the punctuation keys of a standard keyboard (never the back quote).\n\n## Output\n\nPrint each decoded line. Spaces stay as they are."
+  },
+  "10099": {
+    "topics": [
+      "graphs"
+    ],
+    "statement": "A guide must take `T` tourists from city `S` to city `D`. Every road has a bus with a passenger limit. The guide picks one route and repeats it as often as needed; the guide travels on every trip and takes one seat. Find the fewest trips needed.\n\n## Input\n\nSeveral test cases. Each starts with `N R` (`N ≤ 100` cities), then `R` lines `C1 C2 P` (a two way road whose bus carries `P > 1` people, the guide included), then a line `S D T`. `0 0` ends the input.\n\n## Output\n\nFor test case `k`, print `Scenario #k`, then `Minimum Number of Trips = x`, then an empty line."
+  },
+  "10101": {
+    "topics": [
+      "implementation",
+      "math"
+    ],
+    "statement": "Write a number in words using Bangla units: `kuti` (10⁷), `lakh` (10⁵), `hajar` (10³) and `shata` (100). Parts larger than a kuti are themselves written with the same units. For example 45897458973958 becomes `45 lakh 89 hajar 7 shata 45 kuti 89 lakh 73 hajar 9 shata 58`. Units whose part is 0 are left out.\n\n## Input\n\nOne non negative number per line, at most 999999999999999, until the end of input.\n\n## Output\n\nFor case `k`, print `k` right aligned in 4 characters, a period, then the text, separated by single spaces as in the sample."
+  },
+  "10106": {
+    "topics": [
+      "math",
+      "implementation"
+    ],
+    "statement": "Multiply two non negative integers that can have up to 250 digits each.\n\n## Input\n\nPairs of lines until the end of input, one number per line.\n\n## Output\n\nFor each pair, print the exact product."
+  },
+  "10125": {
+    "topics": [
+      "brute-force",
+      "sorting"
+    ],
+    "statement": "In a set `S` of distinct integers, find the largest `d` such that `a + b + c = d` for some `a`, `b`, `c` and `d` that are four different elements of `S`.\n\n## Input\n\nSeveral sets. Each starts with `n` (`1 ≤ n ≤ 1000`), followed by the `n` elements, one per line, each between -536870912 and 536870911. A line with `0` ends the input.\n\n## Output\n\nFor each set, print `d`, or `no solution`."
+  },
+  "10130": {
+    "topics": [
+      "dp"
+    ],
+    "statement": "A family visits a sale where each person may take at most one item of each kind. Every item has a price and a weight, and every person can carry a maximum weight. Find the largest total price of items the family can carry home.\n\n## Input\n\nThe first line is `T`. Each case gives `N` (`1 ≤ N ≤ 1000`), then `N` lines `P W` (price 1 to 100, weight 1 to 30), then `G` (`1 ≤ G ≤ 100`), then `G` lines with each person's limit (1 to 30).\n\n## Output\n\nFor each case, print the largest total price."
+  },
+  "10154": {
+    "topics": [
+      "dp",
+      "greedy"
+    ],
+    "statement": "Each turtle has a weight and a strength; its strength is the total weight it can hold including its own. Stack as many turtles as possible so that no turtle holds more than its strength.\n\n## Input\n\nOne turtle per line until the end of input: weight and strength in grams. There are at most 5607 turtles.\n\n## Output\n\nPrint the largest possible stack size."
+  },
+  "10188": {
+    "topics": [
+      "strings",
+      "implementation"
+    ],
+    "statement": "Judge a team's output against the official answer. It is `Accepted` if every character matches, including spaces and line breaks. It is `Presentation Error` if the characters other than spaces and line breaks match but the whitespace does not. Anything else is `Wrong Answer`.\n\n## Input\n\nSeveral runs. Each gives `n`, then `n` lines of the official answer, then `m`, then `m` lines of the team output. Lines have at most 120 characters. `n = 0` ends the input.\n\n## Output\n\nFor run `x`, print `Run #x: verdict n`, where `n` is the number of characters in the official answer, spaces included and line breaks not. This is a modified version that adds `n` to the original output."
+  },
+  "10189": {
+    "topics": [
+      "implementation"
+    ],
+    "statement": "Fill a Minesweeper field: replace every safe cell `.` by the number of mines `*` among its up to eight neighbours.\n\n## Input\n\nSeveral fields. Each starts with `n m` (`0 < n, m ≤ 100`), followed by `n` lines of `m` characters. `0 0` ends the input.\n\n## Output\n\nFor field `x`, print `Field #x:` and the filled field. Put an empty line between fields."
+  },
+  "10190": {
+    "topics": [
+      "math",
+      "implementation"
+    ],
+    "statement": "Starting from `n`, keep dividing by `m` until you reach 1. The sequence only counts if every number before the last is divisible by `m` and the numbers strictly decrease. For example `125 5` gives `125 25 5 1`, while `30 3` fails because 10 is not divisible by 3.\n\n## Input\n\nPairs `n m` of non negative integers below 2000000000, one per line, until the end of input.\n\n## Output\n\nFor each pair, print the sequence separated by single spaces, or `Boring!` if it does not exist.\n\n## Notes\n\n`n` and `m` can be 0 or 1."
+  },
+  "10200": {
+    "topics": [
+      "number-theory"
+    ],
+    "statement": "Euler's formula `n² + n + 41` is prime for every `n` from 0 to 39 but not always after that. For a range `a ≤ n ≤ b`, find what percentage of the values it produces are prime.\n\n## Input\n\nPairs `a b` with `0 ≤ a ≤ b ≤ 10000`, one per line, until the end of input.\n\n## Output\n\nFor each pair, print the percentage rounded to two decimal places."
+  },
+  "10221": {
+    "topics": [
+      "geometry",
+      "math"
+    ],
+    "statement": "Two satellites circle the earth on the same circular orbit at height `s` km above the surface; the earth's radius is 6440 km. The satellites are separated by an angle `a` measured at the earth's centre, given in degrees or in minutes of arc. Find both the arc distance and the straight line distance between them.\n\n## Input\n\nOne case per line until the end of input: `s a unit`, where `unit` is `deg` or `min`.\n\n## Output\n\nFor each case, print the arc distance and the straight line distance in km, separated by a space, each with six digits after the decimal point.\n\n## Notes\n\nUse the smaller angle between the satellites, which is at most 180 degrees."
+  },
+  "10222": {
+    "topics": [
+      "strings",
+      "implementation"
+    ],
+    "statement": "A professor's text was typed with every key two places to the right of the intended one on a standard keyboard. Decode it by replacing each letter or punctuation key with the key two places to its left. Spaces stay as they are.\n\n## Input\n\nThe first line is `N`, followed by `N` lines, each an encoded message of one or more words.\n\n## Output\n\nFor each message, print the decoded text in lowercase letters, keeping the spaces exactly."
+  },
+  "10226": {
+    "topics": [
+      "data-structures",
+      "sorting"
+    ],
+    "statement": "Given the species of every tree in a forest, print each species with the percentage of all trees that belong to it.\n\n## Input\n\nThe first line is the number of test cases, then an empty line. Each test case lists one species name per line (up to 30 characters, spaces allowed). Test cases are separated by empty lines. There are at most 10000 species and 1000000 trees.\n\n## Output\n\nFor each test case, print every species in alphabetical order followed by its percentage with four digits after the decimal point. Put an empty line between test cases."
+  },
+  "10235": {
+    "topics": [
+      "number-theory"
+    ],
+    "statement": "An emirp is a prime that becomes a different prime when its digits are reversed, like 17 and 71. Classify each number.\n\n## Input\n\nOne integer `N` per line, `1 < N < 1000000`, until the end of input.\n\n## Output\n\nFor each `N` print `N is not prime.`, `N is prime.` or `N is emirp.`\n\n## Notes\n\nA prime whose reversal is the same number is only `prime`."
+  },
+  "10242": {
+    "topics": [
+      "geometry"
+    ],
+    "statement": "Two adjacent sides of a parallelogram are given by their endpoints; the two sides share one endpoint, but the shared point can be listed in any position. Find the fourth corner.\n\n## Input\n\nOne case per line until the end of input: eight decimal numbers, the two endpoints of the first side followed by the two endpoints of the second side. Values are between -10000 and 10000 with three decimals.\n\n## Output\n\nFor each case, print the `x y` coordinates of the fourth corner with three digits after the decimal point."
+  },
+  "10252": {
+    "topics": [
+      "strings"
+    ],
+    "statement": "For two lowercase strings `a` and `b`, find the longest string `x` such that some rearrangement of `x` appears as a subsequence of `a` and some rearrangement appears as a subsequence of `b`. Among the longest, print the alphabetically smallest.\n\n## Input\n\nPairs of lines until the end of input: `a`, then `b`, each up to 1000 lowercase letters.\n\n## Output\n\nFor each pair, print `x`, which can be empty."
+  },
+  "10267": {
+    "topics": [
+      "simulation",
+      "graphs"
+    ],
+    "statement": "Simulate a simple paint program on an `M × N` image whose pixels hold capital letters as colours; `O` is white. Coordinates are `X` (column, 1 to `M`) and `Y` (row, 1 to `N`) from the top left.\n\n- `I M N` new white image; `C` clear to white;\n- `L X Y C` colour one pixel; `V X Y1 Y2 C` vertical segment; `H X1 X2 Y C` horizontal segment;\n- `K X1 Y1 X2 Y2 C` filled rectangle;\n- `F X Y C` fill the region of same coloured pixels connected by sides to `(X, Y)`;\n- `S Name` print the image; `X` stop.\n\nA line starting with any other letter is ignored.\n\n## Input\n\nOne command per line.\n\n## Output\n\nFor every `S Name`, print the name and then the image row by row.\n\n## Notes\n\nThe two ends of a segment or rectangle can be given in either order."
+  },
+  "10268": {
+    "topics": [
+      "math"
+    ],
+    "statement": "Evaluate the derivative of a polynomial `a0·xⁿ + a1·xⁿ⁻¹ + ... + an` at a given `x`.\n\n## Input\n\nPairs of lines until the end of input: a line with `x`, then a line with the coefficients `a0 a1 ... an`. All values and results fit in a 32 bit signed integer.\n\n## Output\n\nFor each pair, print the value of the derivative."
+  },
+  "10273": {
+    "topics": [
+      "simulation"
+    ],
+    "statement": "Each cow repeats a milk pattern: cow `i` has a cycle of `T` days with given amounts. Every day, starting on day 1, the farmer eats the single cow that gives the least milk that day; if two or more cows tie for least, he eats none that day. Find how many cows are never eaten and on which day the last cow is eaten.\n\n## Input\n\nThe first line is `T` (`T ≤ 50`). Each case gives `N` (`1 ≤ N ≤ 1000`), then `N` lines, each with the cycle length (1 to 10) followed by that many milk amounts (0 to 250).\n\n## Output\n\nFor each case, print the number of cows never eaten and the day of the last meal, or 0 if no cow is eaten."
+  },
+  "10309": {
+    "topics": [
+      "brute-force"
+    ],
+    "statement": "A 10 × 10 grid of lights: pressing a cell toggles that light and its neighbours above, below, left and right. `O` is on and `#` is off. Find the fewest presses that turn every light off.\n\n## Input\n\nSeveral test cases, each a name line followed by 10 lines of 10 characters. A name of `end` ends the input.\n\n## Output\n\nFor each test case, print the name, a space and the minimum number of presses. Print `-1` instead if it is impossible or needs more than 100 presses."
+  },
+  "10326": {
+    "topics": [
+      "math",
+      "implementation"
+    ],
+    "statement": "Build the polynomial equation with leading coefficient 1 whose roots are exactly the given integers, and print it.\n\n## Input\n\nCases until the end of input. Each is a line with `N` (`N ≤ 50`) and a line with the `N` integer roots. No coefficient exceeds 10¹⁵.\n\n## Output\n\nFor each case, print the equation from the highest power down, ending with `= 0`. Leave out terms whose coefficient is 0, write a coefficient of 1 as just `x^i`, write `x` instead of `x^1`, and use ` + ` and ` - ` between terms. Always show the constant term, as `+ 0` if it is zero. Follow the sample output exactly."
+  },
+  "10327": {
+    "topics": [
+      "sorting"
+    ],
+    "statement": "The only allowed move is swapping two neighbouring numbers. Find the fewest swaps needed to sort a list in increasing order.\n\n## Input\n\nCases until the end of input. Each gives `N` (`N ≤ 1000`) followed by `N` integers.\n\n## Output\n\nFor each case, print `Minimum exchange operations : M`."
+  },
+  "10336": {
+    "topics": [
+      "graphs",
+      "sorting"
+    ],
+    "statement": "A map is a grid of lowercase letters, one language per letter. A state is a group of cells with the same letter connected through shared sides. Count the states of each language.\n\n## Input\n\nThe first line is `N`. Each case gives `H W`, followed by `H` lines of `W` letters.\n\n## Output\n\nFor case `n`, print `World #n`, then one line `letter: count` per language that appears, sorted by count from most to fewest, and alphabetically for equal counts."
+  },
+  "10364": {
+    "topics": [
+      "brute-force"
+    ],
+    "statement": "Given a set of sticks, decide whether all of them can be joined end to end to form the four sides of a square. Every stick must be used, and sticks cannot be broken.\n\n## Input\n\nThe first line is `N`, the number of test cases. Each test case is one line with `M` (`4 ≤ M ≤ 20`) followed by `M` stick lengths, each between 1 and 10000.\n\n## Output\n\nFor each test case, print `yes` or `no`."
+  },
+  "10365": {
+    "topics": [
+      "brute-force",
+      "math"
+    ],
+    "statement": "`N` unit cubes are stacked into one solid rectangular box and wrapped in paper. Find the smallest possible surface area of the box.\n\n## Input\n\nThe first line is `C`, the number of test cases. Each next line holds one `N` (`N ≤ 1000`).\n\n## Output\n\nFor each `N`, print the minimal area."
+  },
+  "10369": {
+    "topics": [
+      "graphs",
+      "greedy"
+    ],
+    "statement": "Outposts must all be able to communicate, directly or through other outposts. Any two outposts that both have a satellite channel can talk regardless of distance. Otherwise two outposts can talk by radio only if their distance is at most `D`, and `D` is the same for every outpost. With `S` satellite channels to place, find the smallest `D` that works.\n\n## Input\n\nThe first line is `N`, the number of test cases. Each test case starts with `S P` (`1 ≤ S ≤ 100`, `S < P ≤ 500`), followed by `P` lines with the integer coordinates `x y` (0 to 10000) of each outpost.\n\n## Output\n\nFor each test case, print the minimum `D` with two digits after the decimal point."
+  },
+  "10382": {
+    "topics": [
+      "greedy",
+      "geometry"
+    ],
+    "statement": "A strip of grass is `l` meters long and `w` meters wide. Sprinklers sit on the strip's horizontal center line; each waters a circle of a given radius around its position. Find the fewest sprinklers that together water the whole strip.\n\n## Input\n\nCases until the end of input. Each starts with `n l w` (`n ≤ 10000`), followed by `n` lines, each with a sprinkler's position (distance from the left end) and its radius.\n\n## Output\n\nFor each case, print the minimum number of sprinklers, or `-1` if the strip cannot be fully watered.\n\n## Notes\n\nThe whole width must be covered, not just the center line."
+  },
+  "10397": {
+    "topics": [
+      "graphs"
+    ],
+    "statement": "Buildings are points on a map, and some pairs are already joined by straight cables. Add new straight cables so that every building is connected to every other one, directly or indirectly, using the least total length of new cable.\n\n## Input\n\nTest cases until the end of input. Each starts with `N` (`1 ≤ N ≤ 750`), followed by `N` lines of integer coordinates `x y` (absolute value at most 10000) for buildings 1 to `N`. Then comes `M` (`0 ≤ M ≤ 1000`), followed by `M` lines, each with the two building numbers of an existing cable.\n\n## Output\n\nFor each test case, print the total length of new cable, rounded to two decimal places."
+  },
+  "10407": {
+    "topics": [
+      "number-theory"
+    ],
+    "statement": "Find the largest positive integer `d` such that every number in a sequence leaves the same remainder when divided by `d`.\n\n## Input\n\nEach line holds a sequence of 2 to 1000 nonzero integers ending with a `0` that is not part of the sequence. Not all numbers in a sequence are equal. A line with a single `0` ends the input.\n\n## Output\n\nFor each sequence, print `d`.\n\n## Notes\n\nNumbers can be negative."
+  },
+  "10409": {
+    "topics": [
+      "simulation"
+    ],
+    "statement": "A die lies on a table with 1 on top, 2 facing north and 3 facing west; opposite faces always add up to 7. It is tipped over one edge at a time in the given directions. For example, `north` tips it so the top face becomes the north face and the north face goes to the bottom. Find the number on top after all moves.\n\n## Input\n\nSeveral games. Each starts with the number of commands (at most 1024), followed by one command per line: `north`, `east`, `south` or `west`. A line with `0` ends the input.\n\n## Output\n\nFor each game, print the number on the top face."
+  },
+  "10420": {
+    "topics": [
+      "data-structures",
+      "sorting",
+      "strings"
+    ],
+    "statement": "A list records a country and a woman's name on each line. Count how many entries there are for each country.\n\n## Input\n\nThe first line is `n`, followed by `n` lines of at most 75 characters. The first word of each line is the country (always a single word); the rest is the name.\n\n## Output\n\nFor each country, in alphabetical order, print the country and its count separated by a space."
+  },
+  "10436": {
+    "title": "Cheapest Way",
+    "topics": [
+      "graphs"
+    ],
+    "statement": "A bus company sets its fares from the cheapest route on a map. The cost of a trip is 2 taka per kilometer driven plus the fee of every station on the route, the first and last included. The company adds 10% profit to the cost and divides the total by the number of seats in the bus to get each passenger's fare. For each query, find the cheapest route and the fare.\n\n## Input\n\nThe first line is the number of maps. Each map has three sections:\n\n- `nStation` (`0 < nStation < 20`), then `nStation` lines `name fee`;\n- `nPath` (`0 < nPath < 20`), then `nPath` lines `station1 station2 distance` for two way roads, distances in km;\n- `nQuery` (`0 < nQuery < 10`), then `nQuery` lines `station1 station2 seats`.\n\nEvery query has a unique cheapest route.\n\n## Output\n\nFor map `X` print `Map #X`. For its query `Y` print `Query #Y`, then the stations on the route separated by spaces, then `Each passenger has to pay : f taka` with `f` rounded to two digits after the decimal point."
+  },
+  "10474": {
+    "topics": [
+      "sorting"
+    ],
+    "statement": "Marbles with numbers on them are put in a row in increasing order of their numbers. For each query number, find the position of the first marble that carries it.\n\n## Input\n\nFewer than 65 test cases. Each starts with `N Q`, followed by `N` lines with the marble numbers in no particular order, then `Q` lines with the queries. All numbers are between 0 and 10000. `0 0` ends the input.\n\n## Output\n\nFor test case `k`, print `CASE# k:`. Then for each query `x` print `x found at y` with the 1 based position `y`, or `x not found`."
+  },
+  "10487": {
+    "topics": [
+      "brute-force",
+      "sorting"
+    ],
+    "statement": "For each query number, find the sum of two different elements of a set that is closest to it.\n\n## Input\n\nSeveral cases. Each starts with `n` (`1 < n ≤ 1000`), followed by `n` integers, one per line, then `m` (`0 < m < 25`), followed by `m` query integers, one per line. `n = 0` ends the input. There are no ties.\n\n## Output\n\nFor case `k`, print `Case k:`. Then for each query `q` print `Closest sum to q is s.`\n\n## Notes\n\nThe two elements must be at different positions in the set, but their values can be equal."
+  },
+  "10530": {
+    "topics": [
+      "implementation"
+    ],
+    "statement": "Stan thinks of a number from 1 to 10 and Ollie guesses. After each guess Stan answers `too high`, `too low` or `right on`, and the game ends at `right on`. Decide whether Stan's answers in a game could all be true for the final number.\n\n## Input\n\nSeveral games. Each is a sequence of guess lines (a number from 1 to 10) each followed by an answer line, ending with `right on`. A line with `0` ends the input.\n\n## Output\n\nFor each game, print `Stan is dishonest` or `Stan may be honest`."
+  },
+  "10533": {
+    "topics": [
+      "number-theory"
+    ],
+    "statement": "A digit prime is a prime whose digit sum is also prime. For example 41 is a digit prime because 4 + 1 = 5 is prime, while 17 is not because 1 + 7 = 8. Count the digit primes in a range.\n\n## Input\n\nThe first line is `N` (`0 < N ≤ 500000`). Each next line holds `t1 t2` with `0 < t1 ≤ t2 < 1000000`.\n\n## Output\n\nFor each line, print the number of digit primes between `t1` and `t2`, inclusive.\n\n## Notes\n\nThe input is large, so use fast input and output."
+  },
+  "10550": {
+    "topics": [
+      "simulation",
+      "math"
+    ],
+    "statement": "A combination lock's dial has 40 marks numbered 0 to 39, and each mark is 9 degrees apart. To open it starting from the current position:\n\n- turn the dial clockwise 2 full turns;\n- keep turning clockwise until the first number of the combination is reached;\n- turn counter clockwise 1 full turn;\n- keep turning counter clockwise until the second number is reached;\n- turn clockwise until the third number is reached.\n\nFind the total number of degrees the dial turns.\n\n## Input\n\nOne case per line: the starting position followed by the three combination numbers, all between 0 and 39. Consecutive combination numbers are different. `0 0 0 0` ends the input.\n\n## Output\n\nFor each case, print the total degrees."
+  },
+  "10583": {
+    "topics": [
+      "graphs",
+      "data-structures"
+    ],
+    "statement": "There are `n` students and each follows at most one religion. You know `m` pairs of students who follow the same religion. Find the largest possible number of different religions among the students.\n\n## Input\n\nSeveral cases. Each starts with `n m` (`0 < n ≤ 50000`), followed by `m` lines `i j` (students are numbered 1 to `n`). `0 0` ends the input.\n\n## Output\n\nFor case `k`, print `Case k: r`."
+  },
+  "10591": {
+    "topics": [
+      "math",
+      "simulation"
+    ],
+    "statement": "Replace a number by the sum of the squares of its digits, again and again. The number is happy if this process reaches 1, and unhappy otherwise. For example 7 → 49 → 97 → 130 → 10 → 1 is happy, while 4 → 16 → 37 → 58 → 89 → 145 → 42 → 20 → 4 loops forever.\n\n## Input\n\nThe first line is the number of test cases. Each next line holds a positive integer `N` below 10⁹.\n\n## Output\n\nFor case `p`, print `Case #p: N is a Happy number.` or `Case #p: N is an Unhappy number.`"
+  },
+  "10603": {
+    "topics": [
+      "graphs"
+    ],
+    "statement": "Three jugs hold `a`, `b` and `c` liters. The first two start empty and the third is full. A move pours water from one jug into another until the first is empty or the second is full. Get exactly `d` liters into at least one jug while pouring the least total amount of water. If `d` liters is impossible, use instead the largest amount `d' < d` that is possible.\n\n## Input\n\nThe first line is `T`. Each next line holds `a b c d`, all positive integers at most 200.\n\n## Output\n\nFor each case, print the least total amount of poured water, a space, and the amount reached (`d` or `d'`).\n\n## Notes\n\nIf a jug already holds `d` liters at the start, the answer uses 0 poured water."
+  },
+  "10626": {
+    "topics": [
+      "dp"
+    ],
+    "statement": "A coke costs 8 crowns, and the machine takes coins worth 1, 5 and 10. You buy cokes one at a time; after each purchase the machine returns the change with as few coins as possible, and you can use that change for later purchases. Find the fewest coins you must insert to buy `C` cokes.\n\n## Input\n\nThe first line is the number of test cases (at most 50). Each next line holds `C n1 n5 n10`: the cokes to buy and your coins of each value, with `1 ≤ C ≤ 150`, `n1 ≤ 500`, `n5 ≤ 100`, `n10 ≤ 50`. You always have enough money.\n\n## Output\n\nFor each case, print the minimum number of coins inserted."
+  },
+  "10633": {
+    "topics": [
+      "math"
+    ],
+    "statement": "Take a number `N` with at least two digits, remove its last digit to get `M`, and compute `N - M`. Given `N - M`, find every possible `N`.\n\n## Input\n\nOne integer per line, between 10 and 10¹⁸ inclusive. A line with `0` ends the input.\n\n## Output\n\nFor each case, print all possible `N` in increasing order, separated by single spaces.\n\n## Notes\n\nThe values do not fit in a 32 bit integer."
+  },
+  "10635": {
+    "title": "Prince and Princess",
+    "topics": [
+      "dp"
+    ],
+    "statement": "The squares of an `n × n` board are numbered 1 to `n²`. Prince and Princess each walk a route that starts at square 1, ends at square `n²` and never visits a square twice. They may skip some squares of their own routes, keeping the order, so that both follow the same route. Find the length of the longest common route.\n\n## Input\n\nThe first line is `t` (`1 ≤ t ≤ 10`). Each case has a line `n p q` (`2 ≤ n ≤ 250`, `1 ≤ p, q < n²`), a line with the Prince's `p + 1` squares and a line with the Princess's `q + 1` squares.\n\n## Output\n\nFor case `k`, print `Case k: L`, where `L` is the number of squares on the common route."
+  },
+  "10642": {
+    "topics": [
+      "math"
+    ],
+    "statement": "Circles sit at every point `(x, y)` with non negative integers. A path visits them diagonal by diagonal: on the diagonal `x + y = k` it goes from `(0, k)` down to `(k, 0)`, then jumps to `(0, k + 1)`. So the order starts `(0,0)`, `(0,1)`, `(1,0)`, `(0,2)`, `(1,1)`, `(2,0)`, `(0,3)`, ... Each move to the next circle is one step. Find the number of steps from a source circle to a destination circle.\n\n## Input\n\nThe first line is `n` (`0 < n ≤ 500`). Each next line holds the source `x y` and the destination `x y`, every value between 0 and 100000. The destination always comes after the source.\n\n## Output\n\nFor case `k`, print `Case k: s`.\n\n## Notes\n\nThe answer does not fit in a 32 bit integer."
+  },
+  "10664": {
+    "topics": [
+      "dp"
+    ],
+    "statement": "Decide whether a set of suitcases can be split between two car boots so that both boots carry exactly the same weight.\n\n## Input\n\nThe first line is `m`. Each next line holds the weights of 1 to 20 suitcases, separated by single spaces; their total is at most 200.\n\n## Output\n\nFor each line, print `YES` or `NO`."
+  },
+  "10665": {
+    "title": "Diatribe against Pigeonholes",
+    "topics": [
+      "greedy",
+      "sorting"
+    ],
+    "statement": "`N` workers named `A`, `B`, `C`, ... (the first `N` capital letters) each get one pigeonhole on a shelf numbered 1 to `N`. The shelf is fragile in the middle, at hole `(N + 1) / 2`, so workers who receive more parcels must be placed further from the middle. All parcels weigh the same. If several arrangements work, choose the alphabetically first.\n\n## Input\n\nThe first line is `M`. Each case has a line with `N` (`1 < N < 26`) and a line of capital letters ending with `#`, one letter per parcel. Letters that do not belong to one of the `N` workers are ignored.\n\n## Output\n\nFor each case, print the workers from hole 1 to hole `N` separated by spaces, and on the next line their parcel counts in the same order. Study the sample output for how the holes are filled."
+  },
+  "10666": {
+    "topics": [
+      "math"
+    ],
+    "statement": "A knockout cup has `N` rounds and `2ᴺ` teams numbered 0 to `2ᴺ - 1`. In each round neighbouring remaining teams play in order (0 vs 1, 2 vs 3, ... in round 1; 0 vs 2, 4 vs 6, ... in round 2), and the lower number always wins.\n\nA team is better than every team it beat, and this carries over: it is better than every team those teams are better than, and so on. A valid ranking gives the teams places 1 to `2ᴺ` so that a better team always has a smaller place. For team `X`, find its best possible place and its worst possible place over all valid rankings.\n\n## Input\n\nThe first line is `M`. Each case is a line `N X` (`0 < N < 31`, `0 ≤ X ≤ 2ᴺ - 1`).\n\n## Output\n\nFor each case, print the best and worst place, separated by a space."
+  },
+  "10690": {
+    "topics": [
+      "dp",
+      "math"
+    ],
+    "statement": "Split `N + M` given integers into a group of `N` numbers `x` and a group of `M` numbers `y`, and evaluate `(x1 + ... + xN) × (y1 + ... + yM)`. Find the largest and the smallest value this product can take. For example, with `N = M = 2` and the numbers 1, 2, 3, 4 the largest is `(1 + 4) × (2 + 3) = 25` and the smallest is `(4 + 3) × (2 + 1) = 21`.\n\n## Input\n\nAt most 110 cases until the end of input. Each has a line `N M` (both positive and below 51) and a line with `N + M` integers between -50 and 50.\n\n## Output\n\nFor each case, print the maximum and the minimum separated by a space."
+  },
+  "10696": {
+    "topics": [
+      "math"
+    ],
+    "statement": "McCarthy's function is defined as `f91(N) = f91(f91(N + 11))` when `N ≤ 100`, and `f91(N) = N - 10` when `N ≥ 101`. Compute it.\n\n## Input\n\nUp to 250000 positive integers, at most 1000000, one per line. A line with `0` ends the input.\n\n## Output\n\nFor each `N`, print `f91(N) = value`.\n\n## Notes\n\nThe input is large, so use fast input and output."
+  },
+  "10721": {
+    "topics": [
+      "dp"
+    ],
+    "statement": "A bar code is a row of bars alternating dark and light, starting with a dark bar. Each bar is a whole number of units wide. `BC(n, k, m)` is the set of bar codes with exactly `k` bars, total width exactly `n` units and every bar at most `m` units wide. Count its symbols.\n\n## Input\n\nLines `n k m` with `1 ≤ n, k, m ≤ 50`, until the end of input.\n\n## Output\n\nFor each line, print the count.\n\n## Notes\n\nThe answer fits in a 64 bit signed integer but not in 32 bits."
+  },
+  "10740": {
+    "title": "Not the Best",
+    "topics": [
+      "graphs"
+    ],
+    "statement": "In a weighted directed graph, list all paths from `x` to `y` in non decreasing order of length. Paths may repeat vertices and edges. Find the length of the `k`-th path in this list.\n\n## Input\n\nSeveral test cases. Each starts with `n m` (`2 ≤ n ≤ 100` vertices, `1 ≤ m ≤ 1000` edges), then a line `x y k` (`x ≠ y`, `2 ≤ k ≤ 10`), then `m` lines `u v l`, a directed edge from `u` to `v` of length `0 ≤ l ≤ 10000`. `0 0` ends the input. There is always at least one path from `x` to `y`.\n\n## Output\n\nFor each test case, print the length of the `k`-th shortest path, or `-1` if there are fewer than `k` paths.\n\n## Notes\n\nPaths with equal length still count separately. A path may pass through `y` and come back to it later."
+  },
+  "10763": {
+    "topics": [
+      "sorting",
+      "data-structures"
+    ],
+    "statement": "Each exchange candidate wants to go from location `A` to location `B`. The program works only if every candidate can be paired with a different candidate who wants to go from `B` to `A`. Decide whether it works.\n\n## Input\n\nSeveral cases. Each starts with `n` (`1 ≤ n ≤ 500000`), followed by `n` lines with two different non negative integers: the origin and the target. `n = 0` ends the input.\n\n## Output\n\nFor each case, print `YES` or `NO`.\n\n## Notes\n\nThe same trip can appear several times."
+  },
+  "10783": {
+    "topics": [
+      "math"
+    ],
+    "statement": "Find the sum of all odd integers between `a` and `b`, inclusive.\n\n## Input\n\nThe first line is `T` (`1 ≤ T ≤ 100`). Each case gives `a` and `b` on two separate lines, with `0 ≤ a ≤ b ≤ 100`.\n\n## Output\n\nFor case `k`, print `Case k: s`."
+  },
+  "10789": {
+    "topics": [
+      "strings",
+      "number-theory"
+    ],
+    "statement": "Count how many times each character appears in a string, and list the characters whose count is a prime number.\n\n## Input\n\nThe first line is `T` (`0 < T < 201`). Each next line holds a string of digits and letters, 1 to 2000 characters long.\n\n## Output\n\nFor case `k`, print `Case k: ` followed by those characters in increasing ASCII order with nothing between them, or `Case k: empty` if there are none.\n\n## Notes\n\nUppercase and lowercase letters are different characters."
+  },
+  "10800": {
+    "topics": [
+      "implementation"
+    ],
+    "statement": "Draw the price of a stock over time. The price is a string of `R` (rise), `F` (fall) and `C` (constant); each letter takes one column and is drawn with `/`, `\\` or `_`. A rise is drawn at the current height and then the height goes up by one; a fall first goes down by one and is drawn at the new height; a constant step is drawn at the current height.\n\n## Input\n\nThe first line is `N`. Each next line holds a string of 1 to 50 letters from `R`, `F` and `C`.\n\n## Output\n\nFor case `x`, print `Case #x:`, then the graph framed by axes: every graph row starts with `| ` (the y axis and one space), and the bottom line is `+` followed by dashes, one longer than the graph is wide. Print only the rows the graph uses, with no trailing spaces, and an empty line after each case. Match the sample output exactly."
+  },
+  "10810": {
+    "topics": [
+      "sorting",
+      "data-structures"
+    ],
+    "statement": "A sorting algorithm only swaps two neighbouring elements at a time. Find the fewest swaps it needs to sort a sequence of distinct integers in increasing order.\n\n## Input\n\nSeveral test cases. Each starts with `n` (`n < 500000`), followed by `n` lines, each an integer between 0 and 999999999. `n = 0` ends the input.\n\n## Output\n\nFor each test case, print the number of swaps.\n\n## Notes\n\nThe answer does not fit in a 32 bit integer."
+  },
+  "10815": {
+    "topics": [
+      "strings",
+      "sorting"
+    ],
+    "statement": "List every distinct word of a text. A word is a maximal run of letters; anything else separates words. Letter case is ignored, so `Apple` and `apple` are the same word.\n\n## Input\n\nAt most 5000 lines of text, each at most 200 characters, until the end of input. There are at most 5000 distinct words.\n\n## Output\n\nPrint the distinct words in lowercase, one per line, in alphabetical order."
+  },
+  "10903": {
+    "title": "Rock-Paper-Scissors Tournament",
+    "topics": [
+      "implementation"
+    ],
+    "statement": "Paper beats rock, scissors beat paper and rock beats scissors; equal moves are a draw. In a tournament every pair of the `n` players plays `k` games, so `k·n·(n - 1)/2` games in total. For each player compute the win average `w / (w + l)`, where `w` is games won and `l` is games lost.\n\n## Input\n\nSeveral cases. Each starts with `n k` (`1 ≤ n ≤ 100`, `1 ≤ k ≤ 100`), followed by one line per game: `p1 m1 p2 m2`, two different player numbers each followed by that player's move (`rock`, `paper` or `scissors`). A line with `0` ends the input.\n\n## Output\n\nFor each case, print one line per player from 1 to `n`: the win average with three digits after the decimal point, or `-` if the player won and lost no games. Put an empty line between cases."
+  },
+  "10921": {
+    "topics": [
+      "strings",
+      "implementation"
+    ],
+    "statement": "Convert an expression to a phone number using the keypad: `ABC` → 2, `DEF` → 3, `GHI` → 4, `JKL` → 5, `MNO` → 6, `PQRS` → 7, `TUV` → 8, `WXYZ` → 9. Hyphens and the digits `0` and `1` stay unchanged. This is a modified version that also counts the letters and the hyphens.\n\n## Input\n\nOne expression per line until the end of input, 1 to 30 characters from capital letters, hyphens, `0` and `1`.\n\n## Output\n\nFor each expression, print the phone number, the number of capital letters and the number of hyphens, separated by single spaces."
+  },
+  "10931": {
+    "topics": [
+      "math",
+      "implementation"
+    ],
+    "statement": "The parity of an integer is the number of 1 bits in its binary form, taken modulo 2. Print the binary form and the number of 1 bits.\n\n## Input\n\nOne integer `I` per line, `1 ≤ I ≤ 2147483647`. A line with `0` ends the input.\n\n## Output\n\nFor each `I`, print `The parity of B is P (mod 2).`, where `B` is the binary form of `I` and `P` is its number of 1 bits."
+  },
+  "10935": {
+    "title": "Throwing cards away I",
+    "topics": [
+      "data-structures",
+      "simulation"
+    ],
+    "statement": "A deck holds cards 1 to `n`, card 1 on top. While at least two cards remain, throw away the top card and then move the new top card to the bottom. Find the order in which cards are thrown away and the card that remains.\n\n## Input\n\nOne `n` per line (`n ≤ 50`). A line with `0` ends the input.\n\n## Output\n\nFor each `n`, print `Discarded cards: ` followed by the discarded cards separated by `, `, then `Remaining card: x` on the next line. No line has trailing spaces.\n\n## Notes\n\n`n` can be 1, in which case no card is discarded."
+  },
+  "11000": {
+    "title": "Bee",
+    "topics": [
+      "math",
+      "dp"
+    ],
+    "statement": "In a species of bee, every year each female gives birth to one male, and each male gives birth to one male and one female and then dies. Females die at the end of the year as well, except one immortal female who starts the colony and gives birth once a year like the others. Find the number of male bees and the total number of bees after `N` years.\n\n## Input\n\nOne integer `N ≥ 0` per line. A line with `-1` ends the input.\n\n## Output\n\nFor each `N`, print the number of males and the total number of bees, separated by a space.\n\n## Notes\n\nBoth numbers can exceed 2³¹ but stay at most 2³²."
+  },
+  "11003": {
+    "topics": [
+      "dp"
+    ],
+    "statement": "Boxes numbered 1 to `N` all have the same size. Stack as many of them as possible in one stack such that:\n\n- a box with a lower number is never placed above a box with a higher number;\n- the total weight of all boxes above a box never exceeds that box's maximum load.\n\n## Input\n\nSeveral sets. Each starts with `N` (`1 ≤ N ≤ 1000`), followed by `N` lines with the weight and maximum load of each box, both at most 3000. `N = 0` ends the input.\n\n## Output\n\nFor each set, print the largest number of boxes in the stack."
+  },
+  "11039": {
+    "topics": [
+      "greedy",
+      "sorting"
+    ],
+    "statement": "Build the tallest building from available floors. Every floor has a size and a colour, blue or red. Each floor must be strictly larger than the floor directly above it, and two neighbouring floors must have different colours.\n\n## Input\n\nThe first line is `p`. Each case starts with the number of floors (at most 500000), followed by one integer per line between -999999 and 999999, never 0. The absolute value is the size; positive means blue and negative means red. All sizes are different.\n\n## Output\n\nFor each case, print the number of floors in the tallest building."
+  },
+  "11040": {
+    "topics": [
+      "math",
+      "implementation"
+    ],
+    "statement": "A triangular wall has 9 rows, and row `i` (from the top) has `i` bricks. Each brick's number equals the sum of the two bricks directly below it; this does not apply to the bottom row. Only the bricks in odd positions of odd rows are given. Fill in all the others.\n\n## Input\n\nThe first line is `N`. Each test case has five lines with the known bricks of rows 1, 3, 5, 7 and 9, from left to right. A solution in integers always exists.\n\n## Output\n\nFor each test case, print the nine rows of the wall, the numbers in each row separated by single spaces."
+  },
+  "11054": {
+    "title": "Wine trading in Gergovia",
+    "topics": [
+      "greedy"
+    ],
+    "statement": "Houses stand along a street at equal distances. Each inhabitant wants to buy or sell some bottles of wine, and supply exactly matches demand. Moving one bottle to a neighbouring house costs one unit of work. Find the least total work needed to satisfy everyone.\n\n## Input\n\nSeveral test cases. Each has a line with `n` (`2 ≤ n ≤ 100000`) and a line with `n` integers `ai` between -1000 and 1000: `ai ≥ 0` means house `i` buys `ai` bottles, `ai < 0` means it sells `-ai`. The values sum to 0. A line with `0` ends the input.\n\n## Output\n\nFor each test case, print the minimum work.\n\n## Notes\n\nThe answer needs a 64 bit integer."
+  },
+  "11063": {
+    "topics": [
+      "brute-force"
+    ],
+    "statement": "A B2-Sequence is a strictly increasing sequence of positive integers `b1 < b2 < ...` in which all sums `bi + bj` with `i ≤ j` are different. Decide whether a given sequence is one.\n\n## Input\n\nTest cases until the end of input. Each is a line with `N` (`2 ≤ N ≤ 100`) and a line with `N` integers, each at most 10000. An empty line follows every test case.\n\n## Output\n\nFor case `k`, print `Case #k: It is a B2-Sequence.` or `Case #k: It is not a B2-Sequence.`, followed by an empty line.\n\n## Notes\n\nA sequence that is not strictly increasing or contains a number below 1 is not a B2-Sequence. A sum of an element with itself counts too."
+  },
+  "11067": {
+    "topics": [
+      "dp"
+    ],
+    "statement": "Roads form a grid. Little Red Riding Hood lives at `(0, 0)` and her grandmother at `(w, h)`; she only moves right or up along the grid. The wolf may wait at some intersections. Count the routes that avoid every wolf location.\n\n## Input\n\nSeveral test cases. Each starts with `w h` (`1 ≤ w, h ≤ 100`), then `n` (`0 ≤ n ≤ 100`), then `n` lines `x y` with the wolf locations. The wolf is never at either house. `0 0` ends the input.\n\n## Output\n\nFor each test case print one of:\n\n- `There are X paths from Little Red Riding Hood's house to her grandmother's house.`\n- `There is one path from Little Red Riding Hood's house to her grandmother's house.`\n- `There is no path.`\n\n## Notes\n\nThe number of paths fits in an unsigned 32 bit integer."
+  },
+  "11078": {
+    "topics": [
+      "greedy"
+    ],
+    "statement": "Students are listed from most senior to most junior. Find the largest value of `score(senior) - score(junior)` over all pairs where the senior student comes before the junior one in the list. The difference can be negative; do not take the absolute value.\n\n## Input\n\nThe first line is `T` (`T < 20`). Each case has a line with `n` (`2 ≤ n ≤ 100000`) and a line with `n` scores, each with absolute value below 150000.\n\n## Output\n\nFor each case, print the largest difference."
+  },
+  "11085": {
+    "topics": [
+      "brute-force"
+    ],
+    "statement": "Eight queens stand on a chessboard, one in each column. A move takes one queen to a different row in its own column. Find the fewest moves that leave no two queens attacking each other along a row or a diagonal.\n\n## Input\n\nFewer than 1000 test cases, one per line: eight integers from 1 to 8, the row of the queen in each column.\n\n## Output\n\nFor case `k`, print `Case k: m`."
+  },
+  "11094": {
+    "topics": [
+      "graphs"
+    ],
+    "statement": "A world map is an `M × N` grid of at most two different letters, one for land and one for water. A continent is a group of land cells connected through shared sides. The left and right edges of the map wrap around: cell `(x, N - 1)` touches cell `(x, 0)`. The king lives on the cell `(X, Y)`, which tells you which letter is land. Find the size of the largest continent other than the king's own.\n\n## Input\n\nSeveral test cases. Each has `M N` (both at most 20), then `M` lines of `N` letters, then `X Y` (row and column of the king, 0 based). An empty line follows every test case.\n\n## Output\n\nFor each test case, print the number of cells in the largest other continent, or `0` if there is none."
+  },
+  "11157": {
+    "topics": [
+      "greedy"
+    ],
+    "statement": "A frog crosses a river of width `D` from the left bank to the right bank and comes back. Rocks lie on a straight line between the banks. Big rocks can be used any number of times; small rocks sink after one use, so each can be landed on at most once over the whole round trip. Plan the trip so that the longest single jump is as short as possible.\n\n## Input\n\nThe first line is `T` (`T < 100`). Each case has a line `N D` (`0 ≤ N ≤ 100`, `1 ≤ D ≤ 1000000000`) and a line with the `N` rocks, each written as `B-M` or `S-M` (big or small, at distance `M` from the left bank, `0 < M < D`), in increasing order of `M`.\n\n## Output\n\nFor case `k`, print `Case k: x`, where `x` is the smallest possible longest jump."
+  },
+  "11192": {
+    "topics": [
+      "strings"
+    ],
+    "statement": "Split a string into `G` consecutive groups of equal length and reverse each group in place.\n\n## Input\n\nAt most 101 lines, each with `G` (`G < 10`) and a string of letters and digits whose length is a multiple of `G` and at most 100. A line with `0` ends the input.\n\n## Output\n\nFor each line, print the group reversed string."
+  },
+  "11219": {
+    "title": "How old are you?",
+    "topics": [
+      "implementation"
+    ],
+    "statement": "Given today's date and a birth date, compute the person's age in full years.\n\n## Input\n\nThe first line is `T` (`1 ≤ T ≤ 200`). Each test case starts with an empty line, followed by the current date and the birth date on two lines, both valid and written as `DD/MM/YYYY`.\n\n## Output\n\nFor case `N`, print `Case #N: ` followed by:\n\n- `Invalid birth date` if the birth date is after the current date;\n- `Check birth date` if the age is more than 130;\n- otherwise the age in full years.\n\n## Notes\n\nIf the birthday has not come yet in the current year, the person is a year younger. The age is 0 when the two dates are the same."
+  },
+  "11233": {
+    "topics": [
+      "strings"
+    ],
+    "statement": "Make English nouns plural with these rules, checked in order:\n\n1. If the word is in the list of irregular words, use its given plural.\n2. Else if it ends in a consonant followed by `y`, replace `y` with `ies`.\n3. Else if it ends in `o`, `s`, `ch`, `sh` or `x`, append `es`.\n4. Else append `s`.\n\n## Input\n\nThe first line is `L N` (`0 ≤ L ≤ 20`, `1 ≤ N ≤ 100`). The next `L` lines each give an irregular singular and its plural. The next `N` lines each hold one word. Words are at most 20 lowercase letters.\n\n## Output\n\nPrint the plural of each of the `N` words, one per line.\n\n## Notes\n\nThe vowels are `a`, `e`, `i`, `o` and `u`."
+  },
+  "11240": {
+    "topics": [
+      "greedy"
+    ],
+    "statement": "A sequence contains distinct integers from 1 to `n`. Find the longest subsequence `a` with `a[0] > a[1] < a[2] > a[3] < ...`, that is, alternately falling and rising, starting with a fall.\n\n## Input\n\nThe first line is `T` (`T ≤ 50`). Each next line holds `n` (`n ≤ 30000`) followed by the `n` elements.\n\n## Output\n\nFor each case, print the length of the longest such subsequence.\n\n## Notes\n\nA single element is a valid subsequence of length 1."
+  },
+  "11258": {
+    "topics": [
+      "dp",
+      "strings"
+    ],
+    "statement": "A string of digits must be split into pieces, each of which is a non negative 32 bit signed integer (at most 2147483647) with no leading zeros, although `0` alone is allowed. Find the largest possible sum of the pieces.\n\n## Input\n\nThe first line is `N` (`N ≤ 500`). Each next line holds a string of at most 200 digits.\n\n## Output\n\nFor each string, print the largest sum.\n\n## Notes\n\nThe sum does not fit in a 32 bit integer."
+  },
+  "11264": {
+    "topics": [
+      "greedy"
+    ],
+    "statement": "A bank pays any amount `X` by repeatedly handing over the largest coin that does not exceed what is still owed. You may choose any amount to withdraw. Find the largest number of different coin types you can receive in a single withdrawal.\n\n## Input\n\nThe first line is `T`. Each case has a line with `n` (`1 ≤ n ≤ 1000`) and a line with the coin values `C1 < C2 < ... < Cn < 1000000000`, where `C1 = 1`.\n\n## Output\n\nFor each case, print the maximum number of different coin types."
+  },
+  "11284": {
+    "topics": [
+      "graphs",
+      "dp"
+    ],
+    "statement": "Daniel starts at his house (node 0), may drive to some stores along two way roads with given costs, and must return home. Each opera DVD he wants is cheaper at one particular store by a known amount; he may skip any DVD and buy it online instead. Find the largest net amount he can save, that is, the total savings of the DVDs he buys in stores minus the cost of driving.\n\n## Input\n\nThe first line is the number of scenarios; an empty line comes before each one. A scenario starts with `N M` (`1 ≤ N ≤ 50` stores numbered 1 to `N`, `1 ≤ M ≤ 1000` roads), followed by `M` lines `a b cost`, then `P` (`1 ≤ P ≤ 12`), then `P` lines `store saving`. Costs and savings are real numbers with two decimals. Every store can be reached.\n\n## Output\n\nFor each scenario, print `Daniel can save $X.YZ`, or `Don't leave the house` if no positive saving is possible.\n\n## Notes\n\nSeveral DVDs can be sold at the same store. There can be more than one road between the same two places."
+  },
+  "11332": {
+    "topics": [
+      "math"
+    ],
+    "statement": "Let `f(n)` be the sum of the digits of `n`. Applying `f` again and again eventually gives a single digit, called `g(n)`. For example `1234567892 → 47 → 11 → 2`, so `g(1234567892) = 2`.\n\n## Input\n\nOne positive integer `n` per line, at most 2000000000. A line with `0` ends the input.\n\n## Output\n\nFor each `n`, print `g(n)`."
+  },
+  "11336": {
+    "topics": [
+      "graphs"
+    ],
+    "statement": "A map is a set of places and two way streets between them. A new map is a more detailed version of an old map if:\n\n- it contains every place of the old map;\n- for every street `u`–`v` of the old map, the new map has a path from `u` to `v` whose intermediate places, if any, are all places that do not exist in the old map.\n\nFor each pair of maps, decide whether the second is a more detailed version of the first.\n\n## Input\n\nPairs of maps until a line `END`. A map is a line with its name, then one street per line as two place names separated by a space, then a line `* * *`. Names contain no spaces.\n\n## Output\n\nFor each pair with names `id1` and `id2`, print `YES: id2 is a more detailed version of id1` or `NO: id2 is not a more detailed version of id1`.\n\n## Notes\n\nA place appears in a map only through its streets."
+  },
+  "11344": {
+    "topics": [
+      "math",
+      "number-theory"
+    ],
+    "statement": "A number `M` is wonderful if it is divisible by every number in a set `S` of distinct integers from 1 to 12. Decide whether `M` is wonderful.\n\n## Input\n\nThe first line is `N` (`0 < N ≤ 2000`). Each test case has a line with `M` (`0 ≤ M ≤ 10¹⁰⁰⁰`) and a line with the size of `S` followed by its elements.\n\n## Output\n\nFor each test case, print `M - Wonderful.` or `M - Simple.` with `M` written as in the input.\n\n## Notes\n\n`M` can have up to 1001 digits."
+  },
+  "11349": {
+    "topics": [
+      "implementation"
+    ],
+    "statement": "A matrix is symmetric here if all its elements are non negative and the matrix looks the same after rotating it 180 degrees about its center, that is, `M[i][j] = M[n-1-i][n-1-j]` for all `i`, `j`. Decide whether a square matrix is symmetric.\n\n## Input\n\nThe first line is `T` (`T ≤ 300`). Each test case starts with a line `N = n` (`0 < n ≤ 100`), followed by `n` rows of `n` integers. Elements are between -2³² and 2³².\n\n## Output\n\nFor test `t`, print `Test #t: Symmetric.` or `Test #t: Non-symmetric.`\n\n## Notes\n\nElements do not fit in a 32 bit integer."
+  },
+  "11360": {
+    "topics": [
+      "implementation",
+      "simulation"
+    ],
+    "statement": "Apply a list of operations to an `N × N` matrix of digits:\n\n- `row a b` swaps rows `a` and `b`;\n- `col a b` swaps columns `a` and `b`;\n- `inc` adds 1 to every cell modulo 10 (9 becomes 0);\n- `dec` subtracts 1 from every cell modulo 10 (0 becomes 9);\n- `transpose` turns rows into columns.\n\n## Input\n\nThe first line is `T` (`T < 50`). Each case gives `N` (`N < 10`), then `N` lines of `N` digits written without spaces, then `M` (`M < 50`), then `M` operations, one per line. Row and column numbers are 1 based and different.\n\n## Output\n\nFor case `k`, print `Case #k`, then the final matrix as `N` lines of digits without spaces, then an empty line (also after the last case)."
+  },
+  "11364": {
+    "topics": [
+      "math"
+    ],
+    "statement": "Stores stand at integer positions along a straight street. Michael parks once at any integer position, walks to visit every store and returns to his car. Find the shortest total walking distance.\n\n## Input\n\nThe first line is `t` (`1 ≤ t ≤ 100`). Each case has a line with `n` (`1 ≤ n ≤ 20`) and a line with the `n` store positions, each between 0 and 99.\n\n## Output\n\nFor each case, print the minimal distance."
+  },
+  "11389": {
+    "topics": [
+      "greedy",
+      "sorting"
+    ],
+    "statement": "There are `n` drivers, `n` morning routes and `n` evening routes. Each driver gets one morning route and one evening route. If a driver's total length exceeds `d`, the driver is paid `r` per unit above `d`. Assign the routes to minimise the total overtime pay.\n\n## Input\n\nSeveral test cases. Each has a line `n d r` (`1 ≤ n ≤ 100`, `1 ≤ d ≤ 10000`, `1 ≤ r ≤ 5`), a line with the `n` morning lengths and a line with the `n` evening lengths, each a positive integer at most 10000. `0 0 0` ends the input.\n\n## Output\n\nFor each test case, print the minimum total overtime pay."
+  },
+  "11401": {
+    "topics": [
+      "math",
+      "dp"
+    ],
+    "statement": "You have one rod of each length `1, 2, ..., n`. Count the ways to pick three different rods that form a triangle with positive area.\n\n## Input\n\nOne `n` per line (`3 ≤ n ≤ 1000000`). A line with `n < 3` ends the input.\n\n## Output\n\nFor each `n`, print the count.\n\n## Notes\n\nThe answer does not fit in a 32 bit integer."
+  },
+  "11417": {
+    "topics": [
+      "number-theory",
+      "brute-force"
+    ],
+    "statement": "Compute `G`, the sum of `gcd(i, j)` over all pairs `1 ≤ i < j ≤ N`.\n\n## Input\n\nAt most 100 lines, each with `N` (`1 < N < 501`). A line with `0` ends the input.\n\n## Output\n\nFor each `N`, print `G`."
+  },
+  "11455": {
+    "topics": [
+      "geometry",
+      "sorting"
+    ],
+    "statement": "Given four side lengths, decide whether they can form a square; if not, a rectangle; if not, a quadrangle.\n\n## Input\n\nThe first line is the number of test cases. Each next line holds four positive integers below 2³⁰.\n\n## Output\n\nFor each case, print `square`, `rectangle`, `quadrangle` or `banana` (none of them).\n\n## Notes\n\nA quadrangle needs positive area. Sums of sides do not fit in a 32 bit integer."
+  },
+  "11456": {
+    "topics": [
+      "dp"
+    ],
+    "statement": "Train cars arrive one at a time. Each arriving car can be added to the front of the train, added to the back, or refused. The finished train must be ordered by weight, heaviest at the front. Find the longest possible train.\n\n## Input\n\nThe first line is the number of test cases. Each case gives `n` (`0 ≤ n ≤ 2000`), then the `n` weights in arrival order, one per line. All weights are different non negative integers.\n\n## Output\n\nFor each case, print the length of the longest train."
+  },
+  "11461": {
+    "topics": [
+      "math"
+    ],
+    "statement": "Count the perfect squares between `a` and `b`, inclusive.\n\n## Input\n\nAt most 201 lines, each with `a b` (`0 < a ≤ b ≤ 100000`). `0 0` ends the input.\n\n## Output\n\nFor each line, print the count."
+  },
+  "11472": {
+    "topics": [
+      "dp"
+    ],
+    "statement": "A number in base `N` is beautiful if it uses every digit from 0 to `N - 1` at least once and any two neighbouring digits differ by exactly 1. Leading zeros are not allowed. For example 9876543210 is a beautiful base 10 number. Count the beautiful base `N` numbers with at most `M` digits.\n\n## Input\n\nThe first line is `T` (`T < 100`). Each next line holds `N M` (`2 ≤ N ≤ 10`, `0 ≤ M ≤ 100`).\n\n## Output\n\nFor each case, print the count modulo `1000000007`."
+  },
+  "11481": {
+    "title": "Arrange the Numbers",
+    "topics": [
+      "math",
+      "dp"
+    ],
+    "statement": "Count the permutations of `1, 2, ..., N` in which, among the first `M` positions, exactly `K` positions hold their own number. For example with `N = 5, M = 3, K = 2`, the permutation `1 4 3 2 5` counts, but `1 2 3 4 5` does not.\n\n## Input\n\nThe first line is `T` (`T ≤ 1000`). Each next line holds `N M K` with `1 ≤ N ≤ 1000`, `M ≤ N` and `K ≤ M`.\n\n## Output\n\nFor case `k`, print `Case k: ` followed by the count modulo `1000000007`.\n\n## Notes\n\nPositions after the first `M` may hold their own number or not."
+  },
+  "11489": {
+    "topics": [
+      "math"
+    ],
+    "statement": "Players S and T take turns, S first, starting from an integer `N`. A move removes one digit, and it is allowed only if the digit sum of what remains is a multiple of 3, or no digits remain. A player who cannot move loses. With perfect play, who wins?\n\n## Input\n\nThe first line is `T` (`T < 60`). Each next line holds `N`, up to 1000 digits with no zeros.\n\n## Output\n\nFor case `k`, print `Case k: S` or `Case k: T`."
+  },
+  "11495": {
+    "topics": [
+      "sorting",
+      "data-structures"
+    ],
+    "statement": "Marcelo and Carlos play on a permutation of `1` to `N`, Marcelo first. A move swaps two neighbouring elements that are out of order. The player who cannot move, because the sequence is sorted, loses. Find the winner and the total number of moves made in the game. This is a modified version that also asks for the number of moves.\n\n## Input\n\nSeveral test cases, one per line: `N` (`2 ≤ N ≤ 10⁵`) followed by the permutation. A line with `0` ends the input.\n\n## Output\n\nFor each test case, print `Carlos` or `Marcelo`, a space, and the number of moves.\n\n## Notes\n\nThe number of moves does not fit in a 32 bit integer."
+  },
+  "11498": {
+    "topics": [
+      "implementation",
+      "geometry"
+    ],
+    "statement": "A division point `(N, M)` splits the land with a north–south line and an east–west line through it into four countries. For each house, say which country it is in, or whether it lies on a border line.\n\n## Input\n\nSeveral test cases. Each starts with `K` (`0 < K ≤ 1000`), then a line `N M` (`-10⁴ < N, M < 10⁴`), then `K` lines `X Y` (`-10⁴ ≤ X, Y ≤ 10⁴`). A line with `0` ends the input.\n\n## Output\n\nFor each house print `divisa` if it is on a border line, otherwise `NO` (north west), `NE` (north east), `SE` (south east) or `SO` (south west). North means a larger `Y` and east a larger `X`."
+  },
+  "11526": {
+    "topics": [
+      "math",
+      "number-theory"
+    ],
+    "statement": "Compute `H(n) = n/1 + n/2 + ... + n/n`, where every division is integer division.\n\n## Input\n\nThe first line is `T` (`T ≤ 1000`). Each next line holds a signed 32 bit integer `n`.\n\n## Output\n\nFor each `n`, print `H(n)`.\n\n## Notes\n\n`n` can be zero or negative, in which case the sum is empty and `H(n) = 0`. The answer does not fit in a 32 bit integer, and `n` can be up to 2³¹ - 1."
+  },
+  "11536": {
+    "topics": [
+      "data-structures"
+    ],
+    "statement": "A sequence is built as `X1 = 1`, `X2 = 2`, `X3 = 3` and `Xi = (Xi-1 + Xi-2 + Xi-3) % M + 1` for `i = 4` to `N`. Find the shortest contiguous part of the sequence that contains every integer from 1 to `K`.\n\n## Input\n\nThe first line is `T` (`T < 100`). Each next line holds `N M K` with `2 < N < 1000001`, `0 < M < 1001` and `1 < K < 101`.\n\n## Output\n\nFor case `k`, print `Case k: L` with the shortest length, or `Case k: sequence nai` if no such part exists."
+  },
+  "11538": {
+    "topics": [
+      "math"
+    ],
+    "statement": "Two queens, one black and one white, are placed on different squares of an `M × N` board. Count the placements in which they attack each other, that is, share a row, a column or a diagonal. On a 2 × 2 board there are 12 such placements.\n\n## Input\n\nUp to 5000 lines, each with `M N` (`0 < M, N ≤ 10⁶`). `0 0` ends the input.\n\n## Output\n\nFor each line, print the count.\n\n## Notes\n\nThe answer fits in a 64 bit signed integer but not in 32 bits."
+  },
+  "11541": {
+    "topics": [
+      "strings"
+    ],
+    "statement": "In run length encoding each run of equal characters is written as the character followed by the run's length, so `AABBBBDAA` becomes `A2B4D1A2`. Decode such strings.\n\n## Input\n\nThe first line is `T` (`T < 50`). Each next line holds a valid encoded string of capital letters and digits; every letter is followed by one or more digits.\n\n## Output\n\nFor case `k`, print `Case k: ` followed by the decoded string, which has at most 200 letters.\n\n## Notes\n\nA count can have more than one digit, as in `A12`."
+  },
+  "11584": {
+    "topics": [
+      "dp",
+      "strings"
+    ],
+    "statement": "Split a string into the fewest consecutive pieces such that every piece is a palindrome.\n\n## Input\n\nThe first line is `n`. Each next line holds a string of 1 to 1000 lowercase letters.\n\n## Output\n\nFor each string, print the minimum number of pieces."
+  },
+  "11624": {
+    "topics": [
+      "graphs"
+    ],
+    "statement": "Joe is in a maze with fire. Every minute Joe moves one square up, down, left or right, and at the same time the fire spreads from every burning square to its four neighbours. Neither can enter walls, and Joe cannot step onto a burning square. Joe escapes by moving out of the maze from any square on its edge. Find the earliest time he can escape.\n\n## Input\n\nThe first line is the number of test cases. Each case has `R C` (`1 ≤ R, C ≤ 1000`), followed by `R` lines of `C` characters: `#` wall, `.` open square, `J` Joe's start (exactly one), `F` a square on fire.\n\n## Output\n\nFor each case, print the earliest escape time in minutes, or `IMPOSSIBLE`.\n\n## Notes\n\nThere can be several fire squares, or none."
+  },
+  "11633": {
+    "topics": [
+      "brute-force",
+      "math"
+    ],
+    "statement": "A canteen serves food in portions of a fixed size `S`, which can be any positive real number. A student who eats `yi` units keeps taking portions until full and throws away whatever is left of the last portion. Let `x` be the total amount wasted and `y` the total number of portions taken by all students. Choose `S` to minimise `a·x + b·y`, with the extra rule that no student may take more than 3 portions.\n\n## Input\n\nSeveral test cases. Each has a line with `n` (`1 ≤ n ≤ 1000`), a line `a b` (`1 ≤ a, b ≤ 10`) and a line with `y1 ... yn` (`1 ≤ yi ≤ 100`). `n = 0` ends the input.\n\n## Output\n\nFor each test case, print the minimum cost as a reduced fraction `p / q` (with spaces around the slash), or just `p` if it is an integer."
+  },
+  "11636": {
+    "topics": [
+      "math",
+      "greedy"
+    ],
+    "statement": "A program starts with one line that prints `Hello World!`. In one paste you can copy any number of the existing lines and paste them, so the number of lines can at most double. Lines are never deleted. Find the fewest pastes needed to get a program with exactly `N` lines.\n\n## Input\n\nUp to 2000 lines, each with `N` (`0 < N < 10001`). A negative number ends the input.\n\n## Output\n\nFor case `X`, print `Case X: Y`."
+  },
+  "11639": {
+    "topics": [
+      "geometry"
+    ],
+    "statement": "A 100 × 100 field has corners `(0, 0)` and `(100, 100)`. Two guards each watch an axis parallel rectangle given by its lower left and upper right corners. Find the area watched by both guards (strongly secured), by exactly one (weakly secured) and by none (unsecured).\n\n## Input\n\nThe first line is `N` (`N ≤ 100`). Each night has two lines, one per guard, each `x1 y1 x2 y2` with `0 ≤ x1 < x2 ≤ 100` and `0 ≤ y1 < y2 ≤ 100`.\n\n## Output\n\nFor night `k`, print `Night k: s w u` with the three areas."
+  },
+  "11659": {
+    "topics": [
+      "brute-force"
+    ],
+    "statement": "Informants make statements of the form \"X says Y is reliable\" or \"X says Y is not reliable\". Everything a reliable informant says is true; an unreliable informant may say anything. Find the largest number of informants who can all be reliable at the same time.\n\n## Input\n\nSeveral cases. Each starts with `i a` (`0 < i ≤ 20` informants, `0 ≤ a ≤ 800` statements), followed by `a` lines `x y`. A positive `y` means informant `x` says `y` is reliable; a negative `y` means `x` says `-y` is not reliable. `0 0` ends the input.\n\n## Output\n\nFor each case, print the maximum number of reliable informants.\n\n## Notes\n\nAn informant can talk about themself."
+  },
+  "11677": {
+    "topics": [
+      "implementation",
+      "math"
+    ],
+    "statement": "Given the current time and the time an alarm will ring, find how many minutes Daniela can sleep. If the alarm time is earlier in the day than the current time, it rings the next day.\n\n## Input\n\nOne case per line: `H1 M1 H2 M2`, the current time and the alarm time, with hours 0 to 23 and minutes 0 to 59. `0 0 0 0` ends the input.\n\n## Output\n\nFor each case, print the number of minutes."
+  },
+  "11678": {
+    "topics": [
+      "data-structures",
+      "sorting"
+    ],
+    "statement": "Alice and Betty trade cards in one exchange: Alice gives Betty `N` distinct cards and Betty gives Alice `N` distinct cards. Nobody wants a card they already own, so each girl only gives cards the other does not have. Find the largest possible `N`.\n\n## Input\n\nSeveral test cases. Each has a line `A B` (`1 ≤ A, B ≤ 10⁴`), a line with Alice's `A` cards and a line with Betty's `B` cards. Cards are integers from 1 to 10⁵ listed in non decreasing order, and a girl can own several copies of a card. `0 0` ends the input.\n\n## Output\n\nFor each test case, print the largest number of cards they can trade."
+  },
+  "11689": {
+    "topics": [
+      "math",
+      "simulation"
+    ],
+    "statement": "Tim starts the day with `e` empty bottles and finds `f` more. Every `c` empty bottles can be exchanged for a new soda, which he drinks, giving him another empty bottle. He keeps doing this until he cannot afford another soda. How many sodas does he drink?\n\n## Input\n\nThe first line is `N` (`N < 15`). Each next line holds `e f c` with `e < 1000`, `f < 1000` and `1 < c < 2000`.\n\n## Output\n\nFor each case, print the number of sodas."
+  },
+  "11728": {
+    "topics": [
+      "number-theory",
+      "brute-force"
+    ],
+    "statement": "The sum of factors of a number is the sum of all its positive divisors, including 1 and the number itself. Given `S`, find a number whose sum of factors is `S`; if several exist, choose the largest.\n\n## Input\n\nOne positive integer `S` per line, `S ≤ 1000`. A line with `0` ends the input.\n\n## Output\n\nFor case `k`, print `Case k: n`, or `Case k: -1` if no such number exists."
+  },
+  "11730": {
+    "topics": [
+      "graphs",
+      "number-theory"
+    ],
+    "statement": "A number `A` can be changed into `A + x`, where `x` is a prime factor of `A` other than `A` itself. Find the fewest changes that turn `S` into `T`.\n\n## Input\n\nOne case per line: `S T` (`1 ≤ S ≤ 100`, `1 ≤ T ≤ 1000`). `0 0` ends the input.\n\n## Output\n\nFor case `X`, print `Case X: Y` with the minimum number of changes, or `-1` if it is impossible.\n\n## Notes\n\nA prime number cannot be changed, since its only prime factor is itself. `S` can equal `T`."
+  },
+  "11743": {
+    "topics": [
+      "implementation"
+    ],
+    "statement": "Check credit card numbers with the Luhn algorithm:\n\n1. Starting from the second last digit and moving left, double every other digit.\n2. Add the digits of these doubled values, plus all the digits that were not doubled.\n3. The number is valid if the total ends in 0.\n\nFor example, for `5181 2710 9900 0012` the total is 45, so it is invalid.\n\n## Input\n\nThe first line is `N`. Each next line holds a 16 digit number written in four groups of four digits separated by spaces.\n\n## Output\n\nFor each number, print `Valid` or `Invalid`."
+  },
+  "11747": {
+    "topics": [
+      "graphs",
+      "greedy"
+    ],
+    "statement": "In an undirected weighted graph, list every edge that is the heaviest edge of some cycle.\n\n## Input\n\nSeveral cases. Each starts with `n m` (`1 ≤ n ≤ 1000` nodes numbered from 0, `0 ≤ m ≤ 25000` edges), followed by `m` lines `u v w` with `0 ≤ w < 2³¹`. All weights are different and no two nodes share more than one edge. `0 0` ends the input.\n\n## Output\n\nFor each case, print the weights of these edges in increasing order on one line, separated by spaces, or `forest` if there are none."
+  },
+  "11764": {
+    "title": "Jumping Mario",
+    "topics": [
+      "implementation"
+    ],
+    "statement": "Mario stands on the first of `N` walls and jumps from each wall to the next one until he reaches the last. A jump to a taller wall is a high jump, and a jump to a shorter wall is a low jump. Count both.\n\n## Input\n\nThe first line is `T` (`T < 30`). Each case has a line with `N` (`0 < N < 50`) and a line with the `N` wall heights, each from 1 to 10.\n\n## Output\n\nFor case `k`, print `Case k: h l` with the number of high jumps and low jumps."
+  },
+  "11792": {
+    "topics": [
+      "graphs"
+    ],
+    "statement": "Train lines run through lists of stations, in both directions, and travelling between neighbouring stations on a line takes 2 hours. Changing lines costs no time. A station used by more than one line is important. Find the important station whose average shortest travel time to all the other important stations is smallest.\n\n## Input\n\nThe first line is the number of test cases. Each starts with `N S` (`N ≤ 10000` stations numbered from 1, `S ≤ 100` lines), followed by `S` lines, each listing the stations of a line in order and ending with `0`. There are 1 to 100 important stations, and every station can reach every other.\n\n## Output\n\nFor each test case, print `Krochanska is in: X`. If several stations tie, print the smallest number."
+  },
+  "11824": {
+    "topics": [
+      "greedy",
+      "sorting"
+    ],
+    "statement": "One piece of land can be bought per year. A land with cost `L` bought in year `t` (the first purchase is year 1) costs `2 × Lᵗ`. For example buying lands of cost 7, 2 and 10 in that order costs `2×7 + 2×2² + 2×10³ = 2022`. Find the cheapest total for buying all the lands.\n\n## Input\n\nThe first line is `T` (`1 ≤ T ≤ 10`). Each test case lists fewer than 40 land costs, one per line, ending with `0`. All costs are different.\n\n## Output\n\nFor each test case, print the minimum total, or `Too expensive` if it is more than 5000000.\n\n## Notes\n\nPowers grow quickly and overflow 64 bit integers."
+  },
+  "11908": {
+    "topics": [
+      "dp",
+      "sorting"
+    ],
+    "statement": "Advertisements are to be placed on the floors of a building. Each order covers `B` floors starting at floor `A` (floors `A` to `A + B - 1`) and pays `C`. No floor can hold two advertisements, and an order is either placed exactly as requested or not at all. Choose orders to maximise the total payment.\n\n## Input\n\nThe first line is `T` (`T ≤ 50`). Each case starts with `N` (`1 ≤ N ≤ 30000`), followed by `N` lines `A B C` with `0 ≤ A ≤ 10⁵`, `1 ≤ B ≤ 10⁵` and `1 ≤ C ≤ 1000`.\n\n## Output\n\nFor case `k`, print `Case k: p`."
+  },
+  "11917": {
+    "topics": [
+      "implementation",
+      "strings"
+    ],
+    "statement": "Sparrow can do homework in some subjects, each taking a known number of days. An assignment is due in `D` days, and late submissions are accepted up to `D + 5` days. Decide whether Sparrow can do it.\n\n## Input\n\nThe first line is `T` (`T ≤ 100`). Each case starts with `N`, then `N` lines `subject days`, then `D`, then the name of the subject that is due. Names are distinct lowercase words of 1 to 20 letters, and all numbers are from 1 to 100.\n\n## Output\n\nFor case `k`, print `Case k: ` followed by `Yesss` if she needs at most `D` days, `Late` if she needs at most `D + 5`, and `Do your own homework!` otherwise or if she does not know the subject."
+  },
+  "11934": {
+    "topics": [
+      "math",
+      "brute-force"
+    ],
+    "statement": "For `f(x) = ax² + bx + c`, count how many of `f(0), f(1), ..., f(L)` are divisible by `d`.\n\n## Input\n\nOne case per line: `a b c d L` with `-1000 ≤ a, b, c ≤ 1000`, `1 < d < 1000000` and `0 ≤ L < 1000`. `0 0 0 0 0` ends the input.\n\n## Output\n\nFor each case, print the count.\n\n## Notes\n\n`f(x)` can be negative and does not fit in a 32 bit integer."
+  },
+  "11942": {
+    "topics": [
+      "implementation"
+    ],
+    "statement": "Each group of ten lumberjacks is lined up by beard length. Decide whether the group is ordered, either from shortest to longest or from longest to shortest.\n\n## Input\n\nThe first line is `N` (`0 < N < 20`). Each next line holds ten distinct positive integers below 100.\n\n## Output\n\nFirst print `Lumberjacks:`, then one line per group: `Ordered` or `Unordered`."
+  },
+  "11956": {
+    "topics": [
+      "simulation",
+      "strings"
+    ],
+    "statement": "Interpret a program in a small subset of Brainfuck. Memory is 100 bytes, all starting at 0, and a pointer starts at the leftmost byte. Memory is circular: moving right from the last byte goes to the first and vice versa. Bytes are circular too: 255 + 1 = 0 and 0 - 1 = 255.\n\n- `>` moves the pointer right; `<` moves it left;\n- `+` increases the current byte; `-` decreases it;\n- `.` outputs the current byte, which does not affect the memory.\n\n## Input\n\nThe first line is `T` (`T ≤ 100`). Each next line holds one program of fewer than 100000 characters.\n\n## Output\n\nFor test `t`, print `Case t: ` followed by all 100 bytes of memory after the program ends, each as two uppercase hexadecimal digits, separated by single spaces, on one line."
+  },
+  "11957": {
+    "topics": [
+      "dp"
+    ],
+    "statement": "On an `N × N` board there is one white checker `W` and some black ones `B`. The white checker moves up the board: it can step diagonally up left or up right onto a free cell, or, if that diagonal neighbour holds a black checker, jump over it to the free cell right behind it. Black checkers never move and are not removed. Count the different paths that bring the white checker to the top row.\n\n## Input\n\nThe first line is `T` (`T ≤ 100`). Each test has `N` (`1 ≤ N ≤ 100`), followed by `N` lines of `N` characters from `W`, `B` and `.`. There is exactly one `W`.\n\n## Output\n\nFor test `t`, print `Case t: S`, where `S` is the number of paths modulo `1000007`.\n\n## Notes\n\nA path ends as soon as the checker reaches the top row. If it starts on the top row, there is one path, the empty one."
+  },
+  "11960": {
+    "topics": [
+      "number-theory"
+    ],
+    "statement": "For a number `N`, find the number not larger than `N` that has the most divisors. If several numbers tie, choose the largest of them.\n\n## Input\n\nThe first line is `T` (`T ≤ 50000`). Each next line holds `N` (`1 ≤ N ≤ 10⁶`).\n\n## Output\n\nFor each `N`, print the answer."
+  },
+  "11987": {
+    "topics": [
+      "data-structures"
+    ],
+    "statement": "Keep a collection of disjoint sets, starting as `{1}`, `{2}`, ..., `{n}`, and process three commands:\n\n- `1 p q`: merge the sets containing `p` and `q`;\n- `2 p q`: move the element `p` alone into the set containing `q`;\n- `3 p`: report the size and the sum of the set containing `p`.\n\nCommands 1 and 2 do nothing when `p` and `q` are already in the same set.\n\n## Input\n\nTest cases until the end of input. Each starts with `n m` (`1 ≤ n, m ≤ 100000`), followed by `m` commands, one per line, with `1 ≤ p, q ≤ n`.\n\n## Output\n\nFor each command 3, print the number of elements and their sum.\n\n## Notes\n\nSums can exceed 32 bits."
+  },
+  "11995": {
+    "topics": [
+      "data-structures"
+    ],
+    "statement": "A bag supports two operations: `1 x` puts `x` into the bag, and `2 x` means an element was taken out and it was `x`. Given a sequence of operations, decide whether the bag could be a stack (last in, first out), a queue (first in, first out) or a priority queue (largest element out first).\n\n## Input\n\nTest cases until the end of input. Each starts with `n` (`1 ≤ n ≤ 1000`), followed by `n` operations, one per line. Values are positive integers at most 100.\n\n## Output\n\nFor each test case, print `stack`, `queue` or `priority queue` if exactly one fits, `not sure` if more than one fits, or `impossible` if none fits.\n\n## Notes\n\nA take out operation may happen when the bag is empty; then no structure fits."
+  },
+  "12019": {
+    "topics": [
+      "implementation",
+      "math"
+    ],
+    "statement": "Find the day of the week of a date in the year 2011. For reference, 4 April 2011 was a Monday. 2011 is not a leap year.\n\n## Input\n\nThe first line is the number of test cases. Each next line holds a valid date `M D` (month 1 to 12, day 1 to 31).\n\n## Output\n\nFor each date, print one of `Monday`, `Tuesday`, `Wednesday`, `Thursday`, `Friday`, `Saturday`, `Sunday`."
+  },
+  "12041": {
+    "topics": [
+      "strings",
+      "math"
+    ],
+    "statement": "Binary Fibonacci strings are defined by `BFS(0) = \"0\"`, `BFS(1) = \"1\"` and `BFS(n) = BFS(n-2) + BFS(n-1)` (concatenation), giving `0`, `1`, `01`, `101`, `01101`, ... Print the characters of `BFS(N)` from position `i` to position `j`, inclusive, counting from 0.\n\n## Input\n\nThe first line is `T` (`T ≤ 100`). Each next line holds `N i j` with `0 ≤ N, i, j ≤ 2³¹ - 1`, `i ≤ j`, `j - i ≤ 10000`, and both positions inside `BFS(N)`.\n\n## Output\n\nFor each case, print the substring.\n\n## Notes\n\n`N` can be huge, but positions always fit in a 32 bit signed integer."
+  },
+  "12096": {
+    "topics": [
+      "data-structures"
+    ],
+    "statement": "Simulate a computer whose only storage is a stack of sets. The elements of sets are themselves sets. The stack starts empty, and after every command the computer prints the size of the topmost set.\n\n- `PUSH` pushes the empty set `{}`;\n- `DUP` pushes a copy of the topmost set;\n- `UNION` pops two sets and pushes their union;\n- `INTERSECT` pops two sets and pushes their intersection;\n- `ADD` pops the top set `A` and then the next set `B`, and pushes `B` with `A` added as an element.\n\n## Input\n\nThe first line is `T` (`0 ≤ T ≤ 5`). Each test case starts with `N` (`0 ≤ N ≤ 2000`), followed by `N` commands, one per line. No command pops an empty stack.\n\n## Output\n\nFor each command, print the size of the topmost set. After each test case print `***`."
+  },
+  "12195": {
+    "topics": [
+      "implementation",
+      "strings"
+    ],
+    "statement": "A jingle is a sequence of measures separated by slashes, like `/HH/QQQQ/W/`. Each letter is a note with a duration: `W` = 1, `H` = 1/2, `Q` = 1/4, `E` = 1/8, `S` = 1/16, `T` = 1/32, `X` = 1/64. A measure is correct if its notes add up to exactly 1. Count the correct measures.\n\n## Input\n\nOne composition per line, 3 to 200 characters long, starting and ending with `/`. Every measure has at least one note. A line with `*` ends the input.\n\n## Output\n\nFor each composition, print the number of correct measures."
+  },
+  "12208": {
+    "topics": [
+      "math",
+      "dp"
+    ],
+    "statement": "Count the total number of `1` digits needed to write every integer from `a` to `b`, inclusive, in binary.\n\n## Input\n\nUp to 11000 lines, each with `a b` (`0 ≤ a ≤ b ≤ 2000000000`). `0 0` ends the input.\n\n## Output\n\nFor case `k`, print `Case k: c`.\n\n## Notes\n\nThe count does not fit in a 32 bit integer."
+  },
+  "12218": {
+    "topics": [
+      "brute-force",
+      "number-theory"
+    ],
+    "statement": "You have some digit cards. Count the different primes you can form by choosing some of the cards and arranging them in any order. Numbers that differ only by leading zeros count as the same number. For example, the digits 7 and 1 form three primes: 7, 17 and 71.\n\n## Input\n\nThe first line is `c` (`1 ≤ c ≤ 200`). Each next line holds 1 to 7 digits.\n\n## Output\n\nFor each case, print the number of different primes."
+  },
+  "12223": {
+    "topics": [
+      "graphs",
+      "dp"
+    ],
+    "statement": "The subway network is a tree of `n` stations with travel times on its edges. You plan to visit some stations regularly, each a given number of times per year, and every visit is a round trip from home and back. Choose the home station that minimises the total travel time per year.\n\n## Input\n\nThe first line is `c` (`1 ≤ c ≤ 200`). Each case starts with `n` (`1 ≤ n ≤ 50000`), then `n - 1` lines `a b t` (an edge with travel time `1 ≤ t ≤ 300` seconds), then `m` (`0 ≤ m ≤ n`), then `m` lines `a f`: station `a` is visited `f` times a year (`1 ≤ f ≤ 500`). No station is listed twice.\n\n## Output\n\nFor each case, print the minimal total time in seconds on one line, and on the next line all stations that achieve it, in increasing order, separated by single spaces.\n\n## Notes\n\nThe total does not fit in a 32 bit integer."
+  },
+  "12250": {
+    "topics": [
+      "strings"
+    ],
+    "statement": "Detect the language of a greeting: `HELLO` is English, `HOLA` Spanish, `HALLO` German, `BONJOUR` French, `CIAO` Italian and `ZDRAVSTVUJTE` Russian.\n\n## Input\n\nAbout 2000 lines, each an uppercase word of at most 14 letters. A line with `#` ends the input.\n\n## Output\n\nFor case `k`, print `Case k: ` followed by `ENGLISH`, `SPANISH`, `GERMAN`, `FRENCH`, `ITALIAN`, `RUSSIAN` or `UNKNOWN`."
+  },
+  "12319": {
+    "topics": [
+      "graphs"
+    ],
+    "statement": "A city has `n` intersections joined by blocks. The current plan and a proposed plan are both given as directed graphs; distance is the number of blocks on the shortest route. The proposal is acceptable if, for every ordered pair of intersections at distance `x` in the current plan, their distance in the proposal is at most `A·x + B`; in particular every route must still exist. This is a modified version that also asks for the largest distance between any two intersections in the current plan.\n\n## Input\n\nSeveral cases. Each starts with `n` (`3 ≤ n ≤ 100`). The next `n` lines describe the current plan: line `i` starts with `i` followed by the intersections that can be reached from `i` by one block. The next `n` lines describe the proposal in the same way. Then comes a line `A B` (`0 ≤ A, B ≤ 10`). A line with `0` ends the input.\n\n## Output\n\nFor each case, print `Yes` or `No`, a space, and the largest shortest path distance in the current plan."
+  },
+  "12382": {
+    "topics": [
+      "greedy",
+      "sorting"
+    ],
+    "statement": "In an `M × N` grid of lamps, the luminosity of a row or a column is its number of lit lamps. You are given lower bounds for the row luminosities and for the column luminosities, each list in an unknown order of rows or columns. Find the fewest lit lamps a grid can have so that its rows can be matched to the row bounds and its columns to the column bounds, with every row and column reaching at least its bound.\n\n## Input\n\nThe first line is `T` (`T ≤ 100`). Each case has a line `M N` (`1 ≤ M, N ≤ 1000`), a line with `M` row bounds and a line with `N` column bounds.\n\n## Output\n\nFor each case, print the minimum number of lit lamps."
+  },
+  "12385": {
+    "topics": [
+      "greedy",
+      "data-structures"
+    ],
+    "statement": "A contiguous part `x[i..j]` of a sequence, with `i < j`, is interesting if `x[i] = x[j]`. Two interesting parts are conflict free if they do not overlap, although one may start exactly where the other ends. Find the largest number of pairwise conflict free interesting parts.\n\n## Input\n\nThe first line is `T` (`T ≤ 100`). Each case has a line with `N` (`1 ≤ N ≤ 100000`) and a line with `N` integers from 1 to 100000.\n\n## Output\n\nFor each case, print the maximum number."
+  },
+  "12442": {
+    "topics": [
+      "graphs"
+    ],
+    "statement": "Each of `N` Martians always forwards an email to exactly one other Martian. The chieftain sends one email to one Martian, and it keeps being forwarded. Choose the starting Martian so that the most different Martians see it.\n\n## Input\n\nThe first line is `T` (`T ≤ 20`). Each case starts with `N` (`2 ≤ N ≤ 50000`), followed by `N` lines `u v`: Martian `u` forwards to Martian `v` (`u ≠ v`).\n\n## Output\n\nFor case `k`, print `Case k: m`. If several Martians are best, print the smallest number."
+  },
+  "12455": {
+    "topics": [
+      "dp",
+      "brute-force"
+    ],
+    "statement": "Some metal bars can be soldered end to end but not cut. Decide whether some of them can be joined into a bar of exactly length `n`.\n\n## Input\n\nThe first line is `t` (`0 ≤ t ≤ 50`). Each case has three lines: `n` (`0 ≤ n ≤ 1000`), `p` (`1 ≤ p ≤ 20`), and the `p` bar lengths.\n\n## Output\n\nFor each case, print `YES` or `NO`.\n\n## Notes\n\nUsing no bars gives length 0."
+  },
+  "12532": {
+    "topics": [
+      "data-structures"
+    ],
+    "statement": "Keep a sequence `X1, ..., XN` under two commands: `C I V` sets `XI` to `V`, and `P I J` asks whether `XI × ... × XJ` is positive, negative or zero.\n\n## Input\n\nTest cases until the end of input. Each starts with `N K` (`1 ≤ N, K ≤ 10⁵`), then a line with the `N` values, then `K` commands, one per line. All values are between -100 and 100, and `1 ≤ I ≤ J ≤ N`. Every test case has at least one `P` command.\n\n## Output\n\nFor each test case, print one line with one character per `P` command, in order: `+`, `-` or `0`."
+  },
+  "12592": {
+    "topics": [
+      "strings",
+      "data-structures"
+    ],
+    "statement": "A slogan has a first line and a second line. Given a list of slogans, answer each query first line with its second line.\n\n## Input\n\nThe first line is `N` (`0 < N ≤ 20`), followed by `N` pairs of lines: a first line and its second line. Then comes `Q` (`Q ≤ 100`), followed by `Q` first lines. Lines contain lowercase letters and spaces, at most 100 characters. First lines in the list are all different, and every query is in the list.\n\n## Output\n\nFor each query, print the matching second line."
+  },
+  "12602": {
+    "topics": [
+      "implementation",
+      "math"
+    ],
+    "statement": "A licence plate has the form `LLL-DDDD`. The letter part is a base 26 number with `A` = 0 to `Z` = 25, so `ABC` is `0·26² + 1·26 + 2 = 28`. The plate is nice if the letter value and the digit value differ by at most 100.\n\n## Input\n\nThe first line is `N` (`1 ≤ N ≤ 100`). Each next line holds one plate.\n\n## Output\n\nFor each plate, print `nice` or `not nice`."
+  },
+  "12627": {
+    "topics": [
+      "math",
+      "dp"
+    ],
+    "statement": "At hour 0 there is one red balloon in a 1 × 1 grid. Every hour the grid doubles in both directions and every balloon becomes a 2 × 2 block: a red balloon turns into red top left, red top right, red bottom left and blue bottom right; a blue balloon turns into four blue balloons. Count the red balloons in rows `A` to `B` after `K` hours.\n\n## Input\n\nThe first line is `T` (`T < 1000`). Each next line holds `K A B` with `0 ≤ K ≤ 30` and `1 ≤ A ≤ B ≤ 2ᴷ`.\n\n## Output\n\nFor case `k`, print `Case k: r`.\n\n## Notes\n\nThe count does not fit in a 32 bit integer."
+  },
+  "12650": {
+    "topics": [
+      "implementation"
+    ],
+    "statement": "`N` divers numbered 1 to `N` went on a mission and `R` of them came back. List those who did not return.\n\n## Input\n\nTest cases until the end of input. Each has a line `N R` (`1 ≤ R ≤ N ≤ 10⁴`) and a line with the numbers of the `R` divers who returned.\n\n## Output\n\nFor each test case, print the missing numbers in increasing order, each followed by a space (so the line ends with a space), or `*` if everyone returned."
+  },
+  "12654": {
+    "topics": [
+      "dp",
+      "greedy"
+    ],
+    "statement": "A bike tire is a circle of circumference `C` with `N` holes, given as clockwise distances from a chalk mark. You have unlimited patches of two lengths, `T1` and `T2`, which cannot be cut. Every hole must be covered by some patch; a patch of length `k` covers holes up to exactly `k` apart. Find the smallest total length of patches.\n\n## Input\n\nTest cases until the end of input. Each has a line `N C T1 T2` and a line with the `N` hole positions `F1 ... FN`, with `1 ≤ N ≤ 1000`, `1 ≤ C ≤ 10⁶`, `1 ≤ T1, T2 ≤ C` and `0 ≤ Fi ≤ C - 1`.\n\n## Output\n\nFor each test case, print the minimum total length.\n\n## Notes\n\nThe tire is a circle, so a patch can cover the chalk mark. Hole positions are not necessarily sorted."
+  },
+  "12694": {
+    "topics": [
+      "greedy",
+      "sorting"
+    ],
+    "statement": "A meeting room is open from time 0 to 10. Choose as many events as possible from a list so that no two chosen events overlap.\n\n## Input\n\nThe first line is `n` (`1 ≤ n ≤ 100`). Each test case lists fewer than 20 events, one per line as `s f` (`0 ≤ s ≤ 9`, `1 ≤ f ≤ 10`, `s < f`), and ends with a line `0 0`.\n\n## Output\n\nFor each test case, print the maximum number of events.\n\n## Notes\n\nAn event may start at the exact time another one finishes."
+  },
+  "12797": {
+    "topics": [
+      "graphs",
+      "brute-force"
+    ],
+    "statement": "A park is an `N × N` grid; each square holds one of the letters `a`–`j` in lowercase or uppercase. A consistent path moves between squares that share a side and never contains the same letter in both cases: each letter appears only in lowercase, only in uppercase, or not at all. Find the shortest consistent path from the top left square to the bottom right square, where the length is the number of squares on the path.\n\n## Input\n\nTest cases until the end of input. Each starts with `N` (`2 ≤ N ≤ 100`), followed by `N` lines of `N` letters.\n\n## Output\n\nFor each test case, print the length of the shortest consistent path, or `-1` if none exists."
+  },
+  "12820": {
+    "topics": [
+      "strings"
+    ],
+    "statement": "A word is cool if it has at least two different letters and every letter appears a different number of times. For example `ada` and `banana` are cool, while `bbacccd` is not because `a` and `d` both appear once. Count the cool words in a list.\n\n## Input\n\nAt most 30 test cases until the end of input. Each starts with `n` (`1 ≤ n ≤ 10000`), followed by `n` words of 1 to 30 lowercase letters.\n\n## Output\n\nFor case `k`, print `Case k: c`."
+  },
+  "12869": {
+    "topics": [
+      "math"
+    ],
+    "statement": "Let `zero(v)` be the number of trailing zeros of `v!`. Count how many different values `zero(v)` takes for `low ≤ v ≤ high`. For example, for `v` from 1 to 10 the values are 0, 1 and 2, so the answer is 3.\n\n## Input\n\nAt most 50001 lines, each with `low high` (`0 < low ≤ high ≤ 9 × 10¹⁸`). `0 0` ends the input.\n\n## Output\n\nFor each line, print the count.\n\n## Notes\n\nThe values need 64 bit integers."
+  },
+  "12908": {
+    "topics": [
+      "math"
+    ],
+    "statement": "Anita added the page numbers `1, 2, ..., n` of a book but forgot exactly one page, and got the sum `s`. Find the forgotten page and the number of pages `n`.\n\n## Input\n\nOne positive integer `s` per line (`1 ≤ s ≤ 10⁸`). A line with `0` ends the input.\n\n## Output\n\nFor each `s`, print the forgotten page and `n`, separated by a space.\n\n## Notes\n\nThe answer is unique."
+  },
+  "12911": {
+    "topics": [
+      "brute-force",
+      "sorting"
+    ],
+    "statement": "Count the non empty subsets of a set of integers whose elements add up to `T`.\n\n## Input\n\nTest cases until the end of input. Each has a line `N T` and a line with the `N` integers, with `1 ≤ N ≤ 40` and `-10⁹ ≤ T, si ≤ 10⁹`.\n\n## Output\n\nFor each test case, print the number of subsets.\n\n## Notes\n\nSums and the count do not fit in a 32 bit integer. Equal values at different positions are different elements."
+  },
+  "12918": {
+    "topics": [
+      "math"
+    ],
+    "statement": "A thief has `n` keys and there are `m` doors, `n ≤ m`. Each key opens exactly one door, and different keys open different doors. He tests one key on one door per try. Find the number of tries he needs in the worst case to be sure which door each key opens.\n\n## Input\n\nThe first line is `T` (`T ≤ 100000`). Each next line holds `n m` with `1 ≤ n ≤ m ≤ 100000`.\n\n## Output\n\nFor each case, print the number of tries.\n\n## Notes\n\nThe answer does not fit in a 32 bit integer."
+  },
+  "12959": {
+    "topics": [
+      "implementation"
+    ],
+    "statement": "`J` players play `R` rounds; in every round players 1 to `J` play in order, and each play earns some Victory Points. The winner has the largest total. If several players tie, the winner is the one among them who plays last, that is, the one with the largest number.\n\n## Input\n\nSeveral test cases. Each has a line `J R` (`1 ≤ J, R ≤ 500`) and a line with `J × R` integers from 0 to 100: the points of every play in the order they happened. `0 0` ends the input.\n\n## Output\n\nFor each test case, print the number of the winner."
+  },
+  "12970": {
+    "topics": [
+      "math"
+    ],
+    "statement": "Two planes fly toward an airport at constant speeds. The captain's plane flies at `v1` mph and is `d1` miles away; the other plane flies at `v2` mph and is `d2` miles away. The plane that arrives first wins. Report the winner and the average of the two arrival times.\n\n## Input\n\nOne case per line: `v1 d1 v2 d2` with all values from 1 to 10⁹. `0 0 0 0` ends the input. There are no ties.\n\n## Output\n\nFor case `k`, print `Case #k: You owe me a beer!` if the captain wins or `Case #k: No beer for the captain.` otherwise. On the next line print `Avg. arrival time: ` followed by the average time in hours as a reduced fraction `x/y`, or just `x` if it is an integer.\n\n## Notes\n\nProducts of the inputs do not fit in a 32 bit integer."
+  },
+  "13055": {
+    "topics": [
+      "data-structures"
+    ],
+    "statement": "Dom moves between dreams. Process `n` queries:\n\n- `Sleep X`: Dom enters the dream of `X` from the current dream (or from being awake);\n- `Kick`: Dom leaves the current dream and returns to the previous one; ignore it if he is not in any dream;\n- `Test`: print whose dream Dom is in.\n\n## Input\n\nThe first line is `n` (`1 ≤ n ≤ 10000`), followed by `n` queries. Names are 1 to 15 letters.\n\n## Output\n\nFor each `Test`, print the name exactly as given, or `Not in a dream`."
+  },
+  "13171": {
+    "topics": [
+      "implementation"
+    ],
+    "statement": "Paint an image using only magenta, yellow and cyan paint. Each pixel color uses one unit of every primary it is mixed from:\n\n- `M` magenta, `Y` yellow, `C` cyan: one unit of that color;\n- `R` red = magenta + yellow; `G` green = yellow + cyan; `V` violet = magenta + cyan;\n- `B` black = all three; `W` white = no paint.\n\nDecide whether the image can be painted with the paint available.\n\n## Input\n\nThe first line is the number of test cases. Each case is one line with the units of magenta, yellow and cyan, followed by the image as a string of 1 to 100000 of the letters above.\n\n## Output\n\nFor each case, print `YES` followed by the remaining units of magenta, yellow and cyan, or `NO`."
+  },
+  "13185": {
+    "topics": [
+      "number-theory"
+    ],
+    "statement": "Compare a number with the sum of its proper divisors (all positive divisors except itself). The number is deficient if the sum is smaller, perfect if it is equal, and abundant if it is larger.\n\n## Input\n\nThe first line is `t` (`1 ≤ t ≤ 500`). Each next line holds `n` (`2 ≤ n ≤ 1000`).\n\n## Output\n\nFor each `n`, print `deficient`, `perfect` or `abundant`."
+  },
+  "13204": {
+    "topics": [
+      "math"
+    ],
+    "statement": "Count the permutations `(a1, ..., an)` of `(1, ..., n)` with `|a1 - 1| + |a2 - 2| + ... + |an - n| = ⌊n²/2⌋`.\n\n## Input\n\nAt most 1000 lines until the end of input, each with `n` (`1 ≤ n ≤ 1000000`).\n\n## Output\n\nFor each `n`, print the count modulo `1000000007`."
+  },
+  "13211": {
+    "topics": [
+      "graphs"
+    ],
+    "statement": "There are `n` towers, and sending a message directly from tower `i` to tower `j` costs `wij` (not necessarily equal to `wji`). Let `d(u, v)` be the cheapest cost to send a message from `u` to `v`, directly or through other towers that still exist. Towers are destroyed one at a time in a given order, and destroying a tower costs the sum of `d(u, v)` over all ordered pairs `u ≠ v` of towers still standing at that moment, including the one being destroyed. Find the total cost of destroying all towers.\n\n## Input\n\nThe first line is `t`. Each case starts with `n` (`1 ≤ n ≤ 500`), followed by `n` lines of `n` integers `wij` (`1 ≤ wij ≤ 10⁴`, `wii = 0`), then a line with the destruction order: `n` distinct tower numbers from 0 to `n - 1`.\n\n## Output\n\nFor each case, print the total cost.\n\n## Notes\n\nA destroyed tower can no longer relay messages. The total does not fit in a 32 bit integer."
+  },
+  "13242": {
+    "topics": [
+      "brute-force"
+    ],
+    "statement": "Jars numbered from 0 stand in a row, each with a volume of water and its temperature. Pour a group of consecutive jars into a pool. The mixed temperature is the volume weighted average. The total volume must be at least half the pool's capacity and must not exceed it, and the temperature must be within 5 degrees of the target. Find the group whose temperature is closest to the target.\n\n## Input\n\nThe first line is the number of problems. Each has a line with the pool capacity and the target temperature, a line with the number of jars (at most 3000), and one line `volume temperature` per jar.\n\n## Output\n\nFor each problem, print the numbers of the first and last jar, or `Not possible`. If several groups are equally close, use the one with the lowest jar numbers."
+  },
+  "13257": {
+    "topics": [
+      "strings",
+      "brute-force"
+    ],
+    "statement": "Count the different three letter strings that appear in a word as a subsequence, that is, with their letters in the same order but not necessarily next to each other.\n\n## Input\n\nThe first line is `T`. Each next line holds a word of 1 to 10⁵ uppercase letters.\n\n## Output\n\nFor each word, print the count."
+  }
+}
