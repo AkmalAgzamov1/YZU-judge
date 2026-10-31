@@ -111,6 +111,18 @@ npm run dev
 
 Then open http://localhost:5173.
 
+## Deploying
+
+Everything runs on one Linux server with Docker: Postgres, Redis, the API, the judge worker, and Caddy, which serves the site, proxies `/api` and gets the HTTPS certificate. The worker starts the sandbox containers through the host's Docker, so the server should run nothing else.
+
+1. Point the domain's DNS at the server, install Docker, clone the repository.
+2. Copy `.env.production.example` to `.env` and fill it in (`openssl rand -hex 32` for the secrets).
+3. On your own machine, `bash deploy/export_local.sh` packs the problems, tests and help into `deploy/out/`. Copy that folder to the server.
+4. On the server, `bash deploy/import_on_server.sh` loads it and starts everything.
+5. Add `deploy/backup.sh` to cron for daily backups.
+
+After that, updating is `git pull && docker compose -f docker-compose.prod.yml up -d --build`.
+
 ## What's next
 
 - Java support, since some students take the CPE in Java

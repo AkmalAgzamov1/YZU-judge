@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from .routers import problems, users, testcases, submissions, cpe_papers, mock_exams, problem_help
 from fastapi.middleware.cors import CORSMiddleware
+from .config import CORS_ORIGINS
 
 app = FastAPI()
 
@@ -12,7 +13,7 @@ app.include_router(cpe_papers.router)
 app.include_router(mock_exams.router)
 app.include_router(problem_help.router)
 
-origins = ["http://localhost:5173"]
+origins = CORS_ORIGINS
 
 app.add_middleware(
     CORSMiddleware,

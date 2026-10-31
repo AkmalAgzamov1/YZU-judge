@@ -8,9 +8,8 @@ from ..dependencies import get_current_admin_user
 
 from ..models.testcase import TestCase
 from ..schemas.testcase import TestCaseCreate, TestCaseOut, TestCaseUpdate, TestCaseFlags, TestCaseAdminOut
-from ..storage import save_file, write_file, read_file
+from ..storage import save_file, write_file, read_file, delete_file
 
-from pathlib import Path
 
 router = APIRouter(prefix = "/problems", tags = ["TestCases"])
 
@@ -121,7 +120,7 @@ def add_testcases_bulk(problem_id: int, testcases_data: list[TestCaseCreate], cu
     except Exception:
         db.rollback()
         for path in written:
-            Path(path).unlink(missing_ok = True)
+            delete_file(path)
         raise
 
     return [to_admin_out(testcase) for testcase in created]
@@ -240,8 +239,8 @@ def delete_testcase( problem_id: int, testcase_id: int, current_user: User = Dep
             detail = "No such testcase"
         )
 
-    Path(testcase.input_path).unlink(missing_ok = True)
-    Path(testcase.output_path).unlink(missing_ok = True)
+    delete_file(testcase.input_path)
+    delete_file(testcase.output_path)
 
     db.delete(testcase)
     db.commit()

@@ -1,0 +1,6 @@
+# Context for deploy/web.Dockerfile: only the frontend sources and the Caddyfile matter.
+**/node_modules
+frontend/dist
+backend/
+.git
+.claude
