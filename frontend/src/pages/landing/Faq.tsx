@@ -27,7 +27,7 @@ const faqs = [
   },
   {
     q: "Which programming languages can I use?",
-    a: "Python is supported today. C++ and Java are the next languages planned, since they are the most common choices on the CPE.",
+    a: "Python 3.11 and C++17, the two most common choices on the CPE. Java is planned next.",
   },
   {
     q: "Is this the official CPE website?",
