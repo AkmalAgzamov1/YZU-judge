@@ -68,3 +68,5 @@ export const STAR_PROBLEMS: StarProblem[] = [
   { uva: 11461, title: "Square Numbers", asked: ["2025-03-25"] },
   { uva: 12019, title: "Doom's Day Algorithm", asked: ["2021-03-23"] },
 ];
+
+export const STAR_UVA_IDS: ReadonlySet<number> = new Set(STAR_PROBLEMS.map((problem) => problem.uva));
