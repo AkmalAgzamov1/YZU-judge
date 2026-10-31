@@ -122,8 +122,9 @@ Everything runs on one Linux server with Docker: Postgres, Redis, the API, the j
 3. On your own machine, `bash deploy/export_local.sh` packs the problems, tests and help into `deploy/out/`. Copy that folder to the server.
 4. On the server, `bash deploy/import_on_server.sh` loads it and starts everything.
 5. Add `deploy/backup.sh` to cron for daily backups.
+6. Run `bash deploy/install_auto_deploy.sh` once.
 
-After that, updating is `git pull && docker compose -f docker-compose.prod.yml up -d --build`.
+After that, every push to `main` is live within about a minute: the server checks GitHub every minute, rebuilds, and re-applies the statements or hints when their JSON changed (`journalctl -u yzu-auto-deploy` shows what it did).
 
 ## What's next
 
