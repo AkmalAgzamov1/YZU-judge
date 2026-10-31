@@ -1,4 +1,4 @@
-import { CheckCircle, Circle, CircleHalf, MagnifyingGlass } from "@phosphor-icons/react";
+import { CheckCircle, Circle, CircleHalf, MagnifyingGlass, Star } from "@phosphor-icons/react";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { ApiError, problemsApi, submissionsApi, type Problem } from "../api/client";
@@ -12,6 +12,7 @@ import DifficultyLabel, {
 } from "../components/DifficultyLabel";
 import { buttonSecondary, focusRing } from "../components/ui";
 import { formatTime } from "../lib/format";
+import { STAR_UVA_IDS } from "../lib/nextCpe";
 import { buildStatuses, type SolveStatus } from "../lib/progress";
 import { isTopic, TOPICS, topicLabel, type Topic } from "../lib/topics";
 import TopicChips from "../components/TopicChips";
@@ -235,6 +236,18 @@ export default function Problems() {
                 ? `${problems.length} problems, ${problems.filter((problem) => problem.is_cpe).length} of them from past CPE exams. Sorted from easy to hard.`
                 : "Past CPE problems, sorted from easy to hard."}
             </p>
+            <p className="mt-2 flex items-center gap-1.5 text-sm text-neutral-500">
+              <Star weight="fill" aria-hidden="true" className="h-4 w-4 shrink-0 text-yzu-yellow" />
+              <span>
+                One star list: every CPE has one of these.{" "}
+                <Link
+                  to={{ pathname: "/", hash: "#next-cpe" }}
+                  className={`rounded-sm text-neutral-300 underline underline-offset-2 hover:text-white ${focusRing}`}
+                >
+                  Why it matters
+                </Link>
+              </span>
+            </p>
           </div>
           {user && state.kind === "ready" && problems.length > 0 && (
             <Progress problems={problems} statuses={visibleStatuses} />
@@ -381,8 +394,16 @@ export default function Problems() {
                         {problem.uva_id ?? "—"}
                       </span>
                       <span className="min-w-0">
-                        <span className="block truncate text-base font-medium text-white">
-                          {problem.title}
+                        <span className="flex items-center gap-1.5">
+                          <span className="truncate text-base font-medium text-white">
+                            {problem.title}
+                          </span>
+                          {problem.uva_id !== null && problem.uva_id !== undefined && STAR_UVA_IDS.has(problem.uva_id) && (
+                            <span title="On the CPE one star list: every CPE has one of these" className="shrink-0">
+                              <Star weight="fill" aria-hidden="true" className="h-4 w-4 text-yzu-yellow" />
+                              <span className="sr-only">One star list</span>
+                            </span>
+                          )}
                         </span>
                         {(problem.is_cpe || (problem.topics?.length ?? 0) > 0) && (
                           <span className="mt-1 flex flex-wrap gap-1">
