@@ -1,0 +1,31 @@
+{
+  "10079": {
+    "topics": ["math"],
+    "statement": "Each straight cut goes all the way across a round pizza. Given how many cuts are made, find the largest number of pieces the pizza can end up in.\n\n## Input\n\nOne integer `N` per line, the number of cuts, with `0 ≤ N ≤ 210000000`. A negative number ends the input and is not processed.\n\n## Output\n\nFor every `N`, print the maximum number of pieces on its own line, with no extra spaces.\n\n## Notes\n\nThe answer for the largest `N` does not fit in a 32 bit integer."
+  },
+  "11321": {
+    "topics": ["sorting", "implementation"],
+    "statement": "Sort a list of integers by a custom rule based on their remainder modulo `M`.\n\nOrder the numbers by `x mod M` from smallest to largest, where the remainder follows C rules: a negative number gives a remainder that is zero or negative, for example `-100 mod 3 = -1`. When two numbers have the same remainder:\n\n- an odd number comes before an even number,\n- two odd numbers go from larger to smaller,\n- two even numbers go from smaller to larger.\n\n## Input\n\nSeveral test sets. Each starts with a line `N M` (`0 < N ≤ 10000`, `0 < M ≤ 10000`), followed by `N` lines with one 32 bit signed integer each. A line `0 0` ends the input.\n\n## Output\n\nFor each set, print the line `N M`, then the `N` numbers in sorted order, one per line. Finish by printing the closing `0 0` as well."
+  },
+  "706": {
+    "topics": ["implementation", "strings"],
+    "statement": "Draw numbers the way a seven segment calculator display shows them, at a chosen size.\n\nWith size `s`, every digit is `s + 2` characters wide and `2s + 3` lines tall. Horizontal segments are `s` dashes `-`, vertical segments are `s` bars `|`, and every unused position is a space. Neighbouring digits are separated by exactly one column of spaces. Pad every digit to its full width, including the last one on a line.\n\n## Input\n\nEach line holds two integers `s n` with `1 ≤ s ≤ 10` and `0 ≤ n ≤ 99999999`. The line `0 0` ends the input and is not drawn.\n\n## Output\n\nFor each line, draw `n` at size `s`, then print one empty line."
+  },
+  "1203": {
+    "topics": ["data-structures", "simulation"],
+    "statement": "A stream system runs several registered queries at the same time. A query with period `P` first reports `P` seconds after registration, then every `P` seconds after that. Find the first `K` reports in time order.\n\nWhen several queries report at the same moment, the one with the smaller query number goes first.\n\n## Input\n\nFirst, up to 1000 lines of the form `Register Q P`, where `Q` is a unique query number and `P` its period, both between 1 and 3000. A line with `#` ends this part. The last line holds one integer `K` (`K ≤ 10000`).\n\n## Output\n\nPrint the query numbers of the first `K` reports, one per line."
+  },
+  "10405": {
+    "title": "Longest Common Subsequence",
+    "topics": ["dp", "strings"],
+    "statement": "Given two strings, find the length of their longest common subsequence: the longest sequence of characters that appears in both strings in the same order, not necessarily next to each other.\n\nFor example, `abcdgh` and `aedfhr` share `adh`, so the answer is 3.\n\n## Input\n\nPairs of lines until the end of input. Each line of a pair is one string of at most 1000 characters.\n\n## Output\n\nFor each pair, print the length of the longest common subsequence on its own line.\n\n## Notes\n\nStrings may contain any visible characters, and a line can be empty. Read whole lines rather than words."
+  },
+  "11806": {
+    "topics": ["math", "brute-force"],
+    "statement": "Place exactly `K` cheerleaders on an `M × N` grid, at most one per cell, so that every one of the four border sides has at least one cheerleader on it. A corner cell counts for both sides it touches. Count how many different placements exist.\n\n## Input\n\nThe first line is `T` (`T ≤ 50`). Each of the next `T` lines holds `M N K` with `2 ≤ M, N ≤ 20` and `K ≤ 500`.\n\n## Output\n\nFor test case `i`, print `Case i: ` followed by the number of placements modulo `1000007`.\n\n## Notes\n\nCounting all placements and then removing the ones that miss a side (inclusion and exclusion over the four sides) keeps this small."
+  },
+  "1660": {
+    "topics": ["graphs"],
+    "statement": "A network of `n` relays is joined by two way cables. Its safety factor is the smallest number of relays whose removal leaves the network disconnected. If no set of removals disconnects it, the safety factor is `n`. An empty network or a single relay counts as connected.\n\nCompute the safety factor of each network.\n\n## Input\n\nSeveral data sets until the end of input. Each starts with `n m` (`0 ≤ n ≤ 50`), the number of relays and cables, followed by `m` pairs written as `(u,v)` with `0 ≤ u < v < n`. Apart from inside a pair, spacing and line breaks can appear anywhere.\n\n## Output\n\nFor each data set, print its safety factor on its own line.\n\n## Notes\n\nThis is the vertex connectivity of the graph. With `n ≤ 50`, trying every pair of relays with a max flow on a split graph is fast enough."
+  }
+}
