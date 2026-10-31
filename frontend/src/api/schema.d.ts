@@ -419,6 +419,43 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/problems/{problem_id}/help": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Problem Help */
+        get: operations["get_problem_help_problems__problem_id__help_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/problems/{problem_id}/hints/{number}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reveal Hint
+         * @description Opens hint `number` (1 based). Signed in users must open them in order.
+         */
+        post: operations["reveal_hint_problems__problem_id__hints__number__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/": {
         parameters: {
             query?: never;
@@ -493,6 +530,13 @@ export interface components {
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** HintOut */
+        HintOut: {
+            /** Number */
+            number: number;
+            /** Text */
+            text: string;
         };
         /** MockExamCreate */
         MockExamCreate: {
@@ -605,6 +649,32 @@ export interface components {
              */
             topics: ("implementation" | "math" | "number-theory" | "strings" | "sorting" | "greedy" | "brute-force" | "dp" | "graphs" | "data-structures" | "geometry" | "simulation")[];
         };
+        /** ProblemHelpOut */
+        ProblemHelpOut: {
+            /** Available */
+            available: boolean;
+            /**
+             * Hint Count
+             * @default 0
+             */
+            hint_count: number;
+            /**
+             * Hints
+             * @default []
+             */
+            hints: string[];
+            /**
+             * Has Submitted
+             * @default false
+             */
+            has_submitted: boolean;
+            /**
+             * Solution Unlocked
+             * @default false
+             */
+            solution_unlocked: boolean;
+            solution?: components["schemas"]["SolutionOut"] | null;
+        };
         /** ProblemOut */
         ProblemOut: {
             /** Id */
@@ -681,6 +751,15 @@ export interface components {
             input: string;
             /** Output */
             output: string;
+        };
+        /** SolutionOut */
+        SolutionOut: {
+            /** Explanation */
+            explanation: string;
+            /** Python */
+            python: string;
+            /** Cpp */
+            cpp: string;
         };
         /** SubmissionCreate */
         SubmissionCreate: {
@@ -1907,6 +1986,69 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MockExamOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_problem_help_problems__problem_id__help_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                problem_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProblemHelpOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reveal_hint_problems__problem_id__hints__number__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                problem_id: number;
+                number: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HintOut"];
                 };
             };
             /** @description Validation Error */

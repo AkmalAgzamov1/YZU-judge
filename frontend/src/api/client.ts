@@ -24,6 +24,10 @@ type SubmissionResult = components["schemas"]["SubmissionResultOut"];
 
 type Sample = components["schemas"]["SampleOut"];
 
+type ProblemHelp = components["schemas"]["ProblemHelpOut"];
+
+type Hint = components["schemas"]["HintOut"];
+
 type CpePaper = components["schemas"]["CpePaperOut"];
 
 type MockExam = components["schemas"]["MockExamOut"];
@@ -144,6 +148,14 @@ export const problemsApi = {
 
   samples(id: number): Promise<Sample[]> {
     return request<Sample[]>(`/problems/${id}/samples`);
+  },
+
+  help(id: number): Promise<ProblemHelp> {
+    return request<ProblemHelp>(`/problems/${id}/help`);
+  },
+
+  revealHint(id: number, number: number): Promise<Hint> {
+    return request<Hint>(`/problems/${id}/hints/${number}`, { method: "POST" });
   },
 };
 
@@ -275,6 +287,7 @@ export type {
   RegisterRequest,
   LoginResponse,
   Problem,
+  ProblemHelp,
   Sample,
   Submission,
   SubmissionResult,

@@ -17,6 +17,7 @@ from app.models.submission import Submission
 from app.models.submission_result import SubmissionResult
 from app.models.cpe_paper import CpePaper, CpePaperProblem
 from app.models.mock_exam import MockExam
+from app.models.hint_reveal import HintReveal
 
 
 config = context.config

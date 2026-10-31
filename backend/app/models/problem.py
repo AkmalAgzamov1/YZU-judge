@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, Enum, ForeignKey
+from sqlalchemy import Column, Integer, String, Text, Boolean, Enum, ForeignKey
 from sqlalchemy.dialects.postgresql import ARRAY
 from sqlalchemy.orm import relationship
 from ..database import Base
@@ -23,6 +23,13 @@ class Problem(Base):
     # Drafts are visible to admins only, until they are published.
     is_published = Column(Boolean, nullable = False, default = False)
     difficulty = Column(Enum("easy", "medium", "hard", name = "problem_difficulty"), nullable = False)
+
+    # Help for easy problems, written by scripts/cpe_help.py. Never part of ProblemOut:
+    # routers/problem_help.py hands it out only once the unlock rules are met.
+    hints = Column(ARRAY(String), nullable = False, default = list, server_default = "{}")
+    solution_explanation = Column(Text, nullable = True)
+    solution_python = Column(Text, nullable = True)
+    solution_cpp = Column(Text, nullable = True)
 
     created_by = Column(Integer, ForeignKey("users.id"), nullable = False)
     testcases = relationship("TestCase", back_populates="problem")
