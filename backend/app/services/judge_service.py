@@ -9,7 +9,8 @@ def load_testcases(db: Session, problem_id: int):
     testcases = (
         db.query(TestCase)
         .filter(TestCase.problem_id == problem_id)
-        .order_by(TestCase.id)
+        # Samples first, so a wrong answer on the visible test is the one reported.
+        .order_by(TestCase.is_sample.desc(), TestCase.sample_order.nulls_last(), TestCase.id)
         .all()
     )
 

@@ -5,7 +5,8 @@ solution and the two test inputs (A and B), runs the official solution in the
 judge sandbox to produce the expected outputs, and stores:
 
   * one problem per UVa number, linking to the official statement PDF,
-  * test A as the visible sample, tests A and B both used for judging,
+  * test A as the visible sample, tests A and B both used for judging
+    (scripts.cpe_content apply later swaps in the statement's own sample),
   * one Mock CPE paper per exam whose problems all verified.
 
 Problems without official tests, or whose official solution fails, are skipped.
@@ -212,6 +213,26 @@ def generate_outputs(problem: ExamProblem) -> tuple[list[tuple[str, str]] | None
         # The CPE site misses a few files; the problem is skipped instead.
         return None, f"download failed: {error}", 0
 
+    code, compiled = compile_official(code)
+    if not compiled["ok"]:
+        return None, "official solution did not compile: " + compiled["output"][:200], 0
+
+    tests = []
+    slowest = 0
+    for name, test_input in zip("AB", inputs):
+        result = run_official(code, compiled, test_input)
+        if result["timed_out"] or result["is_oom"] or result["exit_code"] != 0:
+            return None, f"official solution failed on test {name} (exit {result['exit_code']})", 0
+        if not result["stdout"]:
+            return None, f"official solution printed nothing on test {name}", 0
+        tests.append((test_input, result["stdout"] + "\n"))
+        slowest = max(slowest, result["time_taken_ms"])
+
+    return tests, "verified", slowest
+
+
+def compile_official(code: str) -> tuple[str, dict]:
+    """Compiles an official solution, patching what modern compilers reject. Returns (code, result)."""
     compiled = compile_in_docker("cpp", code)
     if not compiled["ok"]:
         # Older solutions lean on headers that old compilers included implicitly,
@@ -222,24 +243,14 @@ def generate_outputs(problem: ExamProblem) -> tuple[list[tuple[str, str]] | None
         # gets() was removed in C++14, but many older solutions read lines with it.
         code = GETS_SHIM + code
         compiled = compile_in_docker("cpp", code)
-    if not compiled["ok"]:
-        return None, "official solution did not compile: " + compiled["output"][:200], 0
+    return code, compiled
 
-    tests = []
-    slowest = 0
-    for name, test_input in zip("AB", inputs):
-        result = run_code_in_docker(
-            code, test_input, REFERENCE_TIME_LIMIT_MS, REFERENCE_MEMORY_LIMIT_MB,
-            language = "cpp", binary = compiled["binary"],
-        )
-        if result["timed_out"] or result["is_oom"] or result["exit_code"] != 0:
-            return None, f"official solution failed on test {name} (exit {result['exit_code']})", 0
-        if not result["stdout"]:
-            return None, f"official solution printed nothing on test {name}", 0
-        tests.append((test_input, result["stdout"] + "\n"))
-        slowest = max(slowest, result["time_taken_ms"])
 
-    return tests, "verified", slowest
+def run_official(code: str, compiled: dict, test_input: str) -> dict:
+    return run_code_in_docker(
+        code, test_input, REFERENCE_TIME_LIMIT_MS, REFERENCE_MEMORY_LIMIT_MB,
+        language = "cpp", binary = compiled["binary"],
+    )
 
 
 # -------------------------------------------------------------------- storing

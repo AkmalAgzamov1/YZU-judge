@@ -64,6 +64,7 @@ The CPE publishes its past exams at [cpe.mcu.edu.tw](https://cpe.mcu.edu.tw/). A
 
 - **Difficulty** comes from how many people solved the problem in the real exam: easy if at least 30% solved it, medium if at least 3%, hard otherwise.
 - **Skipped problems:** if the CPE site is missing a problem's test data, or the official solution doesn't work, we just skip that problem. No test data means nothing to judge against.
+- **Samples:** the visible sample is the small one from the official statement, not the CPE's big test file. Its output comes from the official solution and is checked against the PDF. It is judged first, and the CPE's own tests still run after it.
 - **Old C code:** a lot of older official solutions use `gets()`, which modern compilers removed. The importer adds a small replacement for it, so those problems still work.
 - **Mock exams:** an exam only becomes a Mock CPE if all of its problems made it in.
 
