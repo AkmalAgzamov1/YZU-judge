@@ -384,9 +384,14 @@ export default function Problems() {
                         <span className="block truncate text-base font-medium text-white">
                           {problem.title}
                         </span>
-                        {problem.topics && problem.topics.length > 0 && (
-                          <span className="mt-1 block">
-                            <TopicChips topics={problem.topics} />
+                        {(problem.is_cpe || (problem.topics?.length ?? 0) > 0) && (
+                          <span className="mt-1 flex flex-wrap gap-1">
+                            {problem.is_cpe && (
+                              <span className="rounded bg-yzu-blue/20 px-1 py-0.5 font-mono text-xs text-sky-300">
+                                CPE
+                              </span>
+                            )}
+                            <TopicChips topics={problem.topics ?? []} />
                           </span>
                         )}
                         <span className="mt-1 flex gap-3 font-mono text-xs text-neutral-500 md:hidden">
