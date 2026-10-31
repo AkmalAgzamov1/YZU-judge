@@ -87,6 +87,7 @@ export default function ProblemWorkspace({
   const [topicsShown, setTopicsShown] = useState(false);
   // Set by ProblemHelp once it knows this problem has hints, for the link up top.
   const [helpAvailable, setHelpAvailable] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
 
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -299,21 +300,32 @@ export default function ProblemWorkspace({
                 {helpAvailable && (
                   <button
                     type="button"
-                    onClick={() => document.getElementById("problem-help")?.scrollIntoView({ behavior: "smooth", block: "start" })}
-                    className={`inline-flex items-center gap-1 rounded font-mono text-xs text-neutral-500 underline-offset-4 transition duration-300 ease-soft hover:text-white hover:underline ${focusRing}`}
+                    onClick={() => setHelpOpen((open) => !open)}
+                    aria-expanded={helpOpen}
+                    aria-controls="problem-help"
+                    className={`inline-flex items-center gap-1 rounded font-mono text-xs underline-offset-4 transition duration-300 ease-soft hover:text-white hover:underline ${focusRing} ${
+                      helpOpen ? "text-white" : "text-neutral-500"
+                    }`}
                   >
                     <Lightbulb size={14} aria-hidden="true" />
-                    Stuck? Hints and solution
+                    {helpOpen ? "Hide hints and solution" : "Stuck? Hints and solution"}
                   </button>
                 )}
               </div>
+            )}
+            {/* Like topics, never shown during a mock exam. Stays mounted while closed so the link knows whether to appear. */}
+            {mockExamId == null && (
+              <ProblemHelp
+                problemId={problemId}
+                open={helpOpen}
+                refreshKey={historyVersion}
+                onAvailableChange={setHelpAvailable}
+              />
             )}
             <div className="mt-8">
               <Statement markdown={state.problem.description} />
             </div>
             <Samples samples={state.samples} />
-            {/* Like topics, never shown during a mock exam. */}
-            {mockExamId == null && <ProblemHelp problemId={problemId} refreshKey={historyVersion} onAvailableChange={setHelpAvailable} />}
           </>
         )}
       </section>
