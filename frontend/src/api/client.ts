@@ -44,6 +44,10 @@ type TestCaseInput = components["schemas"]["TestCaseCreate"];
 
 type CpePaperInput = components["schemas"]["CpePaperCreate"];
 
+type AdminUser = components["schemas"]["AdminUserOut"];
+
+type AdminSubmission = components["schemas"]["AdminSubmissionOut"];
+
 export const SESSION_EXPIRED_EVENT = "yzu-judge:session-expired";
 
 export class ApiError extends Error {
@@ -214,6 +218,14 @@ export const mockExamsApi = {
 
 // Everything here needs an admin token; the backend checks it.
 export const adminApi = {
+  users(): Promise<AdminUser[]> {
+    return request<AdminUser[]>("/admin/users");
+  },
+
+  submissions(userId?: number): Promise<AdminSubmission[]> {
+    return request<AdminSubmission[]>(`/admin/submissions${userId != null ? `?user_id=${userId}` : ""}`);
+  },
+
   createProblem(data: ProblemInput): Promise<Problem> {
     return request<Problem>("/problems/", { method: "POST", body: JSON.stringify(data) });
   },
@@ -274,6 +286,8 @@ export const adminApi = {
 };
 
 export type {
+  AdminSubmission,
+  AdminUser,
   CpePaper,
   CpePaperInput,
   ProblemInput,

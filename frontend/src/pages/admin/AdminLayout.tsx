@@ -26,6 +26,12 @@ export default function AdminLayout({ title, description, actions, children }: A
           <NavLink to="/admin/papers" className={tabClass}>
             CPE papers
           </NavLink>
+          <NavLink to="/admin/users" className={tabClass}>
+            Users
+          </NavLink>
+          <NavLink to="/admin/submissions" className={tabClass}>
+            Submissions
+          </NavLink>
         </nav>
 
         <div className="mt-8 flex flex-col gap-6 md:flex-row md:items-end md:justify-between">

@@ -21,6 +21,8 @@ const AdminProblems = lazy(() => import("./pages/admin/AdminProblems"));
 const AdminProblemEdit = lazy(() => import("./pages/admin/AdminProblemEdit"));
 const AdminPapers = lazy(() => import("./pages/admin/AdminPapers"));
 const AdminPaperEdit = lazy(() => import("./pages/admin/AdminPaperEdit"));
+const AdminUsers = lazy(() => import("./pages/admin/AdminUsers"));
+const AdminSubmissions = lazy(() => import("./pages/admin/AdminSubmissions"));
 
 const pageFallback = <div className="min-h-svh bg-ink-0" />;
 
@@ -70,6 +72,8 @@ export default function App() {
             <Route path="/admin/problems/:id" element={<Suspense fallback={pageFallback}><AdminProblemEdit /></Suspense>} />
             <Route path="/admin/papers" element={<Suspense fallback={pageFallback}><AdminPapers /></Suspense>} />
             <Route path="/admin/papers/:id" element={<Suspense fallback={pageFallback}><AdminPaperEdit /></Suspense>} />
+            <Route path="/admin/users" element={<Suspense fallback={pageFallback}><AdminUsers /></Suspense>} />
+            <Route path="/admin/submissions" element={<Suspense fallback={pageFallback}><AdminSubmissions /></Suspense>} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
