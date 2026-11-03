@@ -30,6 +30,7 @@ I started on September 19, 2026, and I wanted to really understand every layer, 
 - **Early October:** the scary part, running other people's code safely. Every submission runs inside a Docker container with no internet, no extra privileges, and hard limits on time, memory and processes. I spent a while fixing holes and memory bugs here.
 - **Mid October:** Celery and Redis, so judging happens in the background and the site never freezes while code is running.
 - **Late October:** the frontend, then everything that turns it into a real practice platform: the problem pages, the editor, mock exams, an admin panel, C++ support, and finally the import of all the past CPE exams.
+- **November 1:** deployed it to [yzujudge.com](https://yzujudge.com) on a Linux server with Docker, HTTPS through Caddy, and automatic deploys on every push to `main`.
 
 ## What you can do on it
 
@@ -114,6 +115,8 @@ npm run dev
 Then open http://localhost:5173.
 
 ## Deploying
+
+YZU Judge is deployed and live at [yzujudge.com](https://yzujudge.com) since November 1, 2026, set up exactly as described below.
 
 Everything runs on one Linux server with Docker: Postgres, Redis, the API, the judge worker, and Caddy, which serves the site, proxies `/api` and gets the HTTPS certificate. The worker starts the sandbox containers through the host's Docker, so the server should run nothing else.
 
