@@ -438,6 +438,19 @@
       "cpp": "b526d5778cd9446c1975afb909b15524ecef9de7f8d214a71d5bb12ef9dd05c2"
     }
   },
+  "10106": {
+    "hints": [
+      "250 digits is far too big for any built in integer type in C++, so multiply the way you do on paper.",
+      "Reverse both numbers and add `a[i] * b[j]` into position `i + j` of the result, then carry. Strip leading zeros at the end, but keep a single `0` if the product is zero."
+    ],
+    "explanation": "Store the digits of both numbers in reverse. For every pair of digits add `a[i] * b[j]` into `result[i + j]`, then do one pass of carries. Remove leading zeros, keeping one if the product is zero, and print the digits from the most significant end. Python's integers are arbitrary precision, so there it is one multiplication.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\nout = []\nfor i in range(0, len(data) - 1, 2):\n    out.append(str(int(data[i]) * int(data[i + 1])))\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nstring multiply(const string& a, const string& b) {\n    vector<int> result(a.size() + b.size(), 0);\n    for (int i = a.size() - 1; i >= 0; i--)\n        for (int j = b.size() - 1; j >= 0; j--)\n            result[(a.size() - 1 - i) + (b.size() - 1 - j)] += (a[i] - '0') * (b[j] - '0');\n    for (size_t k = 0; k + 1 < result.size(); k++) {\n        result[k + 1] += result[k] / 10;\n        result[k] %= 10;\n    }\n    int top = result.size() - 1;\n    while (top > 0 && result[top] == 0) top--;\n    string digits;\n    for (int k = top; k >= 0; k--) digits += char('0' + result[k]);\n    return digits;\n}\n\nint main() {\n    string a, b;\n    while (cin >> a >> b) cout << multiply(a, b) << \"\\n\";\n    return 0;\n}\n",
+    "verified": {
+      "python": "230aa80deb0e1d1e4bb5c9c836f0997323c952ccc30a4faa808f5304e8bbadf4",
+      "cpp": "0ee7fa28ca2e6e71c0ecd2060683a7854d9fa3f0c3dbececa8efeafda86a9f53"
+    }
+  },
   "10189": {
     "hints": [],
     "explanation": "For every safe cell, look at the up to eight neighbouring cells, skipping the ones outside the grid, and count the mines. Mines stay `*`. Print `Field #x:` before each field and an empty line between fields.",
@@ -530,6 +543,19 @@
     "verified": {
       "python": "7d743b2c302ccf9ed4d4840d0adc64c692e50f338db885eb0c6aad114715a4af",
       "cpp": "0e7610358c4d9b33cb4ab75db981d2ad1fff20b51ea8fa6e4df891bf071e2e18"
+    }
+  },
+  "10420": {
+    "hints": [
+      "You only need the first word of each line; the rest is the name and can be ignored.",
+      "Count the countries in a map and print it in sorted order."
+    ],
+    "explanation": "For each of the `n` lines take the first word, the country, and add one to its count in a map. Then print the countries in alphabetical order with their counts.",
+    "python": "import sys\nfrom collections import Counter\n\nlines = sys.stdin.read().split(\"\\n\")\nn = int(lines[0])\ncounts = Counter(line.split()[0] for line in lines[1:n + 1] if line.split())\nprint(\"\\n\".join(f\"{country} {count}\" for country, count in sorted(counts.items())))\n",
+    "cpp": "#include <iostream>\n#include <map>\n#include <string>\nusing namespace std;\n\nint main() {\n    int n;\n    cin >> n;\n    map<string, int> counts;\n    for (int i = 0; i < n; i++) {\n        string country, rest;\n        cin >> country;\n        getline(cin, rest);\n        counts[country]++;\n    }\n    for (auto& entry : counts) cout << entry.first << \" \" << entry.second << \"\\n\";\n    return 0;\n}\n",
+    "verified": {
+      "python": "e85dcac61ca4711ca847068dd0e6c7e7b5d937b4c365fe769651f8c666c58bac",
+      "cpp": "7a6278d77b33a2c06b8741b745374c7b5467b09d733f82831ef3489180ccb047"
     }
   },
   "10474": {
@@ -674,6 +700,19 @@
     "verified": {
       "python": "f2317c89fc7e61656190a26bf21078011777d187bdf3ae26ce547fcfc5e89653",
       "cpp": "4f7b9d802e896a1a943c451da4b904dd82b90c7386647ee7bb291a2e8808c7d4"
+    }
+  },
+  "10922": {
+    "hints": [
+      "The number has up to 1000 digits, so keep it as a string and add up its digits.",
+      "The first digit sum is step 1. Keep taking digit sums while the value is bigger than 9 and count the steps; the number is a multiple of 9 only if you end at exactly 9."
+    ],
+    "explanation": "Read the number as a string and add its digits; that is step 1. While the sum has more than one digit, take its digit sum again and add a step. If the final single digit is 9 the number is a multiple of 9 and the step count is its 9-degree; otherwise it is not a multiple of 9. Print the number exactly as it was read.",
+    "python": "import sys\n\nout = []\nfor n in sys.stdin.read().split():\n    if n == \"0\":\n        break\n    total = sum(int(d) for d in n)\n    degree = 1\n    while total > 9:\n        total = sum(int(d) for d in str(total))\n        degree += 1\n    if total == 9:\n        out.append(f\"{n} is a multiple of 9 and has 9-degree {degree}.\")\n    else:\n        out.append(f\"{n} is not a multiple of 9.\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint digitSum(const string& s) {\n    int total = 0;\n    for (char ch : s) total += ch - '0';\n    return total;\n}\n\nint main() {\n    string n;\n    while (cin >> n && n != \"0\") {\n        int total = digitSum(n), degree = 1;\n        while (total > 9) {\n            total = digitSum(to_string(total));\n            degree++;\n        }\n        if (total == 9) cout << n << \" is a multiple of 9 and has 9-degree \" << degree << \".\\n\";\n        else cout << n << \" is not a multiple of 9.\\n\";\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "a3e06ff8b4a4abbf89e475d40e42e92857b774619886c930e9ae82695299be04",
+      "cpp": "ed3de22d2a7aa8705103a4e6254f86b94b816952ea8cddcb44b7d49a96fca0d0"
     }
   },
   "10931": {
