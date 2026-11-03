@@ -11,7 +11,7 @@ type LoadState =
   | { kind: "error"; message: string }
   | { kind: "ready"; users: AdminUser[] };
 
-const columns = "md:grid-cols-[1fr_120px_96px_96px_80px_128px]";
+const columns = "md:grid-cols-[1fr_120px_96px_80px_128px]";
 
 export default function AdminUsers() {
   const [state, setState] = useState<LoadState>({ kind: "loading" });
@@ -84,7 +84,6 @@ export default function AdminUsers() {
             <span>User</span>
             <span>Joined</span>
             <span className="text-right">Submissions</span>
-            <span className="text-right">Accepted</span>
             <span className="text-right">Solved</span>
             <span className="text-right">Last submit</span>
           </div>
@@ -111,8 +110,7 @@ export default function AdminUsers() {
                     {user.submissions}
                     <span className="text-neutral-500 md:hidden"> submits</span>
                   </span>
-                  <span className="hidden text-right font-mono text-sm text-emerald-400 md:block">{user.accepted}</span>
-                  <span className="hidden text-right font-mono text-sm text-white md:block">{user.solved}</span>
+                  <span className="hidden text-right font-mono text-sm text-emerald-400 md:block">{user.solved}</span>
                   <span
                     className="col-span-2 font-mono text-xs text-neutral-500 md:col-span-1 md:text-right md:text-sm"
                     title={user.last_submission_at ? formatDateTime(user.last_submission_at) : undefined}
