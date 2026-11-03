@@ -24,7 +24,7 @@ class Problem(Base):
     is_published = Column(Boolean, nullable = False, default = False)
     difficulty = Column(Enum("easy", "medium", "hard", name = "problem_difficulty"), nullable = False)
 
-    # Help for easy problems, written by scripts/cpe_help.py. Never part of ProblemOut:
+    # Help for easy and medium problems, written by scripts/cpe_help.py. Never part of ProblemOut:
     # routers/problem_help.py hands it out only once the unlock rules are met.
     hints = Column(ARRAY(String), nullable = False, default = list, server_default = "{}")
     solution_explanation = Column(Text, nullable = True)
