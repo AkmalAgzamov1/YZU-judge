@@ -2,6 +2,7 @@
 # Runs every minute on the server (deploy/install_auto_deploy.sh sets that up).
 # When GitHub's main has new commits, it pulls them, rebuilds what changed and,
 # if the statements or the hints changed, writes them into the database.
+# A change to scripts/repair_test_inputs.py runs that repair on the test files.
 # Nothing happens when main is unchanged, so most runs exit in a second.
 set -euo pipefail
 
@@ -33,6 +34,10 @@ fi
 if grep -q "^backend/scripts/cpe_help.json$" <<< "$CHANGED"; then
     # Refuses code that changed since the judge accepted it.
     $COMPOSE exec -T api python -m scripts.cpe_help apply
+fi
+if grep -q "^backend/scripts/repair_test_inputs.py$" <<< "$CHANGED"; then
+    # Runs official solutions, so it needs the worker's Docker. Safe to run again.
+    $COMPOSE exec -T worker python -m scripts.repair_test_inputs || echo "test repair left some problems alone"
 fi
 
 docker image prune -f > /dev/null

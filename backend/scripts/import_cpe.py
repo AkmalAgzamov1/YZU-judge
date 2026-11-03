@@ -120,11 +120,15 @@ def fetch(url: str) -> str:
 def fetch_text_file(url: str) -> str:
     """Newer exams serve plain .txt files; older ones wrap the text in an HTML <pre>."""
     body = fetch(url)
-    if "<pre" in body.lower():
+    in_pre = "<pre" in body.lower()
+    if in_pre:
         match = PRE_PATTERN.search(body)
         body = html.unescape(match.group(1)) if match else ""
     # Some files end lines with \r\r\n; dropping every \r leaves one newline per line.
-    return body.replace("\r", "")
+    body = body.replace("\r", "")
+    # HTML ignores a newline right after <pre>, so it is not part of the file.
+    # Keeping it gave every test an empty first line.
+    return body.removeprefix("\n") if in_pre else body
 
 
 def absolute(url: str) -> str:
