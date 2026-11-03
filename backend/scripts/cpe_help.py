@@ -1,4 +1,4 @@
-"""Hints and reference solutions for easy CPE problems.
+"""Hints and reference solutions for easy and medium CPE problems.
 
 cpe_help.json maps a UVa id to its hints (0 to 2), a short explanation and a
 solution in Python and C++. Nothing gets into it without passing our own judge:
@@ -27,6 +27,7 @@ from app.models.problem import Problem
 from app.models.testcase import TestCase  # noqa: F401  # mapper registry
 from app.models.submission import Submission  # noqa: F401  # mapper registry
 from app.models.user import User  # noqa: F401  # mapper registry
+from app.routers.problem_help import HELP_DIFFICULTIES
 from app.services.judge_service import load_testcases, judge_submission
 
 HELP_FILE = Path(__file__).resolve().parent / "cpe_help.json"
@@ -102,8 +103,8 @@ def judge_all(db, entries: dict) -> dict[str, dict[str, str] | list[str]]:
         problem = find_problem(db, key)
         if problem is None:
             reasons = ["not in the database"]
-        elif problem.difficulty != "easy":
-            reasons = [f"is {problem.difficulty}, only easy problems get help"]
+        elif problem.difficulty not in HELP_DIFFICULTIES:
+            reasons = [f"is {problem.difficulty}, only easy and medium problems get help"]
         else:
             reasons = entry_problems(entry)
         if not reasons:
@@ -175,8 +176,8 @@ def apply():
             if problem is None:
                 missing.append(key)
                 continue
-            if problem.difficulty != "easy":
-                sys.exit(f"UVa {key} is {problem.difficulty}; only easy problems get help.")
+            if problem.difficulty not in HELP_DIFFICULTIES:
+                sys.exit(f"UVa {key} is {problem.difficulty}; only easy and medium problems get help.")
             problem.hints = entry["hints"]
             problem.solution_explanation = entry["explanation"]
             problem.solution_python = entry["python"]

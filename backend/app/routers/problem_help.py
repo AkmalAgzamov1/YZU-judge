@@ -1,4 +1,4 @@
-"""Hints and reference solutions for easy problems.
+"""Hints and reference solutions for easy and medium problems.
 
 Hints open one at a time, for everyone. The solution needs an account: it unlocks
 once the user has opened every hint and has at least one judged submission.
@@ -25,8 +25,11 @@ router = APIRouter(prefix = "/problems", tags = ["Problem help"])
 NOT_AN_ATTEMPT = ("pending", "running", "internal_error")
 
 
+HELP_DIFFICULTIES = ("easy", "medium")
+
+
 def has_help(problem: Problem) -> bool:
-    return problem.difficulty == "easy" and bool(problem.solution_python)
+    return problem.difficulty in HELP_DIFFICULTIES and bool(problem.solution_python)
 
 
 def check_not_in_mock_exam(db: Session, problem: Problem, user: User | None):

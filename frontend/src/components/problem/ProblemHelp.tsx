@@ -50,7 +50,7 @@ interface ProblemHelpProps {
   onAvailableChange?: (available: boolean) => void;
 }
 
-// Hints and the reference solution for easy problems. Never rendered in a mock exam,
+// Hints and the reference solution for easy and medium problems. Never rendered in a mock exam,
 // and the server refuses them there too.
 export default function ProblemHelp({ problemId, open, refreshKey, onAvailableChange }: ProblemHelpProps) {
   const { user, isLoading: authLoading } = useAuth();
