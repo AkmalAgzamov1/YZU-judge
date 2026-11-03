@@ -11,6 +11,84 @@
       "cpp": "f76e56c642988d494c8eeb8aebd8cf019ac16512efcf571f8c8d8f0617907234"
     }
   },
+  "105": {
+    "hints": [
+      "All coordinates are below 10000, so you can keep one height per unit of x: the height of the strip from `x` to `x + 1`.",
+      "Fill that array with the tallest building over each strip, then walk it from left to right and print `x height` every time the height changes."
+    ],
+    "explanation": "Keep `height[x]` for the strip between `x` and `x + 1`. Each building raises the strips from `L` to `R - 1` to at least `H`. Then scan `x` from 1 up to the largest `R`: whenever `height[x]` differs from the previous strip, the outline changes there, so print `x` and the new height. The strip at the largest `R` has height 0, which gives the final `x 0`.",
+    "python": "import sys\n\ndata = list(map(int, sys.stdin.read().split()))\nheight = [0] * 10001\nright = 0\nfor k in range(0, len(data) - 2, 3):\n    left, h, r = data[k], data[k + 1], data[k + 2]\n    right = max(right, r)\n    for x in range(left, r):\n        if height[x] < h:\n            height[x] = h\n\nout = []\nprevious = 0\nfor x in range(1, right + 1):\n    if height[x] != previous:\n        out.append(f\"{x} {height[x]}\")\n        previous = height[x]\nprint(\" \".join(out))\n",
+    "cpp": "#include <cstdio>\n#include <algorithm>\n#include <vector>\nusing namespace std;\n\nint main() {\n    vector<int> height(10001, 0);\n    int left, h, r, right = 0;\n    while (scanf(\"%d %d %d\", &left, &h, &r) == 3) {\n        right = max(right, r);\n        for (int x = left; x < r; x++) height[x] = max(height[x], h);\n    }\n    int previous = 0;\n    bool first = true;\n    for (int x = 1; x <= right; x++) {\n        if (height[x] != previous) {\n            printf(first ? \"%d %d\" : \" %d %d\", x, height[x]);\n            first = false;\n            previous = height[x];\n        }\n    }\n    printf(\"\\n\");\n    return 0;\n}\n",
+    "verified": {
+      "python": "6b524181c499d1e814dcd19f3f17f36854392798db97dce2069a7a44b063c84d",
+      "cpp": "80c2a19b1d9cb195710cfb374b6ab6dbd64dc25770d55c5d6711b501cdb092be"
+    }
+  },
+  "118": {
+    "hints": [
+      "Store the facing as an index into `\"NESW\"`. Turning right adds 1 and turning left adds 3, both modulo 4.",
+      "Keep a set of scented cells. Before an `F`, check where it would land: if that is off the grid, the robot is lost unless its current cell is scented, in which case the command is skipped."
+    ],
+    "explanation": "Simulate each robot. For `F`, compute the next cell. If it is inside the grid, move there. If not, look at the current cell: when it already has a scent, ignore the command; otherwise add the scent, mark the robot lost and stop reading its commands. The scents stay for the robots that come later.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\nmax_x, max_y = int(data[0]), int(data[1])\nDIRS = \"NESW\"\nSTEP = {\"N\": (0, 1), \"E\": (1, 0), \"S\": (0, -1), \"W\": (-1, 0)}\nscent = set()\nout = []\nk = 2\nwhile k + 3 < len(data):\n    x, y, d = int(data[k]), int(data[k + 1]), DIRS.index(data[k + 2])\n    commands = data[k + 3]\n    k += 4\n    lost = False\n    for c in commands:\n        if c == \"L\":\n            d = (d + 3) % 4\n        elif c == \"R\":\n            d = (d + 1) % 4\n        elif c == \"F\":\n            dx, dy = STEP[DIRS[d]]\n            nx, ny = x + dx, y + dy\n            if 0 <= nx <= max_x and 0 <= ny <= max_y:\n                x, y = nx, ny\n            elif (x, y) not in scent:\n                scent.add((x, y))\n                lost = True\n                break\n    out.append(f\"{x} {y} {DIRS[d]}\" + (\" LOST\" if lost else \"\"))\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <iostream>\n#include <set>\n#include <string>\nusing namespace std;\n\nint main() {\n    const string DIRS = \"NESW\";\n    const int DX[] = {0, 1, 0, -1}, DY[] = {1, 0, -1, 0};\n    int maxX, maxY;\n    cin >> maxX >> maxY;\n    set<pair<int, int>> scent;\n    int x, y;\n    char facing;\n    string commands;\n    while (cin >> x >> y >> facing >> commands) {\n        int d = DIRS.find(facing);\n        bool lost = false;\n        for (char c : commands) {\n            if (c == 'L') d = (d + 3) % 4;\n            else if (c == 'R') d = (d + 1) % 4;\n            else if (c == 'F') {\n                int nx = x + DX[d], ny = y + DY[d];\n                if (nx >= 0 && nx <= maxX && ny >= 0 && ny <= maxY) {\n                    x = nx;\n                    y = ny;\n                } else if (!scent.count({x, y})) {\n                    scent.insert({x, y});\n                    lost = true;\n                    break;\n                }\n            }\n        }\n        cout << x << \" \" << y << \" \" << DIRS[d] << (lost ? \" LOST\" : \"\") << \"\\n\";\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "cc2e31da3135aa14e752e2d7f4e5b4bc557119fd4b9fd2e54df6433680d7a0d7",
+      "cpp": "9364cdfbd5927b38bc30e3f3b065a895386b399841d093b4585c004f2a6ce4e8"
+    }
+  },
+  "141": {
+    "hints": [
+      "Keep every board you have seen so far. After each move, build the new board and check it and its three rotations against that collection.",
+      "Rotating by 90 degrees sends cell `(r, c)` to `(c, N + 1 - r)`. Remember to read all `2N` moves even after someone has lost."
+    ],
+    "explanation": "Store a board as the set of its spots. After every move, compute its rotations by 90, 180 and 270 degrees. If any of the four was seen before, the player who just moved loses, so the other player wins on this move (odd moves belong to player 1). Otherwise add the board to the seen collection. If all `2N` moves pass, the game is a draw. The starting empty board does not count as seen.",
+    "python": "import sys\n\ndata = sys.stdin.read().split()\nk = 0\nout = []\nwhile k < len(data):\n    n = int(data[k])\n    k += 1\n    if n == 0:\n        break\n    board = set()\n    seen = set()\n    result = \"Draw\"\n    for move in range(1, 2 * n + 1):\n        r, c, sign = int(data[k]), int(data[k + 1]), data[k + 2]\n        k += 3\n        if result != \"Draw\":\n            continue\n        if sign == \"+\":\n            board.add((r, c))\n        else:\n            board.discard((r, c))\n        shapes = [frozenset(board)]\n        for _ in range(3):\n            shapes.append(frozenset((c2, n + 1 - r2) for r2, c2 in shapes[-1]))\n        if any(shape in seen for shape in shapes):\n            result = f\"Player {2 if move % 2 else 1} wins on move {move}\"\n        else:\n            seen.add(shapes[0])\n    out.append(result)\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <iostream>\n#include <set>\n#include <string>\n#include <vector>\nusing namespace std;\n\ntypedef vector<string> Board;\n\nBoard rotate(const Board& b) {\n    int n = b.size();\n    Board r(n, string(n, '.'));\n    for (int i = 0; i < n; i++)\n        for (int j = 0; j < n; j++) r[j][n - 1 - i] = b[i][j];\n    return r;\n}\n\nint main() {\n    int n;\n    while (cin >> n && n) {\n        Board board(n, string(n, '.'));\n        set<Board> seen;\n        string result = \"Draw\";\n        for (int move = 1; move <= 2 * n; move++) {\n            int r, c;\n            char sign;\n            cin >> r >> c >> sign;\n            if (result != \"Draw\") continue;\n            board[r - 1][c - 1] = (sign == '+') ? '#' : '.';\n            Board shape = board;\n            bool repeated = false;\n            for (int t = 0; t < 4; t++) {\n                if (seen.count(shape)) repeated = true;\n                shape = rotate(shape);\n            }\n            if (repeated) result = \"Player \" + to_string(move % 2 ? 2 : 1) + \" wins on move \" + to_string(move);\n            else seen.insert(board);\n        }\n        cout << result << \"\\n\";\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "7bb6404e335200c7d22a6264957f0fc57cabb2f40fea2f990c492a5b7151dfb4",
+      "cpp": "b271bbb2f5765d66c3c73d7c6e8d5218fff83f02cf16a06ef01603010c190235"
+    }
+  },
+  "160": {
+    "hints": [
+      "You never need `N!` itself. The power of a prime `p` in `N!` is `N/p + N/p² + N/p³ + ...` with integer division.",
+      "The format is the hard part: `%3d! =` first, then every count as `%3d`. After 15 counts start a new line indented by 6 spaces."
+    ],
+    "explanation": "For each prime `p ≤ N`, the number of times it divides `N!` is the sum of `N // p^k` over all powers that do not exceed `N` (Legendre's formula). Print `N` in 3 columns followed by `! =`, then each count in 3 columns. After every 15th count, if more counts follow, end the line and start the next one with 6 spaces so the counts line up.",
+    "python": "import sys\n\nprimes = [p for p in range(2, 101) if all(p % d for d in range(2, p))]\nout = []\nfor token in sys.stdin.read().split():\n    n = int(token)\n    if n == 0:\n        break\n    counts = []\n    for p in primes:\n        if p > n:\n            break\n        total, power = 0, p\n        while power <= n:\n            total += n // power\n            power *= p\n        counts.append(total)\n    line = f\"{n:3d}! =\"\n    for i, value in enumerate(counts):\n        if i and i % 15 == 0:\n            out.append(line)\n            line = \" \" * 6\n        line += f\"{value:3d}\"\n    out.append(line)\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n#include <vector>\nusing namespace std;\n\nint main() {\n    vector<int> primes;\n    for (int p = 2; p <= 100; p++) {\n        bool prime = true;\n        for (int d = 2; d * d <= p; d++)\n            if (p % d == 0) prime = false;\n        if (prime) primes.push_back(p);\n    }\n    int n;\n    while (scanf(\"%d\", &n) == 1 && n) {\n        printf(\"%3d! =\", n);\n        int printed = 0;\n        for (int p : primes) {\n            if (p > n) break;\n            int total = 0;\n            for (int power = p; power <= n; power *= p) total += n / power;\n            if (printed && printed % 15 == 0) printf(\"\\n      \");\n            printf(\"%3d\", total);\n            printed++;\n        }\n        printf(\"\\n\");\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "c0851ad426c7d0437b28df4031e9c3a5d98dc2a7c26ece9763b0d5abcf22d693",
+      "cpp": "4ff5eaa5655a2d6393ea662b2de82bebc6ba37f1346a8f449d2d37c74ed48f79"
+    }
+  },
+  "255": {
+    "hints": [
+      "Turn each square into `(row, column) = (s / 8, s % 8)`. A queen move is legal only if it stays in one row or column, actually moves, and the king is not on the path or the target.",
+      "Write one helper: can the queen standing on square `q` reach square `t` with the king on `k`? Use it both for checking the move and for checking each square the king could step to."
+    ],
+    "explanation": "Check the cases in the order listed. Same square: illegal state. Then the queen's move must change square, stay in one row or column, and not pass through or land on the king. If the new square is next to the king (up, down, left or right), the move is not allowed. Otherwise, look at the king's neighbouring squares: a neighbour is a safe move if the queen on its new square cannot reach it. No safe move means `Stop`, otherwise `Continue`.",
+    "python": "import sys\n\n\ndef reaches(q, t, k):\n    \"\"\"Can a queen on q move to t, with the king on k blocking?\"\"\"\n    if q == t:\n        return False\n    qr, qc, tr, tc = q // 8, q % 8, t // 8, t % 8\n    if qr != tr and qc != tc:\n        return False\n    step = 1 if qr == tr else 8\n    if t < q:\n        step = -step\n    s = q\n    while s != t:\n        s += step\n        if s == k:\n            return False\n    return True\n\n\ndef neighbours(s):\n    r, c = s // 8, s % 8\n    result = []\n    for dr, dc in ((-1, 0), (1, 0), (0, -1), (0, 1)):\n        if 0 <= r + dr < 8 and 0 <= c + dc < 8:\n            result.append((r + dr) * 8 + c + dc)\n    return result\n\n\ndata = list(map(int, sys.stdin.read().split()))\nout = []\nfor i in range(0, len(data) - 2, 3):\n    king, queen, target = data[i], data[i + 1], data[i + 2]\n    if king == queen:\n        out.append(\"Illegal state\")\n    elif not reaches(queen, target, king):\n        out.append(\"Illegal move\")\n    elif target in neighbours(king):\n        out.append(\"Move not allowed\")\n    elif all(reaches(target, s, king) for s in neighbours(king)):\n        out.append(\"Stop\")\n    else:\n        out.append(\"Continue\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n#include <vector>\nusing namespace std;\n\nbool reaches(int q, int t, int k) {\n    if (q == t) return false;\n    if (q / 8 != t / 8 && q % 8 != t % 8) return false;\n    int step = (q / 8 == t / 8) ? 1 : 8;\n    if (t < q) step = -step;\n    for (int s = q; s != t;) {\n        s += step;\n        if (s == k) return false;\n    }\n    return true;\n}\n\nvector<int> neighbours(int s) {\n    int r = s / 8, c = s % 8;\n    vector<int> result;\n    if (r > 0) result.push_back(s - 8);\n    if (r < 7) result.push_back(s + 8);\n    if (c > 0) result.push_back(s - 1);\n    if (c < 7) result.push_back(s + 1);\n    return result;\n}\n\nint main() {\n    int king, queen, target;\n    while (scanf(\"%d %d %d\", &king, &queen, &target) == 3) {\n        if (king == queen) { puts(\"Illegal state\"); continue; }\n        if (!reaches(queen, target, king)) { puts(\"Illegal move\"); continue; }\n        vector<int> around = neighbours(king);\n        bool adjacent = false, canMove = false;\n        for (int s : around) {\n            if (s == target) adjacent = true;\n            if (!reaches(target, s, king)) canMove = true;\n        }\n        if (adjacent) puts(\"Move not allowed\");\n        else puts(canMove ? \"Continue\" : \"Stop\");\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "443ff3a97f33ff5943a281bccde22922e86fbf915e89af7704880317a1586e68",
+      "cpp": "50d274be3402b017da147cbd4786c5a6ebba2d966495d5a7d3a442e9a08fb53d"
+    }
+  },
+  "263": {
+    "hints": [
+      "Work with the number as a string of digits. Sorting the string forwards and backwards gives `b` and `a`; converting back to an integer drops the leading zeros of `b`.",
+      "Keep a set of the numbers produced so far. Print every step, and stop right after you print a number that is already in the set."
+    ],
+    "explanation": "Repeat: sort the digits in descending order for `a`, in ascending order for `b`, and compute `c = a - b`. Print the step and count it. If `c` was produced before, stop; otherwise remember it and continue from `c`. The count is the chain length. The original number itself is not in the set, only the numbers produced.",
+    "python": "import sys\n\nout = []\nfor token in sys.stdin.read().split():\n    n = int(token)\n    if n == 0:\n        break\n    out.append(f\"Original number was {n}\")\n    seen = set()\n    length = 0\n    while True:\n        digits = sorted(str(n))\n        a = int(\"\".join(reversed(digits)))\n        b = int(\"\".join(digits))\n        n = a - b\n        out.append(f\"{a} - {b} = {n}\")\n        length += 1\n        if n in seen:\n            break\n        seen.add(n)\n    out.append(f\"Chain length {length}\")\n    out.append(\"\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <algorithm>\n#include <iostream>\n#include <set>\n#include <string>\nusing namespace std;\n\nint main() {\n    long long n;\n    while (cin >> n && n) {\n        cout << \"Original number was \" << n << \"\\n\";\n        set<long long> seen;\n        int length = 0;\n        while (true) {\n            string digits = to_string(n);\n            sort(digits.begin(), digits.end());\n            long long b = stoll(digits);\n            reverse(digits.begin(), digits.end());\n            long long a = stoll(digits);\n            n = a - b;\n            cout << a << \" - \" << b << \" = \" << n << \"\\n\";\n            length++;\n            if (seen.count(n)) break;\n            seen.insert(n);\n        }\n        cout << \"Chain length \" << length << \"\\n\\n\";\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "5de604d86a6ea8e43bbbc2d920263fcbb44a1458ee6d66299f6d35582234e5a1",
+      "cpp": "8e525f50d1491bddf941d56c39a330e0ebeab4225abf8bd6701bee5ef1bbb2dd"
+    }
+  },
   "264": {
     "hints": [
       "Group the terms by diagonal: diagonal d holds the fractions p/q with p + q = d + 1, and it has exactly d terms. Which diagonal does term n fall on?",
@@ -24,6 +102,19 @@
       "cpp": "8825ba4c366d974c2b9bb5f7df98b2696694b78879697b004142e1dfe3092bf3"
     }
   },
+  "294": {
+    "hints": [
+      "The range has at most 10001 numbers, but each can be up to 10⁹. Trial division up to the square root for every number is too slow in Python.",
+      "Sieve the primes up to 31623 once. A number's divisor count is the product of `(exponent + 1)` over its prime factors, and whatever is left above 1 after dividing out those primes is one more prime."
+    ],
+    "explanation": "If `n = p1^e1 · p2^e2 · ...`, it has `(e1 + 1)(e2 + 1)...` divisors. Every factor of a number up to 10⁹ except at most one is below `√10⁹ ≈ 31623`, so sieve those primes. For each prime, visit only its multiples inside `[L, U]` and divide them out, like a segmented sieve. A leftover above 1 is a prime and doubles the count. Keep the first number with the largest count.",
+    "python": "import sys\n\nLIMIT = 31623\nis_prime = bytearray([1]) * (LIMIT + 1)\nis_prime[0] = is_prime[1] = 0\nfor i in range(2, int(LIMIT ** 0.5) + 1):\n    if is_prime[i]:\n        is_prime[i * i::i] = bytearray(len(is_prime[i * i::i]))\nprimes = [i for i in range(LIMIT + 1) if is_prime[i]]\n\ndata = sys.stdin.read().split()\nout = []\nfor case in range(int(data[0])):\n    low, high = int(data[1 + 2 * case]), int(data[2 + 2 * case])\n    rest = list(range(low, high + 1))\n    count = [1] * len(rest)\n    for p in primes:\n        if p * p > high:\n            break\n        start = (low + p - 1) // p * p\n        for i in range(start - low, len(rest), p):\n            e = 0\n            while rest[i] % p == 0:\n                rest[i] //= p\n                e += 1\n            count[i] *= e + 1\n    best, best_count = low, 0\n    for i in range(len(rest)):\n        c = count[i] * (2 if rest[i] > 1 else 1)\n        if c > best_count:\n            best, best_count = low + i, c\n    out.append(f\"Between {low} and {high}, {best} has a maximum of {best_count} divisors.\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n#include <vector>\nusing namespace std;\n\nint main() {\n    const int LIMIT = 31623;\n    vector<bool> composite(LIMIT + 1, false);\n    vector<long long> primes;\n    for (int i = 2; i <= LIMIT; i++) {\n        if (composite[i]) continue;\n        primes.push_back(i);\n        for (long long j = (long long) i * i; j <= LIMIT; j += i) composite[j] = true;\n    }\n    int cases;\n    scanf(\"%d\", &cases);\n    while (cases--) {\n        long long low, high;\n        scanf(\"%lld %lld\", &low, &high);\n        int size = high - low + 1;\n        vector<long long> rest(size);\n        vector<int> count(size, 1);\n        for (int i = 0; i < size; i++) rest[i] = low + i;\n        for (long long p : primes) {\n            if (p * p > high) break;\n            for (long long n = (low + p - 1) / p * p; n <= high; n += p) {\n                int i = n - low, e = 0;\n                while (rest[i] % p == 0) { rest[i] /= p; e++; }\n                count[i] *= e + 1;\n            }\n        }\n        long long best = low;\n        int bestCount = 0;\n        for (int i = 0; i < size; i++) {\n            int c = rest[i] > 1 ? count[i] * 2 : count[i];\n            if (c > bestCount) { best = low + i; bestCount = c; }\n        }\n        printf(\"Between %lld and %lld, %lld has a maximum of %d divisors.\\n\", low, high, best, bestCount);\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "b38ecb1ca9e9fefb90d64fc5b6c8f53c43ade345d1bded83e2dc6c242137dd94",
+      "cpp": "94387145cc5882689c1111e00c884a43c16b8d0e3fe8c5740d99e257a70eca6e"
+    }
+  },
   "299": {
     "hints": [
       "Swapping neighbours until everything is in order is exactly what one well known (slow) sorting algorithm does.",
@@ -35,6 +126,19 @@
     "verified": {
       "python": "ea27d469bb24681147712f35d2170c7ee762dab4886cbcced426ae1f1adaf37a",
       "cpp": "daa8766be4f42f9568d4400d03e4a3407e6e0172d015f94e1f6545684fa4308c"
+    }
+  },
+  "300": {
+    "hints": [
+      "Turn the Haab date into one number: the count of days since the first day of the world.",
+      "A Haab year is 365 days and each month before `uayet` is 20 days. From the day count, the Tzolkin number, name and year all come from `%` and `/`."
+    ],
+    "explanation": "The day count is `year · 365 + month_index · 20 + day`. In the Tzolkin calendar, the number cycles every 13 days and the name every 20 days, both advancing together from `1 imix`, so the number is `days % 13 + 1`, the name is `names[days % 20]`, and the year is `days / 260`.",
+    "python": "import sys\n\nHAAB = [\"pop\", \"no\", \"zip\", \"zotz\", \"tzec\", \"xul\", \"yoxkin\", \"mol\", \"chen\", \"yax\",\n        \"zac\", \"ceh\", \"mac\", \"kankin\", \"muan\", \"pax\", \"koyab\", \"cumhu\", \"uayet\"]\nTZOLKIN = [\"imix\", \"ik\", \"akbal\", \"kan\", \"chicchan\", \"cimi\", \"manik\", \"lamat\", \"muluk\", \"ok\",\n           \"chuen\", \"eb\", \"ben\", \"ix\", \"mem\", \"cib\", \"caban\", \"eznab\", \"canac\", \"ahau\"]\n\ndata = sys.stdin.read().split()\nn = int(data[0])\nout = [str(n)]\nfor i in range(n):\n    day, month, year = data[1 + 3 * i].rstrip(\".\"), data[2 + 3 * i], data[3 + 3 * i]\n    days = int(year) * 365 + HAAB.index(month) * 20 + int(day)\n    out.append(f\"{days % 13 + 1} {TZOLKIN[days % 20]} {days // 260}\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    const string HAAB[] = {\"pop\", \"no\", \"zip\", \"zotz\", \"tzec\", \"xul\", \"yoxkin\", \"mol\", \"chen\", \"yax\",\n                           \"zac\", \"ceh\", \"mac\", \"kankin\", \"muan\", \"pax\", \"koyab\", \"cumhu\", \"uayet\"};\n    const string TZOLKIN[] = {\"imix\", \"ik\", \"akbal\", \"kan\", \"chicchan\", \"cimi\", \"manik\", \"lamat\", \"muluk\", \"ok\",\n                              \"chuen\", \"eb\", \"ben\", \"ix\", \"mem\", \"cib\", \"caban\", \"eznab\", \"canac\", \"ahau\"};\n    int n;\n    cin >> n;\n    cout << n << \"\\n\";\n    for (int i = 0; i < n; i++) {\n        string day, month;\n        int year;\n        cin >> day >> month >> year;\n        int monthIndex = 0;\n        while (HAAB[monthIndex] != month) monthIndex++;\n        int days = year * 365 + monthIndex * 20 + stoi(day);\n        cout << days % 13 + 1 << \" \" << TZOLKIN[days % 20] << \" \" << days / 260 << \"\\n\";\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "89254991d1589a02a455f58be22837ac2764203bbd5b6bdf6050a478a55f600d",
+      "cpp": "914f3e165c519d47d1afabe1d7f3c919406ff14ef60496af06ef8d3e00138936"
     }
   },
   "357": {
@@ -62,6 +166,19 @@
       "cpp": "403cc8d4e4e7ae722f35a8e121d61ba08900bcb436710ee041ceab3efc429005"
     }
   },
+  "389": {
+    "hints": [
+      "Go through an ordinary integer: first read the number in its base, then write that value in the new base.",
+      "Writing in base `b`: take `value % b` as the last digit and divide by `b` until the value is 0. Then pad with zeros to 7 digits, or keep the last 7 if it is longer."
+    ],
+    "explanation": "Convert the input to an integer by processing its digits from left to right (`value = value · base + digit`). Then produce the digits in the target base by repeated `% base` and `/ base`, which gives them from right to left. A value of 0 still has the digit `0`. Finally pad the result with leading zeros to 7 characters, and if it is longer, keep only the last 7.",
+    "python": "import sys\n\nDIGITS = \"0123456789ABCDEF\"\nout = []\nfor line in sys.stdin:\n    parts = line.split()\n    if len(parts) < 3:\n        continue\n    value = int(parts[0], int(parts[1]))\n    base = int(parts[2])\n    result = \"\"\n    while True:\n        result = DIGITS[value % base] + result\n        value //= base\n        if value == 0:\n            break\n    out.append(result.rjust(7, \"0\")[-7:])\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    const string DIGITS = \"0123456789ABCDEF\";\n    string number;\n    int from, to;\n    while (cin >> number >> from >> to) {\n        unsigned long long value = 0;\n        for (char c : number) value = value * from + DIGITS.find(toupper(c));\n        string result;\n        do {\n            result = DIGITS[value % to] + result;\n            value /= to;\n        } while (value);\n        if (result.size() < 7) result = string(7 - result.size(), '0') + result;\n        cout << result.substr(result.size() - 7) << \"\\n\";\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "ae9dda9b60ffa2eedbb743cebfecd098a091bc554d664c8ef94094dd8bb33f37",
+      "cpp": "5441837a105487a72ee0006969f67687b54b944c807731d15d2a3a2d5f0ff6ce"
+    }
+  },
   "401": {
     "hints": [
       "Check the two properties separately: palindrome means `s` equals its reverse; mirrored means replacing every character by its mirror and reversing gives `s` back.",
@@ -73,6 +190,45 @@
     "verified": {
       "python": "67f3d54b5b6eff63454f3979a431d024751d565eac04543108bf406fdc02f910",
       "cpp": "21e5dc682d985fd96750296893efc1defd039cd8da537037c6aef230fb5b2d78"
+    }
+  },
+  "406": {
+    "hints": [
+      "Build the list of primes up to `N` with 1 at the front, then work only with its length `L`.",
+      "Take `2C` numbers when `L` is even and `2C - 1` when it is odd, capped at `L`. The middle part starts at index `(L - count) / 2`."
+    ],
+    "explanation": "Sieve the primes up to 1000 and put 1 in front. For each case, the list for `N` has length `L`. The amount to print is `2C` for even `L` and `2C - 1` for odd `L`, but never more than `L`. Because `L` and the amount have the same parity, `(L - count) / 2` numbers are skipped on each side, so print the slice starting there. Every case is followed by an empty line.",
+    "python": "import sys\n\nprimes = [1] + [p for p in range(2, 1001) if all(p % d for d in range(2, int(p ** 0.5) + 1))]\ndata = list(map(int, sys.stdin.read().split()))\nout = []\nfor i in range(0, len(data) - 1, 2):\n    n, c = data[i], data[i + 1]\n    chosen = [p for p in primes if p <= n]\n    length = len(chosen)\n    count = min(2 * c if length % 2 == 0 else 2 * c - 1, length)\n    start = (length - count) // 2\n    out.append(f\"{n} {c}:\" + \"\".join(f\" {p}\" for p in chosen[start:start + count]))\n    out.append(\"\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <algorithm>\n#include <cstdio>\n#include <vector>\nusing namespace std;\n\nint main() {\n    vector<int> primes = {1};\n    for (int p = 2; p <= 1000; p++) {\n        bool prime = true;\n        for (int d = 2; d * d <= p; d++)\n            if (p % d == 0) prime = false;\n        if (prime) primes.push_back(p);\n    }\n    int n, c;\n    while (scanf(\"%d %d\", &n, &c) == 2) {\n        int length = 0;\n        while (length < (int) primes.size() && primes[length] <= n) length++;\n        int count = min(length % 2 == 0 ? 2 * c : 2 * c - 1, length);\n        int start = (length - count) / 2;\n        printf(\"%d %d:\", n, c);\n        for (int i = start; i < start + count; i++) printf(\" %d\", primes[i]);\n        printf(\"\\n\\n\");\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "4b766eed22770803fb3b5a361924bb235da7423aa40bffd8e3444a8e8a477cee",
+      "cpp": "78e324c29783f02b45e2460e47db57f49b336d322cfd6272b0d02400ca87567e"
+    }
+  },
+  "409": {
+    "hints": [
+      "Split each excuse into its runs of letters. Every run is a whole word, so you only compare those runs, lowercased, with the keywords.",
+      "Count the matches for every excuse, find the maximum, and print the excuses that reach it in their original form. Read the excuses line by line, since they contain spaces."
+    ],
+    "explanation": "Store the keywords in a set. For each excuse, extract the maximal runs of letters (anything that is not a letter separates words), lowercase them, and count how many are keywords. Print the header, every excuse whose count equals the best count in input order, and an empty line.",
+    "python": "import re\nimport sys\n\nlines = sys.stdin.read().split(\"\\n\")\nout = []\ni, set_number = 0, 0\nwhile i < len(lines):\n    header = lines[i].split()\n    i += 1\n    if len(header) < 2:\n        continue\n    k, e = int(header[0]), int(header[1])\n    keywords = {lines[i + j].strip().lower() for j in range(k)}\n    i += k\n    excuses = lines[i:i + e]\n    i += e\n    counts = [sum(word.lower() in keywords for word in re.findall(\"[A-Za-z]+\", excuse)) for excuse in excuses]\n    best = max(counts)\n    set_number += 1\n    out.append(f\"Excuse Set #{set_number}\")\n    out.extend(excuse for excuse, count in zip(excuses, counts) if count == best)\n    out.append(\"\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cctype>\n#include <iostream>\n#include <set>\n#include <sstream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    string line;\n    int setNumber = 0;\n    while (getline(cin, line)) {\n        istringstream header(line);\n        int k, e;\n        if (!(header >> k >> e)) continue;\n        set<string> keywords;\n        for (int i = 0; i < k; i++) {\n            getline(cin, line);\n            string word;\n            istringstream(line) >> word;\n            keywords.insert(word);\n        }\n        vector<string> excuses(e);\n        vector<int> counts(e, 0);\n        int best = 0;\n        for (int i = 0; i < e; i++) {\n            getline(cin, excuses[i]);\n            string word;\n            for (size_t j = 0; j <= excuses[i].size(); j++) {\n                if (j < excuses[i].size() && isalpha((unsigned char) excuses[i][j])) {\n                    word += tolower((unsigned char) excuses[i][j]);\n                } else {\n                    if (keywords.count(word)) counts[i]++;\n                    word.clear();\n                }\n            }\n            best = max(best, counts[i]);\n        }\n        cout << \"Excuse Set #\" << ++setNumber << \"\\n\";\n        for (int i = 0; i < e; i++)\n            if (counts[i] == best) cout << excuses[i] << \"\\n\";\n        cout << \"\\n\";\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "04b8a5f3ac85e39f59b8ed8bdfd4d4f52a4d974a4e72fc6f55b08b18c909950c",
+      "cpp": "4b371345a992d74c142be79bac9e204aff17815b77f37509a8578c2450bae247"
+    }
+  },
+  "417": {
+    "hints": [
+      "There are only 83681 valid words. You can generate all of them in the required order and store each word's position.",
+      "Valid words of length `k` are exactly the `k`-letter combinations of the alphabet, and generating combinations in lexicographic order already gives alphabetical order."
+    ],
+    "explanation": "Generate the words length by length: for each length from 1 to 5, list every combination of that many different letters in lexicographic order (each combination, written in order, is a strictly increasing word). Number them 1, 2, 3, ... and store the numbers in a dictionary. Any word that is not in the dictionary is invalid and gets 0.",
+    "python": "import sys\nfrom itertools import combinations\nfrom string import ascii_lowercase\n\nposition = {}\nfor length in range(1, 6):\n    for letters in combinations(ascii_lowercase, length):\n        position[\"\".join(letters)] = len(position) + 1\n\nprint(\"\\n\".join(str(position.get(word, 0)) for word in sys.stdin.read().split()))\n",
+    "cpp": "#include <iostream>\n#include <map>\n#include <string>\nusing namespace std;\n\nmap<string, int> position;\n\nvoid build(string word, char next, int length) {\n    if ((int) word.size() == length) {\n        int number = position.size() + 1;\n        position[word] = number;\n        return;\n    }\n    for (char c = next; c <= 'z'; c++) build(word + c, c + 1, length);\n}\n\nint main() {\n    for (int length = 1; length <= 5; length++) build(\"\", 'a', length);\n    string word;\n    while (cin >> word) {\n        auto it = position.find(word);\n        cout << (it == position.end() ? 0 : it->second) << \"\\n\";\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "5e3f649212ff9996d507cbc00a1fbe6753a38f0be3ca8f103fd496ebb75379e7",
+      "cpp": "a1995fa8885742ec83eab652d9f4aff464d15a5ca468bdc175b54556c20caa44"
     }
   },
   "441": {
@@ -111,6 +267,19 @@
     "verified": {
       "python": "fb2781cc6102f53af6c56e424fa742315dfb064d2595f0e567a29d514fa5b06b",
       "cpp": "b75af1217fd5d8384867cdbe38fb459d34376e60e22f4ce0369cc2643d9e4ab3"
+    }
+  },
+  "482": {
+    "hints": [
+      "You only rearrange the numbers, so keep them as strings. That way `32.0` is printed as `32.0`, not `32`.",
+      "The cases are made of lines, so read line by line and skip empty ones: the first line of a case is the index array, the second the numbers."
+    ],
+    "explanation": "For each case take the index line and the value line. Create an output list of size `n` and put the `i`th value at position `p[i] - 1`. Print the output list one value per line, exactly as the values were written, with an empty line between cases.",
+    "python": "import sys\n\nlines = [line for line in sys.stdin.read().split(\"\\n\") if line.strip()]\ncases = int(lines[0])\nout = []\nfor case in range(cases):\n    order = list(map(int, lines[1 + 2 * case].split()))\n    values = lines[2 + 2 * case].split()\n    result = [\"\"] * len(order)\n    for index, value in zip(order, values):\n        result[index - 1] = value\n    if case:\n        out.append(\"\")\n    out.extend(result)\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <iostream>\n#include <sstream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nbool nextLine(string& line) {\n    while (getline(cin, line))\n        if (line.find_first_not_of(\" \\t\\r\") != string::npos) return true;\n    return false;\n}\n\nint main() {\n    string line;\n    nextLine(line);\n    int cases = stoi(line);\n    for (int c = 0; c < cases; c++) {\n        nextLine(line);\n        istringstream orderIn(line);\n        vector<int> order;\n        int index;\n        while (orderIn >> index) order.push_back(index);\n        nextLine(line);\n        istringstream valueIn(line);\n        vector<string> result(order.size());\n        for (size_t i = 0; i < order.size(); i++) valueIn >> result[order[i] - 1];\n        if (c) cout << \"\\n\";\n        for (const string& value : result) cout << value << \"\\n\";\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "8b05d2f4f797c3b77cb9141f0bceaad04ee9a95aa411ab3854e2da23a4a947a9",
+      "cpp": "0ede7eaf2a3afaa5d66a94e8c7f430f46d42852a73eee4be92b7cddb60216f17"
     }
   },
   "483": {
@@ -157,6 +326,32 @@
     "verified": {
       "python": "f954eb30c55ae29155073a87caa2cd2cd2c17700b2af2de4c475e83c7c3b5008",
       "cpp": "cb983cc10f99f3184bd000774ef3189838b1fae966de91205949a086925d2054"
+    }
+  },
+  "496": {
+    "hints": [
+      "Read the input as pairs of lines and turn each line into a set. Set operations then answer every question directly.",
+      "Check the outcomes in the order they are listed: equal first, then each proper subset, then disjoint, and only then `I'm confused!`."
+    ],
+    "explanation": "Make a set from each of the two lines. If they are equal, print that. Otherwise, if `A` is contained in `B` it is a proper subset, and likewise the other way round. If neither holds and their intersection is empty, they are disjoint. Anything else is the confused case.",
+    "python": "import sys\n\nlines = sys.stdin.read().split(\"\\n\")\nif lines and lines[-1] == \"\":\n    lines.pop()\nout = []\nfor i in range(0, len(lines) - 1, 2):\n    a, b = set(lines[i].split()), set(lines[i + 1].split())\n    if a == b:\n        out.append(\"A equals B\")\n    elif a < b:\n        out.append(\"A is a proper subset of B\")\n    elif b < a:\n        out.append(\"B is a proper subset of A\")\n    elif not a & b:\n        out.append(\"A and B are disjoint\")\n    else:\n        out.append(\"I'm confused!\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <iostream>\n#include <set>\n#include <sstream>\n#include <string>\nusing namespace std;\n\nset<long long> readSet(const string& line) {\n    istringstream in(line);\n    set<long long> s;\n    long long x;\n    while (in >> x) s.insert(x);\n    return s;\n}\n\nint main() {\n    string lineA, lineB;\n    while (getline(cin, lineA) && getline(cin, lineB)) {\n        set<long long> a = readSet(lineA), b = readSet(lineB);\n        int common = 0;\n        for (long long x : a) common += b.count(x);\n        if (a == b) cout << \"A equals B\\n\";\n        else if (common == (int) a.size()) cout << \"A is a proper subset of B\\n\";\n        else if (common == (int) b.size()) cout << \"B is a proper subset of A\\n\";\n        else if (common == 0) cout << \"A and B are disjoint\\n\";\n        else cout << \"I'm confused!\\n\";\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "d2f5a9e8663e8268f44e1d421294a10948fb12d2b8f492b6e96338636b4c59d4",
+      "cpp": "b4af08ab510a3c0ef1fcd58afe45e11c6377e24f47e5d17db2da53678f699c32"
+    }
+  },
+  "499": {
+    "hints": [
+      "Count the letters of each line in a dictionary or an array of size 128. Uppercase and lowercase are separate entries.",
+      "Sorting the winning letters by their character codes already puts uppercase before lowercase, both in alphabetical order."
+    ],
+    "explanation": "For each line, count every character that is a letter. Find the highest count, collect the letters that reach it, and sort them: in ASCII all uppercase letters come before all lowercase letters, which is the order the output wants. Print them joined together, then a space and the count. Lines without letters produce no output.",
+    "python": "import sys\nfrom collections import Counter\n\nout = []\nfor line in sys.stdin.read().split(\"\\n\"):\n    counts = Counter(c for c in line if c.isascii() and c.isalpha())\n    if not counts:\n        continue\n    best = max(counts.values())\n    out.append(\"\".join(sorted(c for c, n in counts.items() if n == best)) + f\" {best}\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cctype>\n#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string line;\n    while (getline(cin, line)) {\n        int counts[128] = {0}, best = 0;\n        for (unsigned char c : line)\n            if (c < 128 && isalpha(c)) best = max(best, ++counts[c]);\n        if (best == 0) continue;\n        string letters;\n        for (int c = 0; c < 128; c++)\n            if (isalpha(c) && counts[c] == best) letters += (char) c;\n        cout << letters << \" \" << best << \"\\n\";\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "ec9688b96bceec71c9d3807503ce2e3dbab2e122180367cdcddee12087b7fd33",
+      "cpp": "3e6b8d43da821965e19d5b54d0f8446e910e3edcbbeab80d3b7e7a5ac48bee2d"
     }
   },
   "514": {
@@ -222,6 +417,45 @@
       "cpp": "fd40ab1c80e071f86d5967520d3dc24d5bac7d4c58ea0ca782cdabbbf57c6695"
     }
   },
+  "612": {
+    "hints": [
+      "Strings are at most 50 characters, so counting the wrong-order pairs with two nested loops is fast enough.",
+      "Use a stable sort keyed on that count, so strings with the same unsortedness keep their input order."
+    ],
+    "explanation": "For each string, count pairs `i < j` with `s[i] > s[j]` using two loops. Sort the strings by that count with a stable sort (Python's `sorted`, or `stable_sort` in C++), which keeps ties in input order. Print the data sets with an empty line between them.",
+    "python": "import sys\n\n\ndef unsortedness(s):\n    return sum(s[i] > s[j] for i in range(len(s)) for j in range(i + 1, len(s)))\n\n\ndata = sys.stdin.read().split()\nk = 1\nout = []\nfor case in range(int(data[0])):\n    m = int(data[k + 1])\n    strings = data[k + 2:k + 2 + m]\n    k += 2 + m\n    if case:\n        out.append(\"\")\n    out.extend(sorted(strings, key = unsortedness))\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <algorithm>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint unsortedness(const string& s) {\n    int count = 0;\n    for (size_t i = 0; i < s.size(); i++)\n        for (size_t j = i + 1; j < s.size(); j++)\n            if (s[i] > s[j]) count++;\n    return count;\n}\n\nint main() {\n    int cases;\n    cin >> cases;\n    for (int c = 0; c < cases; c++) {\n        int n, m;\n        cin >> n >> m;\n        vector<pair<int, string>> strings(m);\n        for (auto& entry : strings) {\n            cin >> entry.second;\n            entry.first = unsortedness(entry.second);\n        }\n        stable_sort(strings.begin(), strings.end(),\n                    [](const pair<int, string>& a, const pair<int, string>& b) { return a.first < b.first; });\n        if (c) cout << \"\\n\";\n        for (const auto& entry : strings) cout << entry.second << \"\\n\";\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "7143ee5f0e8bf7c6e8d4b4170a6b2d024f56e8a808622ed35d301c5580a543e9",
+      "cpp": "845f10e68abd34e18c5debc4d687a90131605d571972ed85a98e8c2b18f3ce5c"
+    }
+  },
+  "615": {
+    "hints": [
+      "Collect all nodes and count the edges coming into each one. A tree has exactly one node with in-degree 0, and every other node has in-degree exactly 1.",
+      "Those counts are not enough on their own: a cycle can hide next to a correct-looking root. Also check that a search from the root reaches every node."
+    ],
+    "explanation": "For each case, record the edges, the set of nodes and the in-degree of every node. It is a tree when exactly one node has in-degree 0 (the root), all others have in-degree 1, and a DFS or BFS from the root visits every node. With in-degree 1 everywhere else, reaching every node rules out cycles too.",
+    "python": "import sys\nfrom collections import defaultdict\n\ndata = list(map(int, sys.stdin.read().split()))\nout = []\nk, case = 0, 0\nwhile k + 1 < len(data):\n    a, b = data[k], data[k + 1]\n    if a < 0 and b < 0:\n        break\n    edges = []\n    while not (data[k] == 0 and data[k + 1] == 0):\n        edges.append((data[k], data[k + 1]))\n        k += 2\n    k += 2\n    case += 1\n\n    nodes = {x for edge in edges for x in edge}\n    indegree = defaultdict(int)\n    children = defaultdict(list)\n    for a, b in edges:\n        indegree[b] += 1\n        children[a].append(b)\n    roots = [x for x in nodes if indegree[x] == 0]\n    tree = len(roots) == 1 and all(indegree[x] <= 1 for x in nodes)\n    if tree:\n        seen, stack = {roots[0]}, [roots[0]]\n        while stack:\n            for child in children[stack.pop()]:\n                if child not in seen:\n                    seen.add(child)\n                    stack.append(child)\n        tree = len(seen) == len(nodes)\n    out.append(f\"Case {case} is a tree. Root is {roots[0]}.\" if tree else f\"Case {case} is not a tree.\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n#include <map>\n#include <set>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int a, b, caseNumber = 0;\n    while (scanf(\"%d %d\", &a, &b) == 2 && !(a < 0 && b < 0)) {\n        set<int> nodes;\n        map<int, int> indegree;\n        map<int, vector<int>> children;\n        while (!(a == 0 && b == 0)) {\n            nodes.insert(a);\n            nodes.insert(b);\n            indegree[b]++;\n            children[a].push_back(b);\n            scanf(\"%d %d\", &a, &b);\n        }\n        caseNumber++;\n        vector<int> roots;\n        bool tree = true;\n        for (int x : nodes) {\n            if (indegree[x] == 0) roots.push_back(x);\n            if (indegree[x] > 1) tree = false;\n        }\n        if (roots.size() != 1) tree = false;\n        if (tree) {\n            set<int> seen = {roots[0]};\n            vector<int> stack = {roots[0]};\n            while (!stack.empty()) {\n                int x = stack.back();\n                stack.pop_back();\n                for (int child : children[x])\n                    if (seen.insert(child).second) stack.push_back(child);\n            }\n            tree = seen.size() == nodes.size();\n        }\n        if (tree) printf(\"Case %d is a tree. Root is %d.\\n\", caseNumber, roots[0]);\n        else printf(\"Case %d is not a tree.\\n\", caseNumber);\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "dc1f4496ae6ab4feb299340cc1e68b85b9b800f9ef1d0351d2f4f16e8295529e",
+      "cpp": "aeb3eab1e268b3a4af152f9a5fc8af2de4dfee723441af150e3ec7358ed2d9b6"
+    }
+  },
+  "630": {
+    "hints": [
+      "Two words are anagrams exactly when their letters, sorted, give the same string. Compute that key once for every vocabulary word.",
+      "Look at the sample output carefully: `Anagrams for: word` is printed for every test word, and `No anagrams for: word` is added when nothing matches."
+    ],
+    "explanation": "For each test word, compute its sorted letters and walk through the vocabulary in order, printing every word with the same sorted letters as `%3d) word`. Always print the `Anagrams for:` line first; if no word matched, follow it with `No anagrams for:`. Print an empty line between test cases.",
+    "python": "import sys\n\ntokens = sys.stdin.read().split()\nk = 0\nout = []\ncases = int(tokens[k])\nk += 1\nfor case in range(cases):\n    n = int(tokens[k])\n    vocabulary = tokens[k + 1:k + 1 + n]\n    k += 1 + n\n    keys = [\"\".join(sorted(word)) for word in vocabulary]\n    if case:\n        out.append(\"\")\n    while tokens[k] != \"END\":\n        word = tokens[k]\n        k += 1\n        key = \"\".join(sorted(word))\n        out.append(f\"Anagrams for: {word}\")\n        matches = [v for v, vk in zip(vocabulary, keys) if vk == key]\n        if not matches:\n            out.append(f\"No anagrams for: {word}\")\n        for i, match in enumerate(matches, 1):\n            out.append(f\"{i:3d}) {match}\")\n    k += 1\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <algorithm>\n#include <cstdio>\n#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int cases;\n    cin >> cases;\n    for (int c = 0; c < cases; c++) {\n        int n;\n        cin >> n;\n        vector<string> vocabulary(n), keys(n);\n        for (int i = 0; i < n; i++) {\n            cin >> vocabulary[i];\n            keys[i] = vocabulary[i];\n            sort(keys[i].begin(), keys[i].end());\n        }\n        if (c) printf(\"\\n\");\n        string word;\n        while (cin >> word && word != \"END\") {\n            string key = word;\n            sort(key.begin(), key.end());\n            printf(\"Anagrams for: %s\\n\", word.c_str());\n            int found = 0;\n            for (int i = 0; i < n; i++)\n                if (keys[i] == key) printf(\"%3d) %s\\n\", ++found, vocabulary[i].c_str());\n            if (!found) printf(\"No anagrams for: %s\\n\", word.c_str());\n        }\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "e2b464cb2ca1ed69b49a80658bf5f1051924db2caad9d8350b94af05059818c6",
+      "cpp": "0c6a2e0160efc14684f459e267b6ba29f8365a6630d5df3270e7703ae0db0b97"
+    }
+  },
   "673": {
     "hints": [
       "Read the input line by line: a line can be empty, and the empty string counts as correct.",
@@ -261,6 +495,45 @@
       "cpp": "b1adcdbe34d330e49ab7163b7811a5a32610026c700e0c058275d58a5ead606c"
     }
   },
+  "696": {
+    "hints": [
+      "On a big board, knights placed on all squares of one colour never attack each other, since a knight always jumps to the other colour. That gives `(M·N + 1) / 2`.",
+      "Thin boards are special. With one row nothing can attack, so every square is used. With two rows, knights fit in 2×2 blocks separated by empty 2×2 blocks."
+    ],
+    "explanation": "Let `a = min(M, N)` and `b = max(M, N)`. If `a = 0` the answer is 0. If `a = 1`, every square holds a knight: `b`. If `a = 2`, fill columns in a pattern of two full columns, two empty columns: that is `4 · (b / 4)` plus `2 · min(b % 4, 2)` for the remainder. Otherwise use the colouring argument: `(M·N + 1) / 2`.",
+    "python": "import sys\n\ndata = list(map(int, sys.stdin.read().split()))\nout = []\nfor i in range(0, len(data) - 1, 2):\n    m, n = data[i], data[i + 1]\n    if m == 0 and n == 0:\n        break\n    a, b = min(m, n), max(m, n)\n    if a == 0:\n        k = 0\n    elif a == 1:\n        k = b\n    elif a == 2:\n        k = 4 * (b // 4) + 2 * min(b % 4, 2)\n    else:\n        k = (m * n + 1) // 2\n    out.append(f\"{k} knights may be placed on a {m} row {n} column board.\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <algorithm>\n#include <cstdio>\nusing namespace std;\n\nint main() {\n    int m, n;\n    while (scanf(\"%d %d\", &m, &n) == 2 && (m || n)) {\n        int a = min(m, n), b = max(m, n), k;\n        if (a == 0) k = 0;\n        else if (a == 1) k = b;\n        else if (a == 2) k = 4 * (b / 4) + 2 * min(b % 4, 2);\n        else k = (m * n + 1) / 2;\n        printf(\"%d knights may be placed on a %d row %d column board.\\n\", k, m, n);\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "ffcdc004b6b5aed6b0e36a58756978f06766edcd650638dc8892eb4679a22b52",
+      "cpp": "32611f8fb2f60807317a951ed3ae7e835eda18112ebbc333421595349390603b"
+    }
+  },
+  "706": {
+    "hints": [
+      "Describe each digit by which of its 7 segments are lit: top, upper left, upper right, middle, lower left, lower right, bottom.",
+      "Build the output row by row, not digit by digit. There are 5 kinds of rows: the top, `s` upper rows, the middle, `s` lower rows and the bottom. Keep every trailing space."
+    ],
+    "explanation": "A digit drawn at size `s` has 3 horizontal rows (top, middle, bottom) that show ` ` + `s` dashes + ` ` when lit, and two blocks of `s` vertical rows that show a `|` or space on the left, `s` spaces, and a `|` or space on the right. For each of the `2s + 3` output rows, draw that row of every digit and join them with one space. Print an empty line after each number.",
+    "python": "import sys\n\n# top, upper left, upper right, middle, lower left, lower right, bottom\nSEGMENTS = {\n    \"0\": \"1110111\", \"1\": \"0010010\", \"2\": \"1011101\", \"3\": \"1011011\", \"4\": \"0111010\",\n    \"5\": \"1101011\", \"6\": \"1101111\", \"7\": \"1010010\", \"8\": \"1111111\", \"9\": \"1111011\",\n}\n\nout = []\ndata = sys.stdin.read().split()\nfor k in range(0, len(data) - 1, 2):\n    s, number = int(data[k]), data[k + 1]\n    if s == 0 and number == \"0\":\n        break\n    lit = [[c == \"1\" for c in SEGMENTS[d]] for d in number]\n\n    def horizontal(index):\n        return \" \".join(\" \" + (\"-\" if seg[index] else \" \") * s + \" \" for seg in lit)\n\n    def vertical(left, right):\n        return \" \".join((\"|\" if seg[left] else \" \") + \" \" * s + (\"|\" if seg[right] else \" \") for seg in lit)\n\n    out.append(horizontal(0))\n    out.extend([vertical(1, 2)] * s)\n    out.append(horizontal(3))\n    out.extend([vertical(4, 5)] * s)\n    out.append(horizontal(6))\n    out.append(\"\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n\n// top, upper left, upper right, middle, lower left, lower right, bottom\nconst string SEGMENTS[] = {\"1110111\", \"0010010\", \"1011101\", \"1011011\", \"0111010\",\n                           \"1101011\", \"1101111\", \"1010010\", \"1111111\", \"1111011\"};\n\nint main() {\n    int s;\n    string number;\n    while (cin >> s >> number && !(s == 0 && number == \"0\")) {\n        auto lit = [&](char digit, int index) { return SEGMENTS[digit - '0'][index] == '1'; };\n        auto horizontal = [&](int index) {\n            string row;\n            for (size_t i = 0; i < number.size(); i++) {\n                if (i) row += ' ';\n                row += ' ' + string(s, lit(number[i], index) ? '-' : ' ') + ' ';\n            }\n            cout << row << \"\\n\";\n        };\n        auto vertical = [&](int left, int right) {\n            string row;\n            for (size_t i = 0; i < number.size(); i++) {\n                if (i) row += ' ';\n                row += (lit(number[i], left) ? '|' : ' ') + string(s, ' ') + (lit(number[i], right) ? '|' : ' ');\n            }\n            for (int r = 0; r < s; r++) cout << row << \"\\n\";\n        };\n        horizontal(0);\n        vertical(1, 2);\n        horizontal(3);\n        vertical(4, 5);\n        horizontal(6);\n        cout << \"\\n\";\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "42c74f0b8496fb3705f7d3f4308d30ffd6c7b6299f4731342909b6f78a1a3438",
+      "cpp": "e3f91a63c88b32dbd7d17841718f3ff06dea685b939f856d4ee06aba8e0dda0a"
+    }
+  },
+  "725": {
+    "hints": [
+      "Do not try all 10! digit orders. Loop over the denominator `fghij` instead and compute `abcde = fghij · N` directly.",
+      "The numerator has to stay at most 98765. Write both numbers with 5 digits (leading zeros included) and check that the 10 characters are all different."
+    ],
+    "explanation": "For every denominator from 1234 upward while `denominator · N ≤ 98765`, compute the numerator. Format both as 5 digit strings and accept the pair when the combined 10 characters contain each digit once. Increasing denominators give increasing numerators, so the solutions come out in the right order. Separate the outputs for different `N` with an empty line.",
+    "python": "import sys\n\nblocks = []\nfor token in sys.stdin.read().split():\n    n = int(token)\n    if n == 0:\n        break\n    lines = []\n    denominator = 1234\n    while denominator * n <= 98765:\n        top = f\"{denominator * n:05d}\"\n        bottom = f\"{denominator:05d}\"\n        if len(set(top + bottom)) == 10:\n            lines.append(f\"{top} / {bottom} = {n}\")\n        denominator += 1\n    if not lines:\n        lines.append(f\"There are no solutions for {n}.\")\n    blocks.append(\"\\n\".join(lines))\nprint(\"\\n\\n\".join(blocks))\n",
+    "cpp": "#include <cstdio>\n\nbool allDifferent(int a, int b) {\n    int used = 0;\n    for (int i = 0; i < 5; i++) {\n        used |= 1 << (a % 10);\n        used |= 1 << (b % 10);\n        a /= 10;\n        b /= 10;\n    }\n    return used == (1 << 10) - 1;\n}\n\nint main() {\n    int n;\n    bool first = true;\n    while (scanf(\"%d\", &n) == 1 && n) {\n        if (!first) printf(\"\\n\");\n        first = false;\n        bool found = false;\n        for (int denominator = 1234; denominator * n <= 98765; denominator++) {\n            if (allDifferent(denominator * n, denominator)) {\n                printf(\"%05d / %05d = %d\\n\", denominator * n, denominator, n);\n                found = true;\n            }\n        }\n        if (!found) printf(\"There are no solutions for %d.\\n\", n);\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "afe0eb6018e24e8710744aa806a479fe21dbe26ed4c58ff2eb424bf51d01124e",
+      "cpp": "1adaf1019142499e2384977324fe109fdf3bd5009f0a5d1473b65b323e4c20b7"
+    }
+  },
   "834": {
     "hints": [
       "b0 is just the integer part of the fraction. What is left is a fraction smaller than 1; flip it over and repeat.",
@@ -274,6 +547,45 @@
       "cpp": "7f9fec495eecc2f966870d9a5d8487069a012db07959632275fe9bd161a44e28"
     }
   },
+  "846": {
+    "hints": [
+      "Turn it around: with `k` steps, what is the longest distance you can cover? Grow the steps by 1 until halfway, then shrink them back to 1.",
+      "With `2m` steps the best is `1 + 2 + ... + m + m + ... + 2 + 1 = m(m + 1)`. With `2m + 1` steps one extra step of length `m + 1` fits in the middle, giving `(m + 1)²`."
+    ],
+    "explanation": "Let `d = y - x`. If `d = 0` no step is needed. Otherwise find the smallest `k` whose largest reachable distance is at least `d`: that distance is `m(m + 1)` for `k = 2m` and `(m + 1)²` for `k = 2m + 1`. Any shorter distance with the same number of steps can be reached too, by lowering some of the steps in the middle. Increasing `k` one by one is fast enough because `k` is only about `2√d`.",
+    "python": "import sys\n\n\ndef farthest(k):\n    m = k // 2\n    return m * (m + 1) if k % 2 == 0 else (m + 1) ** 2\n\n\ndata = list(map(int, sys.stdin.read().split()))\nout = []\nfor i in range(data[0]):\n    distance = data[2 + 2 * i] - data[1 + 2 * i]\n    k = 0\n    while farthest(k) < distance:\n        k += 1\n    out.append(str(k))\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n\nlong long farthest(long long k) {\n    long long m = k / 2;\n    return k % 2 == 0 ? m * (m + 1) : (m + 1) * (m + 1);\n}\n\nint main() {\n    int cases;\n    scanf(\"%d\", &cases);\n    while (cases--) {\n        long long x, y;\n        scanf(\"%lld %lld\", &x, &y);\n        long long k = 0;\n        while (farthest(k) < y - x) k++;\n        printf(\"%lld\\n\", k);\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "3c47d5c41f67cd34083b7dda1019ab1ac5c3b127050b9d6aec441ce459708ab0",
+      "cpp": "fb3054e70407afbad7ed3919e362d53cf045b96562e50f9556039cba90ccfa6b"
+    }
+  },
+  "855": {
+    "hints": [
+      "Walking distance on a grid is `|street difference| + |avenue difference|`, so the best street and the best avenue can be chosen separately.",
+      "The sum of distances `|x - a|` is smallest when `a` is a median of the values. For an even count, any value between the two middle ones works, and the tie rule asks for the smaller one."
+    ],
+    "explanation": "Sort the streets and the avenues separately. The total distance in each direction is minimised at a median, and when the count is even the lower median gives the smallest corner. So the answer is `streets[(F - 1) / 2]` and `avenues[(F - 1) / 2]`.",
+    "python": "import sys\n\ndata = list(map(int, sys.stdin.read().split()))\nk = 1\nout = []\nfor _ in range(data[0]):\n    f = data[k + 2]\n    streets = sorted(data[k + 3:k + 3 + 2 * f:2])\n    avenues = sorted(data[k + 4:k + 4 + 2 * f:2])\n    k += 3 + 2 * f\n    out.append(f\"(Street: {streets[(f - 1) // 2]}, Avenue: {avenues[(f - 1) // 2]})\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <algorithm>\n#include <cstdio>\n#include <vector>\nusing namespace std;\n\nint main() {\n    int cases;\n    scanf(\"%d\", &cases);\n    while (cases--) {\n        int s, a, f;\n        scanf(\"%d %d %d\", &s, &a, &f);\n        vector<int> streets(f), avenues(f);\n        for (int i = 0; i < f; i++) scanf(\"%d %d\", &streets[i], &avenues[i]);\n        nth_element(streets.begin(), streets.begin() + (f - 1) / 2, streets.end());\n        nth_element(avenues.begin(), avenues.begin() + (f - 1) / 2, avenues.end());\n        printf(\"(Street: %d, Avenue: %d)\\n\", streets[(f - 1) / 2], avenues[(f - 1) / 2]);\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "80240ce329c9cd1152278a355a094e343065f359fb7aebabe4a265d210ec4696",
+      "cpp": "e53200298a338c398b31c3095c35e0da6e2753ed295d395e507635170f607e37"
+    }
+  },
+  "865": {
+    "hints": [
+      "Build a mapping from each plaintext character to the substitution character at the same position. Characters missing from the mapping stay the same.",
+      "Read line by line: a case is two alphabet lines followed by text lines up to the next empty line or the end of input. Note that the output prints the substitution alphabet first."
+    ],
+    "explanation": "Skip the count line and any empty lines before a case. Read the plaintext and substitution alphabets, map `plain[i]` to `sub[i]`, then translate every following line until an empty line. Print the substitution alphabet, the plaintext alphabet and the translated lines, with an empty line between cases.",
+    "python": "import sys\n\nlines = sys.stdin.read().split(\"\\n\")\ni = 1\nblocks = []\nwhile True:\n    while i < len(lines) and lines[i] == \"\":\n        i += 1\n    if i + 1 >= len(lines):\n        break\n    plain, sub = lines[i], lines[i + 1]\n    i += 2\n    table = {}\n    for p, s in zip(plain, sub):\n        table.setdefault(p, s)\n    block = [sub, plain]\n    while i < len(lines) and lines[i] != \"\":\n        block.append(\"\".join(table.get(c, c) for c in lines[i]))\n        i += 1\n    blocks.append(\"\\n\".join(block))\nprint(\"\\n\\n\".join(blocks))\n",
+    "cpp": "#include <iostream>\n#include <string>\nusing namespace std;\n\nint main() {\n    string line;\n    getline(cin, line);\n    bool first = true;\n    while (true) {\n        string plain, sub;\n        while (getline(cin, plain) && plain.empty()) {}\n        if (plain.empty() || !getline(cin, sub)) break;\n        char table[256];\n        bool set[256] = {false};\n        for (int c = 0; c < 256; c++) table[c] = (char) c;\n        for (size_t i = 0; i < plain.size() && i < sub.size(); i++) {\n            unsigned char p = plain[i];\n            if (!set[p]) { table[p] = sub[i]; set[p] = true; }\n        }\n        if (!first) cout << \"\\n\";\n        first = false;\n        cout << sub << \"\\n\" << plain << \"\\n\";\n        while (getline(cin, line) && !line.empty()) {\n            for (char& c : line) c = table[(unsigned char) c];\n            cout << line << \"\\n\";\n        }\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "9746987fe2f8e30a4b40168ce0d2c9e5c25acde669244c977ab95bfb87b835c4",
+      "cpp": "3223daebaf7a33129231a57867ea67cef5fe8409d3082051ed694141af819a9f"
+    }
+  },
   "913": {
     "hints": [
       "N can be almost 10⁹, so you can't build the rows. Instead, count: how many odd numbers have been written once the row of length N is finished?",
@@ -285,6 +597,19 @@
     "verified": {
       "python": "d04035bf68f562d5aa138b92e29a5afd0efaff66e385e09f6ee0916cb404e36c",
       "cpp": "bf27cef523fd03e33aaa73a7992bc28e2754f8b57318603a7aa62d39b41fc88b"
+    }
+  },
+  "948": {
+    "hints": [
+      "Use the greedy rule: always take the largest Fibonacci number that still fits, subtract it, and repeat.",
+      "List the Fibonacci numbers 1, 2, 3, 5, 8, ... up to 10⁸. Walking from the largest down, write `1` for a number you take and `0` otherwise, starting from the first `1`."
+    ],
+    "explanation": "Greedy choice gives the Zeckendorf representation: after taking the largest Fibonacci number `F(k) ≤ d`, the rest is smaller than `F(k - 1)`, so two neighbours are never both used. Walk the list `1, 2, 3, 5, 8, ...` from the largest value down, append `1` and subtract when the value fits, otherwise `0`, and skip leading zeros.",
+    "python": "import sys\n\nfib = [1, 2]\nwhile fib[-1] < 10 ** 8:\n    fib.append(fib[-1] + fib[-2])\n\ndata = sys.stdin.read().split()\nout = []\nfor token in data[1:1 + int(data[0])]:\n    d = int(token)\n    rest, bits = d, \"\"\n    for f in reversed(fib):\n        if f <= rest:\n            bits += \"1\"\n            rest -= f\n        elif bits:\n            bits += \"0\"\n    out.append(f\"{d} = {bits} (fib)\")\nprint(\"\\n\".join(out))\n",
+    "cpp": "#include <cstdio>\n#include <string>\n#include <vector>\nusing namespace std;\n\nint main() {\n    vector<long long> fib = {1, 2};\n    while (fib.back() < 100000000) fib.push_back(fib[fib.size() - 1] + fib[fib.size() - 2]);\n    int n;\n    scanf(\"%d\", &n);\n    while (n--) {\n        long long d;\n        scanf(\"%lld\", &d);\n        long long rest = d;\n        string bits;\n        for (int i = fib.size() - 1; i >= 0; i--) {\n            if (fib[i] <= rest) {\n                bits += '1';\n                rest -= fib[i];\n            } else if (!bits.empty()) {\n                bits += '0';\n            }\n        }\n        printf(\"%lld = %s (fib)\\n\", d, bits.c_str());\n    }\n    return 0;\n}\n",
+    "verified": {
+      "python": "ee446f68e45384bfe0d872c6675277a130961da5a109afdce395a22305d27444",
+      "cpp": "cc86ca884c98434383036673d852b49aba485f2c4d8dc9ce083f58f1c1752103"
     }
   },
   "1225": {
