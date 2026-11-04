@@ -1226,7 +1226,7 @@
       "simulation",
       "graphs"
     ],
-    "statement": "Simulate a simple paint program on an `M × N` image whose pixels hold capital letters as colours; `O` is white. Coordinates are `X` (column, 1 to `M`) and `Y` (row, 1 to `N`) from the top left.\n\n- `I M N` new white image; `C` clear to white;\n- `L X Y C` colour one pixel; `V X Y1 Y2 C` vertical segment; `H X1 X2 Y C` horizontal segment;\n- `K X1 Y1 X2 Y2 C` filled rectangle;\n- `F X Y C` fill the region of same coloured pixels connected by sides to `(X, Y)`;\n- `S Name` print the image; `X` stop.\n\nA line starting with any other letter is ignored.\n\n## Input\n\nOne command per line.\n\n## Output\n\nFor every `S Name`, print the name and then the image row by row.\n\n## Notes\n\nThe two ends of a segment or rectangle can be given in either order.",
+    "statement": "Simulate a simple paint program on an `M × N` image whose pixels hold capital letters as colours; `O` is white. Coordinates are `X` (column, 1 to `M`) and `Y` (row, 1 to `N`) from the top left.\n\n- `I M N` new white image; `C` clear to white;\n- `L X Y C` colour one pixel; `V X Y1 Y2 C` vertical segment; `H X1 X2 Y C` horizontal segment;\n- `K X1 Y1 X2 Y2 C` filled rectangle;\n- `F X Y C` fill the region of same coloured pixels connected by sides to `(X, Y)`;\n- `S Name` print the image; `X` stop.\n\nA line starting with any other letter is ignored.\n\n## Input\n\nOne command per line.\n\n## Output\n\nFor every `S Name`, print the name and then the image row by row.\n\n## Notes\n\nThe two ends of a segment or rectangle can be given in either order. Commands can reach outside the image: ignore any pixels outside it, and ignore `F` if its starting pixel is outside.",
     "sample_input": "I 5 6\nL 2 3 A\nS one.bmp\nG 2 3 J\nF 3 3 J\nV 2 3 4 W\nH 3 4 2 Z\nS two.bmp\nX\n",
     "sample_output": "one.bmp\nOOOOO\nOOOOO\nOAOOO\nOOOOO\nOOOOO\nOOOOO\ntwo.bmp\nJJJJJ\nJJZZJ\nJWJJJ\nJWJJJ\nJJJJJ\nJJJJJ\n"
   },
@@ -1244,7 +1244,8 @@
     ],
     "statement": "Each cow repeats a milk pattern: cow `i` has a cycle of `T` days with given amounts. Every day, starting on day 1, the farmer eats the single cow that gives the least milk that day; if two or more cows tie for least, he eats none that day. Find how many cows are never eaten and on which day the last cow is eaten.\n\n## Input\n\nThe first line is `T` (`T ≤ 50`). Each case gives `N` (`1 ≤ N ≤ 1000`), then `N` lines, each with the cycle length (1 to 10) followed by that many milk amounts (0 to 250).\n\n## Output\n\nFor each case, print the number of cows never eaten and the day of the last meal, or 0 if no cow is eaten.",
     "sample_input": "1\n4\n4 7 1 2 9\n1 2\n2 7 1\n1 2\n",
-    "sample_output": "2 6\n"
+    "sample_output": "2 6\n",
+    "time_limit_ms": 30000
   },
   "10309": {
     "topics": [

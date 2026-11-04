@@ -257,6 +257,9 @@ def apply():
             # The CPE site mislabels a few problems; the PDF has the real title.
             if entry.get("title"):
                 problem.title = entry["title"]
+            # The import's limit is set from the official C++, which can be too tight for Python.
+            if entry.get("time_limit_ms"):
+                problem.time_limit_ms = entry["time_limit_ms"]
             problem.topics = normalize_topics(entry.get("topics", []))
             with_samples += apply_sample(db, problem, entry)
             updated += 1
