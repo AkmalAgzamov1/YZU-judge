@@ -43,6 +43,27 @@ class PythonJudgeTests(unittest.TestCase):
         self.assertEqual(len(calls), 1)
 
 
+    def test_output_limit_stops_judging(self):
+        calls = []
+
+        def run_code(code, input_data, time_limit_ms, memory_limit_mb, **options):
+            calls.append(options)
+            return {
+                "stdout": "x",
+                "stderr": "",
+                "exit_code": 137,
+                "timed_out": False,
+                "is_oom": False,
+                "output_limit_exceeded": True,
+                "time_taken_ms": 5,
+                "memory_used_mb": 4,
+            }
+
+        result = judge_submission(run_code, "code", TESTS, 1000, 64)
+        self.assertEqual(result["verdict"], "output_limit_exceeded")
+        self.assertEqual(len(calls), 1)
+
+
 class CompiledJudgeTests(unittest.TestCase):
     def test_compile_error_skips_every_test(self):
         calls = []

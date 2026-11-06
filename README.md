@@ -58,7 +58,7 @@ flowchart LR
 
 1. You press Submit. The API saves the submission as *pending* and puts a job in the queue right away, so the page doesn't wait.
 2. A Celery worker picks up the job. For C++ it first compiles your code in a `gcc:13` container. Python runs in `python:3.11-slim`.
-3. Each test runs in a fresh, locked down container: no network, all Linux capabilities dropped, a non-root user, no swap, and limits on memory and processes. If your code runs too long, it gets stopped.
+3. Each test runs in a fresh, locked down container: no network, all Linux capabilities dropped, a non-root user, no swap, and limits on memory, processes, output and writable disk space. If your code runs too long, it gets stopped.
 4. Your output is compared with the expected output, and the verdict for every test is saved. The page polls until the result is ready.
 
 ### Where the problems come from
