@@ -28,11 +28,11 @@ export default function FinalCta() {
             </Link>
           </div>
           <img
-            src="/yzu-logo.png"
+            src="/ibpi-emblem.svg"
             alt=""
-            width={316}
-            height={316}
-            className="hidden h-48 w-48 justify-self-end rounded-full bg-white p-1 lg:block"
+            width={551}
+            height={560}
+            className="hidden h-48 w-auto justify-self-end lg:block"
           />
         </div>
       </Reveal>
