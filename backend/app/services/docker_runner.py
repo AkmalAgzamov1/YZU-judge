@@ -7,7 +7,10 @@ import threading
 import re
 import socket
 
+from datetime import datetime, timedelta, timezone
+
 import docker
+from docker.types import LogConfig
 
 from .languages import get_language
 
@@ -21,12 +24,30 @@ MEMORY_PEAK_POLL_INTERVAL_SECONDS = 0.1
 
 # Submissions run as nobody, without capabilities or a way to gain privileges.
 SANDBOX_USER = "65534:65534"
+SANDBOX_LABEL = "yzu-judge-sandbox"
 SANDBOX_OPTIONS = dict(
     user = SANDBOX_USER,
     cap_drop = ["ALL"],
     security_opt = ["no-new-privileges"],
     network_disabled = True,
+    labels = {SANDBOX_LABEL: "1"},
 )
+
+# Longer than any real limit, so only a container whose worker died is this old.
+STALE_SANDBOX_AGE = timedelta(minutes = 5)
+
+# Correct outputs are under 2 MB, so this only stops runaway programs.
+OUTPUT_LIMIT_BYTES = 16 * 1024 * 1024
+# Enough to find the memory marker the Python bootstrap writes at the very end.
+STDERR_TAIL_BYTES = 64 * 1024
+OUTPUT_DRAIN_SECONDS = 5
+
+# Every folder the sandbox user can write to is a small tmpfs, which also counts
+# against the memory limit, so a submission cannot fill the server's disk.
+SANDBOX_TMPFS_OPTIONS = "size=64m,mode=1777"
+SANDBOX_TMPFS = {path: SANDBOX_TMPFS_OPTIONS for path in ("/tmp", "/var/tmp", "/run/lock")}
+# A tmpfs only appears at start, so the binary goes in a folder the sandbox cannot write to.
+RUN_DIR = "/usr/local/bin"
 
 COMPILE_TIME_LIMIT_SECONDS = 15
 COMPILE_MEMORY_LIMIT_MB = 512
@@ -36,15 +57,27 @@ COMPILE_OUTPUT_LIMIT_CHARS = 8000
 WORK_DIR = "/tmp"
 
 
-def _tar_bytes(files: dict[str, tuple[bytes, int]]) -> bytes:
-    """Builds an in memory tar of {name: (content, mode)} owned by the sandbox user."""
+def remove_stale_sandboxes() -> int:
+    """Removes containers left running by a worker that died. Returns how many."""
+    cutoff = datetime.now(timezone.utc) - STALE_SANDBOX_AGE
+    removed = 0
+    for container in client.containers.list(all = True, filters = {"label": SANDBOX_LABEL}):
+        created = datetime.fromisoformat(container.attrs["Created"][:19]).replace(tzinfo = timezone.utc)
+        if created < cutoff:
+            container.remove(force = True)
+            removed += 1
+    return removed
+
+
+def _tar_bytes(files: dict[str, tuple[bytes, int]], owner: int = 65534) -> bytes:
+    """Builds an in memory tar of {name: (content, mode)}, by default owned by the sandbox user."""
     buffer = io.BytesIO()
     with tarfile.open(fileobj = buffer, mode = "w") as archive:
         for name, (content, mode) in files.items():
             info = tarfile.TarInfo(name)
             info.size = len(content)
             info.mode = mode
-            info.uid = info.gid = 65534
+            info.uid = info.gid = owner
             info.mtime = int(time.time())
             archive.addfile(info, io.BytesIO(content))
     return buffer.getvalue()
@@ -148,7 +181,7 @@ def run_code_in_docker(code, input_data, time_limit_ms, memory_limit_mb, languag
             raise ValueError(f"{language} needs a compiled binary to run")
         # Wait for the judge's handshake line, then hand the rest of stdin to
         # the program, the same contract as the Python bootstrap below.
-        command = ["sh", "-c", f"read _ && exec {WORK_DIR}/{lang.binary_name}"]
+        command = ["sh", "-c", f"read _ && exec {RUN_DIR}/{lang.binary_name}"]
         files = {lang.binary_name: (binary, 0o755)}
     else:
         command = ["python", "-c", PYTHON_BOOTSTRAP, code]
@@ -183,15 +216,59 @@ def _run_container(image, command, files, input_data, time_limit_ms, memory_limi
         memswap_limit=f"{memory_limit_mb}m",
         nano_cpus=CPU_LIMIT_NANO_CPUS,
         pids_limit=PROCESS_LIMIT,
+        tmpfs=SANDBOX_TMPFS,
+        # Output is read live below, so Docker does not need to keep a copy on disk.
+        log_config=LogConfig(type=LogConfig.types.NONE),
         **SANDBOX_OPTIONS,
     )
 
-    if files:
-        container.put_archive(WORK_DIR, _tar_bytes(files))
-
     peak_memory_bytes = 0
     try:
+        if files:
+            container.put_archive(RUN_DIR, _tar_bytes(files, owner=0))
+
         container.start()
+
+        # The program stays silent until the handshake below, so no output is missed.
+        output_stream = container.attach(
+            stdout=True, stderr=True, stream=True, demux=True, logs=False
+        )
+        stdout_chunks = []
+        stderr_tail = bytearray()
+        output_exceeded = threading.Event()
+        output_finished = threading.Event()
+        output_errors = []
+
+        def kill_container():
+            try:
+                container.kill()
+            except docker.errors.APIError:
+                pass
+
+        def collect_output():
+            total = 0
+            try:
+                # Keep reading until the stream ends, even past the limit: if nobody
+                # reads, Docker blocks every call on this container, kill included.
+                for stdout_chunk, stderr_chunk in output_stream:
+                    if output_exceeded.is_set():
+                        continue
+                    if stdout_chunk:
+                        total += len(stdout_chunk)
+                        stdout_chunks.append(stdout_chunk)
+                    if stderr_chunk:
+                        total += len(stderr_chunk)
+                        stderr_tail.extend(stderr_chunk)
+                        del stderr_tail[:-STDERR_TAIL_BYTES]
+                    if total > OUTPUT_LIMIT_BYTES:
+                        output_exceeded.set()
+                        threading.Thread(target=kill_container, daemon=True).start()
+            except Exception as error:
+                output_errors.append(error)
+            finally:
+                output_finished.set()
+
+        threading.Thread(target=collect_output, daemon=True).start()
 
         # This initial sample happens while the bootstrap is waiting for stdin.
         initial_peak = _read_memory_peak_bytes(container)
@@ -291,8 +368,16 @@ def _run_container(image, command, files, input_data, time_limit_ms, memory_limi
         is_oom = container.attrs.get("State", {}).get("OOMKilled", False)
         exit_code = None if timed_out else result["StatusCode"]
 
-        stdout = container.logs(stdout=True, stderr=False)
-        stderr = container.logs(stdout=False, stderr=True).decode(errors="replace")
+        # A verdict needs the whole output, so a broken stream must not look like a wrong answer.
+        output_drained = output_finished.wait(OUTPUT_DRAIN_SECONDS)
+        if not timed_out and not output_exceeded.is_set():
+            if output_errors:
+                raise output_errors[0]
+            if not output_drained:
+                raise RuntimeError("The sandbox output stream did not finish")
+
+        stdout = b"".join(list(stdout_chunks))
+        stderr = bytes(stderr_tail).decode(errors="replace")
         rss_samples_kb = re.findall(r"__OJ_RSS_KB__=(\d+)", stderr)
         process_peak_bytes = int(rss_samples_kb[-1]) * 1024 if rss_samples_kb else None
         stderr = re.sub(r"\n?__OJ_RSS_KB__=\d+\n?", "\n", stderr).strip()
@@ -312,6 +397,7 @@ def _run_container(image, command, files, input_data, time_limit_ms, memory_limi
             "exit_code": exit_code,
             "timed_out": timed_out,
             "is_oom": is_oom,
+            "output_limit_exceeded": output_exceeded.is_set(),
             "time_taken_ms": time_taken_ms,
             "memory_used_mb": (
                 (peak_memory_bytes + 1024 * 1024 - 1) // (1024 * 1024)

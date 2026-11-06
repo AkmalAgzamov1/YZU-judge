@@ -10,7 +10,7 @@ class SubmissionResult(Base):
     submission_id = Column(Integer, ForeignKey("submissions.id"), nullable = False)
     test_case_id = Column(Integer, ForeignKey("testcases.id"), nullable = False)
 
-    verdict = Column(Enum("accepted", "wrong_answer", "time_limit_exceeded", "memory_limit_exceeded", "runtime_error", name = "submission_result_verdict"), nullable = False) 
+    verdict = Column(Enum("accepted", "wrong_answer", "time_limit_exceeded", "memory_limit_exceeded", "runtime_error", "output_limit_exceeded", name = "submission_result_verdict"), nullable = False) 
 
     time_taken_ms = Column(Integer, nullable = False)
     memory_used_mb = Column(Integer, nullable = True)

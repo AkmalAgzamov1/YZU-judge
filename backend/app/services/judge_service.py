@@ -49,6 +49,9 @@ def judge_code(
     if result["timed_out"]:
         verdict = "time_limit_exceeded"
 
+    elif result.get("output_limit_exceeded", False):
+        verdict = "output_limit_exceeded"
+
     elif result.get("is_oom", False):
         verdict = "memory_limit_exceeded"
 

@@ -38,7 +38,8 @@ class SubmissionOut(BaseModel):
         "time_limit_exceeded",
         "compilation_error",
         "runtime_error",
-        "internal_error"
+        "internal_error",
+        "output_limit_exceeded"
     ]
     created_at: datetime
 
@@ -53,7 +54,8 @@ class SubmissionResultOut(BaseModel):
         "wrong_answer",
         "time_limit_exceeded",
         "memory_limit_exceeded",
-        "runtime_error"
+        "runtime_error",
+        "output_limit_exceeded"
     ]
     time_taken_ms: int
     memory_used_mb: int | None

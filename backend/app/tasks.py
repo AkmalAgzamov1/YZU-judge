@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime, timedelta
 
 from app.celery_app import celery_app
 from app.database import SessionLocal
@@ -16,6 +17,43 @@ from app.services.judge_service import load_testcases, judge_submission
 
 
 logger = logging.getLogger(__name__)
+
+# Far longer than a real judgment. If a slow queue trips this, the verdict still
+# replaces the error once the job runs.
+STUCK_SUBMISSION_AGE = timedelta(minutes=15)
+
+
+@celery_app.task(ignore_result=True)
+def reap_stuck_submissions():
+    """Cleans up after a worker that died mid-judgment.
+
+    Such a job is not retried: code that kills the worker would kill it again.
+    Students get a judge error and can submit again.
+    """
+    db = SessionLocal()
+
+    try:
+        reaped = (
+            db.query(Submission)
+            .filter(
+                Submission.status.in_(("pending", "running")),
+                Submission.created_at < datetime.utcnow() - STUCK_SUBMISSION_AGE,
+            )
+            .update({Submission.status: "internal_error"}, synchronize_session=False)
+        )
+        db.commit()
+    finally:
+        db.close()
+
+    if reaped:
+        logger.warning("Marked %s stuck submissions as internal_error", reaped)
+
+    # Must stay lazy, for the same reason as in judge_submission_task.
+    from app.services.docker_runner import remove_stale_sandboxes
+
+    removed = remove_stale_sandboxes()
+    if removed:
+        logger.warning("Removed %s sandbox containers left by a dead worker", removed)
 
 
 @celery_app.task

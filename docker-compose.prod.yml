@@ -55,9 +55,10 @@ services:
     # On a redeploy Celery finishes the submissions it is judging before it stops.
     stop_grace_period: 2m
     # Each submission gets one CPU, so two at a time fits a 2 vCPU server.
+    # --beat runs the cleanup of stuck submissions; there is only one worker.
     command: >
       sh -c "python -m scripts.pull_judge_images &&
-             celery -A app.celery_app worker --concurrency=2 --loglevel=info"
+             exec celery -A app.celery_app worker --beat --schedule=/tmp/celerybeat-schedule --concurrency=2 --loglevel=info"
 
   web:
     build:
