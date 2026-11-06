@@ -47,7 +47,7 @@ export default function SiteFooter() {
       <div className="mx-auto mt-12 flex max-w-6xl flex-col gap-2 text-xs text-neutral-600 md:flex-row md:justify-between">
         <p>© 2026 YZU Judge. Made in Taoyuan.</p>
         <p>
-          Yuan Ze University logo used with permission. Campus photo by Emily
+          Logo of the YZU International Bachelor Program in Informatics. Campus photo by Emily
           rao, CC0, via{" "}
           <a
             href="https://commons.wikimedia.org/wiki/File:%E5%85%83%E6%99%BA%E5%A4%A7%E5%AD%B8%E7%BE%8E%E9%BA%97%E7%9A%84%E6%A0%A1%E9%96%80.jpg"

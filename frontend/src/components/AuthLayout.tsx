@@ -32,11 +32,11 @@ export default function AuthLayout({ title, subtitle, children }: AuthLayoutProp
         <div className="w-full max-w-sm">
           <div className="text-center">
             <img
-              src="/yzu-logo.png"
+              src="/ibpi-emblem.svg"
               alt=""
-              width={316}
-              height={316}
-              className="mx-auto h-16 w-16 rounded-full bg-white p-0.5"
+              width={551}
+              height={560}
+              className="mx-auto h-16 w-auto"
             />
             <h1 className="mt-6 text-3xl font-semibold tracking-tight text-white">{title}</h1>
             <p className="mt-2 text-base text-neutral-400">{subtitle}</p>

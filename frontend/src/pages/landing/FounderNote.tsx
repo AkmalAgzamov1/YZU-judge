@@ -15,7 +15,7 @@ export default function FounderNote() {
               I wish they had from their first semester.”
             </blockquote>
             <p className="mt-8 text-base text-neutral-400">
-              <span className="font-semibold text-white">Akmal</span>
+              <span className="font-semibold text-white">Akmal (Aki)</span>
               <span className="text-neutral-600"> · </span>
               Yuan Ze University student, builder of YZU Judge
             </p>
