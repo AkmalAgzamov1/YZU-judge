@@ -1,0 +1,66 @@
+# deploy/auto_deploy.sh looks this workflow up by name and only deploys a commit that passed it.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      SECRET_KEY: ci-only-not-a-secret
+      DATABASE_URL: postgresql://yzu:ci@localhost:5432/yzu_judge
+      # A test that silently skips here would look like a sandbox that works.
+      REQUIRE_DOCKER: "1"
+    services:
+      db:
+        # Same major version as docker-compose.prod.yml.
+        image: postgres:18-alpine
+        env:
+          POSTGRES_USER: yzu
+          POSTGRES_PASSWORD: ci
+          POSTGRES_DB: yzu_judge
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U yzu -d yzu_judge"
+          --health-interval 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+      - run: pip install -r requirements.txt
+      # The API runs these on every start, so a broken migration would take the site down.
+      - name: Apply migrations to an empty database
+        run: alembic upgrade head
+      - name: Pull the judge images
+        run: python -m scripts.pull_judge_images
+      - name: Run tests
+        run: python -m unittest discover -s tests -v
+
+  frontend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci --legacy-peer-deps
+      - run: npm run lint
+      - run: npm run build

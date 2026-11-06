@@ -150,7 +150,7 @@ function StarChip({ problem, problemId, muted }: { problem: StarProblem; problem
 
 export default function NextCpe() {
   const now = useNow(30_000);
-  const groups = useMemo(groupStarProblems, []);
+  const groups = useMemo(() => groupStarProblems(), []);
   const [problemIds, setProblemIds] = useState(new Map<number, number>());
 
   useEffect(() => {

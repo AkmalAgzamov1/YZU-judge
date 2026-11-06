@@ -127,7 +127,9 @@ Everything runs on one Linux server with Docker: Postgres, Redis, the API, the j
 5. Add `deploy/backup.sh` to cron for daily backups.
 6. Run `bash deploy/install_auto_deploy.sh` once.
 
-After that, every push to `main` is live within about a minute: the server checks GitHub every minute, rebuilds, and re-applies the statements or hints when their JSON changed (`journalctl -u yzu-auto-deploy` shows what it did).
+After that, every push to `main` goes live about a minute after it passes CI: the server checks GitHub every minute, keeps the running version until the new commit is green, rebuilds, and re-applies the statements or hints when their JSON changed (`journalctl -u yzu-auto-deploy` shows what it did).
+
+CI (`.github/workflows/ci.yml`) applies the migrations to an empty database, runs the tests, including hostile programs in the real Docker sandbox, then lints and builds the frontend.
 
 ## What's next
 
