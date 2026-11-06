@@ -10,7 +10,7 @@ import socket
 from datetime import datetime, timedelta, timezone
 
 import docker
-from docker.types import LogConfig
+from docker.types import LogConfig, Ulimit
 
 from .languages import get_language
 
@@ -54,6 +54,13 @@ COMPILE_MEMORY_LIMIT_MB = 512
 COMPILE_PROCESS_LIMIT = 64
 # Template errors in C++ can run to megabytes; students need the first ones.
 COMPILE_OUTPUT_LIMIT_CHARS = 8000
+# A tiny source can make the assembler write gigabytes, and the worker loads the
+# binary into its own memory. Uninitialized arrays take no file space, so real
+# programs stay far below this.
+COMPILE_FILE_LIMIT_BYTES = 64 * 1024 * 1024
+# A file that includes itself twice prints diagnostics until the time limit, and
+# exec_run keeps all of it in the worker's memory, so the compiler is cut off here.
+COMPILE_OUTPUT_LIMIT_BYTES = 1024 * 1024
 WORK_DIR = "/tmp"
 
 
@@ -103,6 +110,7 @@ def compile_in_docker(language_name, code):
         memswap_limit = f"{COMPILE_MEMORY_LIMIT_MB}m",
         nano_cpus = CPU_LIMIT_NANO_CPUS,
         pids_limit = COMPILE_PROCESS_LIMIT,
+        ulimits = [Ulimit(name = "fsize", soft = COMPILE_FILE_LIMIT_BYTES, hard = COMPILE_FILE_LIMIT_BYTES)],
         **SANDBOX_OPTIONS,
     )
 
@@ -116,7 +124,13 @@ def compile_in_docker(language_name, code):
         def run_compiler():
             try:
                 outcome.append(container.exec_run(
-                    list(language.compile_command),
+                    # pipefail keeps the compiler's exit code. When head stops reading,
+                    # the compiler dies on the closed pipe, which fails the compile.
+                    [
+                        "bash", "-o", "pipefail", "-c",
+                        f'"$@" 2>&1 | head -c {COMPILE_OUTPUT_LIMIT_BYTES}',
+                        "compile", *language.compile_command,
+                    ],
                     workdir = WORK_DIR,
                     user = SANDBOX_USER,
                     demux = True,
