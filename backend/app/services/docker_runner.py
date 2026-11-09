@@ -392,7 +392,8 @@ def _run_container(image, command, files, input_data, time_limit_ms, memory_limi
             )
 
         return {
-            "stdout": stdout.decode(errors="replace").strip(),
+            # Not stripped: the judge checks the final newline. Callers strip what they store.
+            "stdout": stdout.decode(errors="replace"),
             "stderr": stderr,
             "exit_code": exit_code,
             "timed_out": timed_out,

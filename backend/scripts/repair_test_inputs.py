@@ -53,9 +53,9 @@ def repair(db, problem: Problem, broken: list[tuple[TestCase, str]], dry_run: bo
     outputs = []
     for test, fixed_input in broken:
         result = run_official(code, compiled, fixed_input)
-        if result["timed_out"] or result["is_oom"] or result["exit_code"] != 0 or not result["stdout"]:
+        if result["timed_out"] or result["is_oom"] or result["exit_code"] != 0 or not result["stdout"].strip():
             return f"official solution failed on test {test.id} (exit {result['exit_code']}), left alone"
-        outputs.append(result["stdout"] + "\n")
+        outputs.append(result["stdout"].strip() + "\n")
 
     changed = sum(output != read_file(test.output_path) for (test, _), output in zip(broken, outputs))
     if not dry_run:

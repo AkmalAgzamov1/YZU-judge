@@ -36,6 +36,17 @@ class PythonJudgeTests(unittest.TestCase):
         self.assertEqual(result["verdict"], "accepted")
         self.assertEqual(calls, [{}, {}])
 
+    def test_accepted_with_final_newline_has_no_warning(self):
+        result = judge_submission(fake_runner(["3\n", "10\n"], []), "code", TESTS, 1000, 64)
+        self.assertEqual(result["verdict"], "accepted")
+        self.assertFalse(result["missing_final_newline"])
+
+    def test_missing_final_newline_is_accepted_with_a_warning(self):
+        # UVa and the CPE answer Wrong Answer here, so the student is warned.
+        result = judge_submission(fake_runner(["3\n", "10"], []), "code", TESTS, 1000, 64)
+        self.assertEqual(result["verdict"], "accepted")
+        self.assertTrue(result["missing_final_newline"])
+
     def test_stops_at_first_wrong_answer(self):
         calls = []
         result = judge_submission(fake_runner(["4", "10"], calls), "code", TESTS, 1000, 64)

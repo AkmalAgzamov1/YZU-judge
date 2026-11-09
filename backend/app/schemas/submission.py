@@ -29,6 +29,8 @@ class SubmissionOut(BaseModel):
     mock_exam_id: int | None = None
     # Compiler messages when the verdict is compilation_error.
     compile_output: str | None = None
+    # Accepted, but UVa and the CPE would reject it for the missing newline at the end.
+    missing_final_newline: bool = False
     status: Literal[
         "pending",
         "running",

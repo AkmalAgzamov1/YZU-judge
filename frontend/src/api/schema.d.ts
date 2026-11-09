@@ -885,6 +885,11 @@ export interface components {
             /** Compile Output */
             compile_output?: string | null;
             /**
+             * Missing Final Newline
+             * @default false
+             */
+            missing_final_newline: boolean;
+            /**
              * Status
              * @enum {string}
              */
