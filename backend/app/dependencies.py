@@ -28,7 +28,18 @@ def get_current_user(credentials = Depends(oauth2_scheme), db = Depends(get_db))
             detail="User not found"
         )
 
+    # Tokens issued before token_version existed carry no number and count as 0.
+    if payload.get("ver", 0) != user.token_version:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid or expired token"
+        )
+
     return user
+
+
+def get_token_payload(credentials = Depends(oauth2_scheme)) -> dict:
+    return decode_access_token(credentials.credentials)
 
 def get_current_admin_user(current_user: User = Depends(get_current_user)):
     if not current_user.is_admin: 

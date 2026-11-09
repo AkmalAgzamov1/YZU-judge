@@ -6,6 +6,7 @@ from ..schemas.user import UserCreate, UserOut, UserLogin
 from ..security import hash_password, verify_password, create_access_token
 from ..dependencies import get_current_user
 from ..schemas.user import UserCreate, UserOut, UserLogin, Token
+from ..dependencies import get_token_payload
 
 
 router = APIRouter(
@@ -57,7 +58,8 @@ def login(user: UserLogin, db = Depends(get_db)):
 
     access_token = create_access_token({
         "user_id": existing_user.id,
-        "username": existing_user.username
+        "username": existing_user.username,
+        "ver": existing_user.token_version
     })
 
     return {
@@ -72,12 +74,13 @@ def get_me(current_user: User = Depends(get_current_user)):
 
 
 @router.post("/refresh", response_model = Token)
-def refresh_token(current_user: User = Depends(get_current_user)):
-    """Trades a still valid token for a fresh one, so active users are never signed out."""
+def refresh_token(current_user: User = Depends(get_current_user), payload: dict = Depends(get_token_payload)):
+    """Trades a still valid token for a fresh one, up to MAX_SESSION_DAYS after the last sign in."""
     access_token = create_access_token({
         "user_id": current_user.id,
-        "username": current_user.username
-    })
+        "username": current_user.username,
+        "ver": current_user.token_version
+    }, auth_time = payload.get("auth_time"))
 
     return {
         "access_token": access_token,
