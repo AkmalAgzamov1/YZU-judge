@@ -10,7 +10,7 @@ import socket
 from datetime import datetime, timedelta, timezone
 
 import docker
-from docker.types import LogConfig
+from docker.types import LogConfig, Ulimit
 
 from .languages import get_language
 
@@ -31,6 +31,8 @@ SANDBOX_OPTIONS = dict(
     security_opt = ["no-new-privileges"],
     network_disabled = True,
     labels = {SANDBOX_LABEL: "1"},
+    # A crash must not hand a core dump to the host's crash handler.
+    ulimits = [Ulimit(name = "core", soft = 0, hard = 0)],
 )
 
 # Longer than any real limit, so only a container whose worker died is this old.
@@ -55,6 +57,13 @@ COMPILE_PROCESS_LIMIT = 64
 # Template errors in C++ can run to megabytes; students need the first ones.
 COMPILE_OUTPUT_LIMIT_CHARS = 8000
 WORK_DIR = "/tmp"
+# An initialized global array is stored in the binary byte for byte, so two lines
+# of C++ can link to hundreds of MB. Real solutions stay far below this.
+MAX_BINARY_BYTES = 32 * 1024 * 1024
+BINARY_TOO_LARGE = f"The compiled program is larger than {MAX_BINARY_BYTES // (1024 * 1024)} MB."
+# The kernel stops the compiler or linker at this file size, before it reaches the disk.
+COMPILE_ULIMITS = [Ulimit(name = "fsize", soft = MAX_BINARY_BYTES, hard = MAX_BINARY_BYTES)]
+FILE_SIZE_EXCEEDED = ("File size limit exceeded", "signal 25", "File too large")
 
 
 def remove_stale_sandboxes() -> int:
@@ -103,7 +112,7 @@ def compile_in_docker(language_name, code):
         memswap_limit = f"{COMPILE_MEMORY_LIMIT_MB}m",
         nano_cpus = CPU_LIMIT_NANO_CPUS,
         pids_limit = COMPILE_PROCESS_LIMIT,
-        **SANDBOX_OPTIONS,
+        **{**SANDBOX_OPTIONS, "ulimits": SANDBOX_OPTIONS["ulimits"] + COMPILE_ULIMITS},
     )
 
     try:
@@ -149,9 +158,14 @@ def compile_in_docker(language_name, code):
             output = output[:COMPILE_OUTPUT_LIMIT_CHARS] + "\n... (output truncated)"
 
         if result.exit_code != 0:
+            if any(marker in output for marker in FILE_SIZE_EXCEEDED):
+                output = f"{BINARY_TOO_LARGE}\n\n{output}"
             return {"ok": False, "output": output, "binary": None}
 
-        chunks, _ = container.get_archive(f"{WORK_DIR}/{language.binary_name}")
+        chunks, stat = container.get_archive(f"{WORK_DIR}/{language.binary_name}")
+        # Checked before reading, so an oversized binary never reaches the worker's memory.
+        if stat["size"] > MAX_BINARY_BYTES:
+            return {"ok": False, "output": BINARY_TOO_LARGE, "binary": None}
         return {"ok": True, "output": output, "binary": _untar_single_file(chunks)}
     finally:
         container.remove(force = True)
