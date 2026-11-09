@@ -176,7 +176,7 @@ export default function NextCpe() {
     <section id="next-cpe" className="px-4 py-24">
       <div className="mx-auto max-w-6xl">
         <SectionHeader
-          index="02"
+          index="03"
           label="Next CPE"
           title={examOver ? "The next date is on its way" : `The next CPE is ${dateFormat.format(examDay)}`}
         >
@@ -215,7 +215,14 @@ export default function NextCpe() {
                 >
                   official CPE website
                 </a>
-                .
+                . International student?{" "}
+                <Link
+                  to={{ pathname: "/", hash: "#register" }}
+                  className={`rounded-sm text-neutral-300 underline underline-offset-2 hover:text-white ${focusRing}`}
+                >
+                  Get your account first
+                </Link>
+                , it takes one to two weeks.
               </p>
             </>
           )}
