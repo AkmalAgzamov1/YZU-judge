@@ -110,6 +110,7 @@ def judge_submission_task(submission_id):
 
             submission.status = judge_result["verdict"]
             submission.compile_output = judge_result.get("compile_output")
+            submission.missing_final_newline = judge_result.get("missing_final_newline", False)
             db.commit()
 
         except Exception:

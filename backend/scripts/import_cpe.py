@@ -227,9 +227,9 @@ def generate_outputs(problem: ExamProblem) -> tuple[list[tuple[str, str]] | None
         result = run_official(code, compiled, test_input)
         if result["timed_out"] or result["is_oom"] or result["exit_code"] != 0:
             return None, f"official solution failed on test {name} (exit {result['exit_code']})", 0
-        if not result["stdout"]:
+        if not result["stdout"].strip():
             return None, f"official solution printed nothing on test {name}", 0
-        tests.append((test_input, result["stdout"] + "\n"))
+        tests.append((test_input, result["stdout"].strip() + "\n"))
         slowest = max(slowest, result["time_taken_ms"])
 
     return tests, "verified", slowest

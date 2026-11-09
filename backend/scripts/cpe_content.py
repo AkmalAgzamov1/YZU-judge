@@ -159,10 +159,10 @@ def official_output(sittings: list, sample_input: str) -> tuple[str | None, str]
         if result["timed_out"] or result["is_oom"] or result["exit_code"] != 0:
             note = f"official solution failed on the sample (exit {result['exit_code']})"
             continue
-        if not result["stdout"]:
+        if not result["stdout"].strip():
             note = "official solution printed nothing on the sample"
             continue
-        return result["stdout"] + "\n", "ok"
+        return result["stdout"].strip() + "\n", "ok"
     return None, note
 
 

@@ -128,4 +128,13 @@ def judge_submission(
     return {
         "verdict": "accepted",
         "results": results,
+        "missing_final_newline": any(
+            missing_final_newline(result["stdout"]) for result in results
+        ),
     }
+
+
+def missing_final_newline(output):
+    # compare_output forgives this, but UVa and the CPE judge byte for byte
+    # and answer Wrong Answer, so an accepted submission gets a warning.
+    return output.strip() != "" and not output.endswith("\n")

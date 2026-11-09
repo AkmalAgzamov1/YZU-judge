@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Text, DateTime, ForeignKey, Enum
+from sqlalchemy import Boolean, Column, Integer, Text, DateTime, ForeignKey, Enum
 from datetime import datetime
 from ..database import Base
 
@@ -16,6 +16,9 @@ class Submission(Base):
 
     # Compiler messages, trimmed, when the verdict is compilation_error.
     compile_output = Column(Text, nullable = True)
+
+    # Accepted here, but the output does not end with a newline, which UVa and the CPE reject.
+    missing_final_newline = Column(Boolean, nullable = False, default = False, server_default = "false")
 
     # Set when the submission was sent during a mock CPE exam.
     mock_exam_id = Column(Integer, ForeignKey("mock_exams.id"), nullable = True, index = True)
