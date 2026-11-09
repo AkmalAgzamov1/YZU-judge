@@ -6,6 +6,7 @@ import Benefits from "./landing/Benefits";
 import Faq from "./landing/Faq";
 import FinalCta from "./landing/FinalCta";
 import FounderNote from "./landing/FounderNote";
+import HowToRegister from "./landing/HowToRegister";
 import Hero from "./landing/Hero";
 import HowItWorks from "./landing/HowItWorks";
 import NextCpe from "./landing/NextCpe";
@@ -24,6 +25,7 @@ export default function Landing() {
     <PageShell>
       <Hero />
       <WhyCpe />
+      <HowToRegister />
       <NextCpe />
       <section aria-label="Our promise" className="mx-auto max-w-6xl px-4 py-24 lg:pl-[33.333%]">
         <TaglineReveal

@@ -7,6 +7,7 @@ import { buttonGhostSmall, buttonPrimarySmall, focusRing } from "./ui";
 
 const sections = [
   { id: "why", label: "Why the CPE" },
+  { id: "register", label: "Registration" },
   { id: "features", label: "Features" },
   { id: "how", label: "How it works" },
   { id: "faq", label: "FAQ" },
