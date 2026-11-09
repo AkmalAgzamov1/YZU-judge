@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from ..database import get_db
-from ..dependencies import get_current_admin_user
+from ..dependencies import get_current_admin_user, get_optional_user, is_admin
 from ..models.cpe_paper import CpePaper, CpePaperProblem
 from ..models.mock_exam import MockExam
 from ..models.problem import Problem
@@ -61,16 +61,29 @@ def get_paper_or_404(db: Session, paper_id: int) -> CpePaper:
     return paper
 
 
+def is_public(paper: CpePaper) -> bool:
+    """A paper with a draft problem stays hidden from students, like the draft itself."""
+    return all(item.problem.is_published for item in paper.problems)
+
+
 @router.get("/", response_model = list[CpePaperOut])
-def get_papers(db: Session = Depends(get_db)):
+def get_papers(current_user: User | None = Depends(get_optional_user), db: Session = Depends(get_db)):
     papers = db.query(CpePaper).order_by(CpePaper.held_on.desc(), CpePaper.id.desc()).all()
 
-    return [paper_to_out(paper) for paper in papers]
+    return [paper_to_out(paper) for paper in papers if is_admin(current_user) or is_public(paper)]
 
 
 @router.get("/{paper_id}", response_model = CpePaperOut)
-def get_paper(paper_id: int, db: Session = Depends(get_db)):
-    return paper_to_out(get_paper_or_404(db, paper_id))
+def get_paper(paper_id: int, current_user: User | None = Depends(get_optional_user), db: Session = Depends(get_db)):
+    paper = get_paper_or_404(db, paper_id)
+
+    if not is_admin(current_user) and not is_public(paper):
+        raise HTTPException(
+            status_code = 404,
+            detail = "No such CPE paper"
+        )
+
+    return paper_to_out(paper)
 
 
 @router.post("/", response_model = CpePaperOut)
