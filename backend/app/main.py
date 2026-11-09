@@ -1,9 +1,13 @@
 from fastapi import FastAPI
 from .routers import problems, users, testcases, submissions, cpe_papers, mock_exams, problem_help, admin
 from fastapi.middleware.cors import CORSMiddleware
-from .config import CORS_ORIGINS
+from .config import API_DOCS, CORS_ORIGINS
 
-app = FastAPI()
+app = FastAPI(
+    docs_url = "/docs" if API_DOCS else None,
+    redoc_url = "/redoc" if API_DOCS else None,
+    openapi_url = "/openapi.json" if API_DOCS else None,
+)
 
 app.include_router(submissions.router)
 app.include_router(testcases.router)

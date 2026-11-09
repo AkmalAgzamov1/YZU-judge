@@ -23,3 +23,7 @@ JWT_ALGORITHM = "HS256"
 # 7 days by default. The frontend swaps tokens for fresh ones while the site is in use,
 # so active students stay signed in, including through a 3 hour mock exam.
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 60 * 24 * 7))
+
+# The interactive docs and the OpenAPI schema are a map of every endpoint. Development
+# keeps them (npm run gen:api reads the schema); docker-compose.prod.yml turns them off.
+API_DOCS = os.getenv("API_DOCS", "on").lower() != "off"

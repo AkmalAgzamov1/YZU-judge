@@ -10,6 +10,7 @@ x-backend: &backend
     REDIS_URL: redis://redis:6379/0
     SECRET_KEY: ${SECRET_KEY:?set SECRET_KEY in .env}
     TEST_DATA_DIR: /data/test_data
+    API_DOCS: "off"
   volumes:
     - test-data:/data/test_data
   depends_on:
