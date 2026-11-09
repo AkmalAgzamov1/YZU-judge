@@ -26,6 +26,10 @@ MAX_SUBMISSIONS_PER_MINUTE = 10
 
 
 def check_rate_limit(db: Session, user: User):
+    # Locks the user's row until the new submission is committed. Without it,
+    # parallel requests all counted zero waiting submissions and all got in.
+    db.query(User).filter(User.id == user.id).with_for_update().one()
+
     waiting = db.query(Submission).filter(
         Submission.user_id == user.id,
         Submission.status.in_(("pending", "running"))
