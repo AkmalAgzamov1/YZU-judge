@@ -1,3 +1,5 @@
+import threading
+
 from fastapi import HTTPException  
 import jwt
 
@@ -8,11 +10,29 @@ from pwdlib import PasswordHash
 
 password_hash = PasswordHash.recommended()
 
+# Each Argon2 hash takes 64 MB of memory. Without a cap, a burst of logins runs
+# up to 40 at once per uvicorn process. Extra requests wait for a free slot.
+HASH_SLOTS = 4
+_hash_slots = threading.BoundedSemaphore(HASH_SLOTS)
+
+# Checked when the username does not exist, so the answer takes as long as for a real user.
+_DUMMY_HASH = password_hash.hash("not a real password")
+
+
 def hash_password(password: str) -> str:
-    return password_hash.hash(password)
+    with _hash_slots:
+        return password_hash.hash(password)
 
 def verify_password(password: str, hashed_password: str) -> bool:
-    return password_hash.verify(password, hashed_password)
+    with _hash_slots:
+        return password_hash.verify(password, hashed_password)
+
+def verify_password_or_dummy(password: str, hashed_password: str | None) -> bool:
+    """Like verify_password, but spends the same time when there is no user."""
+    if hashed_password is None:
+        verify_password(password, _DUMMY_HASH)
+        return False
+    return verify_password(password, hashed_password)
 
 
 def create_access_token(data: dict):

@@ -1,4 +1,6 @@
-from pydantic import BaseModel, ConfigDict, EmailStr
+from typing import Annotated
+
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 from datetime import datetime
 
@@ -16,9 +18,10 @@ class UserOut(BaseModel):
     created_at: datetime
     is_admin: bool = False
 
+# Only a cap against huge requests; the real rules are checked at sign up.
 class UserLogin(BaseModel):
-    username: str
-    password: str
+    username: Annotated[str, Field(max_length = 256)]
+    password: Annotated[str, Field(max_length = 1024)]
 
 class Token(BaseModel):
     access_token: str
