@@ -3,6 +3,17 @@
 {$SITE_ADDRESS:localhost} {
 	encode zstd gzip
 
+	# Caps request bodies before they reach the API. Admins upload test files in
+	# bulk, so the test case endpoints get a larger cap than everything else.
+	@testcase_upload path_regexp ^/api/problems/\d+/testcases
+	@other_requests not path_regexp ^/api/problems/\d+/testcases
+	request_body @testcase_upload {
+		max_size 64MB
+	}
+	request_body @other_requests {
+		max_size 2MB
+	}
+
 	handle_path /api/* {
 		reverse_proxy api:8000
 	}
@@ -18,6 +29,10 @@
 		Strict-Transport-Security "max-age=31536000"
 		X-Content-Type-Options "nosniff"
 		Referrer-Policy "strict-origin-when-cross-origin"
+		# Everything the app loads comes from this origin. CodeMirror injects its
+		# styles at runtime, which is why inline styles are allowed.
+		Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'"
+		X-Frame-Options "DENY"
 		-Server
 	}
 }

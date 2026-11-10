@@ -13,6 +13,7 @@ x-backend: &backend
     RESEND_API_KEY: ${RESEND_API_KEY:?set RESEND_API_KEY in .env}
     EMAIL_FROM: ${EMAIL_FROM:-YZU Judge <codes@send.yzujudge.com>}
     TEST_DATA_DIR: /data/test_data
+    API_DOCS: "off"
   volumes:
     - test-data:/data/test_data
   depends_on:

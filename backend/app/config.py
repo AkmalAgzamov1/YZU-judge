@@ -28,3 +28,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 60 * 
 # Without a key, for local development, the email is printed to the API log instead.
 RESEND_API_KEY = os.getenv("RESEND_API_KEY", "").strip()
 EMAIL_FROM = os.getenv("EMAIL_FROM", "YZU Judge <codes@send.yzujudge.com>")
+
+# The interactive docs and the OpenAPI schema are a map of every endpoint. Development
+# keeps them (npm run gen:api reads the schema); docker-compose.prod.yml turns them off.
+API_DOCS = os.getenv("API_DOCS", "on").lower() != "off"
