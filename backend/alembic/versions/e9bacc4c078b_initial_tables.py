@@ -93,3 +93,7 @@ def downgrade() -> None:
     op.drop_index('ix_users_username', table_name='users')
     op.drop_index('ix_users_email', table_name='users')
     op.drop_table('users')
+    # Dropping a table keeps the PostgreSQL enum types its columns used, and
+    # upgrading again would then fail with "type ... already exists".
+    for enum_type in ('submission_result_verdict', 'submission_language', 'submission_status', 'problem_difficulty'):
+        op.execute(f"DROP TYPE IF EXISTS {enum_type}")
