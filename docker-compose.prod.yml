@@ -11,7 +11,7 @@ x-backend: &backend
     SECRET_KEY: ${SECRET_KEY:?set SECRET_KEY in .env}
     # Required: without it, sign up codes would only be printed to the log.
     RESEND_API_KEY: ${RESEND_API_KEY:?set RESEND_API_KEY in .env}
-    EMAIL_FROM: ${EMAIL_FROM:-YZU Judge <no-reply@send.yzujudge.com>}
+    EMAIL_FROM: ${EMAIL_FROM:-YZU Judge <codes@send.yzujudge.com>}
     TEST_DATA_DIR: /data/test_data
   volumes:
     - test-data:/data/test_data
