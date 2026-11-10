@@ -13,3 +13,10 @@ class User(Base):
     created_at = Column(DateTime, default = datetime.utcnow)
 
     is_admin = Column(Boolean, nullable = False, default = False)
+
+    # False until the student types the code we emailed them. Unverified accounts
+    # cannot sign in and are deleted after a day.
+    email_verified = Column(Boolean, nullable = False, default = False)
+
+    # Goes up on every password reset. Tokens carry it, so older tokens stop working.
+    token_version = Column(Integer, nullable = False, default = 0)

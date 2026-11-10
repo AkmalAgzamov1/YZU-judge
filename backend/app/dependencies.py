@@ -28,6 +28,14 @@ def get_current_user(credentials = Depends(oauth2_scheme), db = Depends(get_db))
             detail="User not found"
         )
 
+    # A password reset bumps token_version, which ends every older session.
+    # Tokens from before this check existed carry no version and count as 0.
+    if payload.get("tv", 0) != user.token_version:
+        raise HTTPException(
+            status_code=401,
+            detail="Your session ended. Sign in again."
+        )
+
     return user
 
 def get_current_admin_user(current_user: User = Depends(get_current_user)):

@@ -23,3 +23,8 @@ JWT_ALGORITHM = "HS256"
 # 7 days by default. The frontend swaps tokens for fresh ones while the site is in use,
 # so active students stay signed in, including through a 3 hour mock exam.
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", 60 * 24 * 7))
+
+# Verification and password reset emails go out through Resend (resend.com).
+# Without a key, for local development, the email is printed to the API log instead.
+RESEND_API_KEY = os.getenv("RESEND_API_KEY", "").strip()
+EMAIL_FROM = os.getenv("EMAIL_FROM", "YZU Judge <no-reply@send.yzujudge.com>")

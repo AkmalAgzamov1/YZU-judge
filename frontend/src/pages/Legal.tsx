@@ -7,7 +7,7 @@ interface LegalProps {
 const content = {
   privacy: {
     title: "Privacy policy",
-    updated: "October 31, 2026",
+    updated: "November 10, 2026",
     sections: [
       {
         heading: "What we store",
@@ -18,8 +18,12 @@ const content = {
         body: "To sign you in, to run and judge your code, and to show you your own submission history. Submitted code is executed in an isolated container and is not shared with other users.",
       },
       {
+        heading: "Emails we send",
+        body: "Only codes: one to confirm your email when you sign up, and one when you reset your password. They are delivered by our email provider, Resend, which receives your email address and the message for that purpose only. No newsletters, no marketing.",
+      },
+      {
         heading: "What we never do",
-        body: "We do not sell your data, show ads or share your email with anyone. There are no third party trackers on this site.",
+        body: "We do not sell your data, show ads or share your email with anyone beyond sending those codes. There are no third party trackers on this site.",
       },
       {
         heading: "Deleting your data",

@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ApiError } from "../api/client";
+import { ApiError, unverifiedEmail } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
 import AuthLayout from "../components/AuthLayout";
 import Field from "../components/Field";
@@ -40,7 +40,10 @@ export default function Login() {
       await login(username.trim(), password);
       navigate(from, { replace: true });
     } catch (err) {
-      if (err instanceof ApiError) {
+      const unverified = unverifiedEmail(err);
+      if (unverified) {
+        navigate("/verify-email", { state: { email: unverified.email, from } });
+      } else if (err instanceof ApiError) {
         setError(err.message);
       } else {
         setError("Something went wrong. Please try again.");
@@ -76,6 +79,13 @@ export default function Login() {
           onChange={(event) => setPassword(event.target.value)}
           error={errors.password}
         />
+
+        <Link
+          to="/forgot-password"
+          className={`-mt-3 self-end rounded-sm text-sm text-neutral-400 underline-offset-4 hover:text-white hover:underline ${focusRing}`}
+        >
+          Forgot password?
+        </Link>
 
         {error && (
           <p role="alert" className="rounded-lg border border-yzu-red/40 bg-yzu-red/10 px-3 py-2 text-sm text-red-300">

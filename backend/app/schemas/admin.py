@@ -10,6 +10,7 @@ class AdminUserOut(BaseModel):
     username: str
     email: str
     is_admin: bool
+    email_verified: bool
     created_at: datetime | None
     submissions: int
     accepted: int
