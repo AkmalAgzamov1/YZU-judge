@@ -9,6 +9,7 @@ from ..models.cpe_paper import CpePaper
 from ..models.mock_exam import MockExam
 from ..models.submission import Submission
 from ..models.user import User
+from .cpe_papers import is_public
 from ..schemas.mock_exam import MockExamCreate, MockExamOut, MockExamProblemOut, MockExamSummary
 
 router = APIRouter(prefix = "/mock-exams", tags = ["Mock exams"])
@@ -120,7 +121,7 @@ def start_mock_exam(exam_data: MockExamCreate, current_user: User = Depends(get_
 
     paper = db.query(CpePaper).filter(CpePaper.id == exam_data.paper_id).first()
 
-    if paper is None:
+    if paper is None or not (current_user.is_admin or is_public(paper)):
         raise HTTPException(
             status_code = 404,
             detail = "No such CPE paper"
