@@ -25,12 +25,15 @@ function validate(
 
   if (!username.trim()) errors.username = "Choose a username.";
   else if (username.trim().length < 3) errors.username = "Use at least 3 characters.";
+  else if (username.trim().length > 32) errors.username = "Use at most 32 characters.";
+  else if (/\s/.test(username.trim())) errors.username = "Usernames cannot contain spaces.";
 
   if (!email.trim()) errors.email = "Enter your email address.";
   else if (!EMAIL_PATTERN.test(email.trim())) errors.email = "That email address looks incomplete.";
 
   if (!password) errors.password = "Choose a password.";
   else if (password.length < 8) errors.password = "Use at least 8 characters.";
+  else if (password.length > 128) errors.password = "Use at most 128 characters.";
 
   if (!confirmPassword) errors.confirmPassword = "Type your password again.";
   else if (confirmPassword !== password) errors.confirmPassword = "Passwords do not match.";

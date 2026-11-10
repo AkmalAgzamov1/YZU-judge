@@ -1,7 +1,9 @@
 import logging
+import unicodedata
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy import func
+from sqlalchemy.exc import IntegrityError
 
 from ..database import get_db
 from ..models.user import User
@@ -15,10 +17,11 @@ from ..schemas.user import (
     UserOut,
     VerifyEmail,
 )
-from ..security import hash_password, verify_password, create_access_token
+from ..security import hash_password, verify_password_or_dummy, create_access_token
+from ..rate_limit import client_ip, hit
 from ..dependencies import get_current_user
 from ..services import mailer
-from ..services.email_codes import RESET, VERIFY, CodeError, check_ip_limit, consume_code, issue_code
+from ..services.email_codes import RESET, VERIFY, CodeError, consume_code, issue_code
 
 
 logger = logging.getLogger(__name__)
@@ -28,7 +31,30 @@ router = APIRouter(
     tags = ["Users"]
 )
 
+
+USERNAME_MIN, USERNAME_MAX = 3, 32
+PASSWORD_MIN, PASSWORD_MAX = 8, 128
+
+# Generous, because a whole class can sign up from one campus address.
+REGISTER_LIMIT_PER_HOUR = 30
+LOGIN_LIMIT_PER_IP_PER_MINUTE = 30
+LOGIN_LIMIT_PER_USERNAME_PER_MINUTE = 10
+# Every code is an email, and the provider's free plan sends 100 a day.
+EMAILS_PER_IP_PER_HOUR = 50
+TOO_MANY = "Too many attempts. Wait a minute and try again."
+TOO_MANY_EMAILS = "Too many emails from your network. Try again in an hour."
+
 EMAIL_FAILED = "We could not send the email right now. Try again in a minute."
+
+
+def check_new_account(username: str, password: str) -> None:
+    if not USERNAME_MIN <= len(username) <= USERNAME_MAX:
+        raise HTTPException(status_code = 400, detail = f"Username must be {USERNAME_MIN} to {USERNAME_MAX} characters.")
+    # Spaces and invisible characters make names that look like someone else's.
+    if any(char.isspace() or unicodedata.category(char).startswith("C") for char in username):
+        raise HTTPException(status_code = 400, detail = "Username cannot contain spaces or invisible characters.")
+    if not PASSWORD_MIN <= len(password) <= PASSWORD_MAX:
+        raise HTTPException(status_code = 400, detail = f"Password must be {PASSWORD_MIN} to {PASSWORD_MAX} characters.")
 
 
 def _find_by_email(db, email: str) -> User | None:
@@ -45,9 +71,8 @@ def _token_response(user: User) -> dict:
     return {"access_token": access_token, "token_type": "bearer"}
 
 
-def _client_ip(request: Request) -> str | None:
-    # Behind Caddy, uvicorn's --proxy-headers puts the real address here.
-    return request.client.host if request.client else None
+def _count_email(request: Request) -> None:
+    hit(f"email-codes:{client_ip(request)}", EMAILS_PER_IP_PER_HOUR, 3600, TOO_MANY_EMAILS)
 
 
 def _send_code(db, user: User, purpose: str) -> None:
@@ -66,8 +91,11 @@ def _http_error(error: CodeError) -> HTTPException:
 @router.post("/register", response_model = CodeSent)
 def register(user: UserCreate, request: Request, db = Depends(get_db)):
     """Creates an unverified account and emails it a code. No token until it is verified."""
+    hit(f"register:{client_ip(request)}", REGISTER_LIMIT_PER_HOUR, 3600, "Too many new accounts from this network. Try again later.")
+
     username = user.username.strip()
     email = user.email.strip().lower()
+    check_new_account(username, user.password)
 
     by_email = _find_by_email(db, email)
     if by_email is not None and by_email.email_verified:
@@ -76,14 +104,12 @@ def register(user: UserCreate, request: Request, db = Depends(get_db)):
             detail = "An account with this email already exists. Sign in, or reset your password."
         )
 
-    by_name = db.query(User).filter(User.username == username).first()
+    # Case insensitive, so nobody can sign up as "Admin" next to "admin".
+    by_name = db.query(User).filter(func.lower(User.username) == username.lower()).first()
     if by_name is not None and by_name is not by_email:
         raise HTTPException(status_code = 400, detail = "That username is taken.")
 
-    try:
-        check_ip_limit(_client_ip(request))
-    except CodeError as error:
-        raise _http_error(error)
+    _count_email(request)
 
     # Nobody proved they own an unverified email, so signing up again simply takes it over.
     # That way a fake sign up cannot block the real owner.
@@ -100,7 +126,12 @@ def register(user: UserCreate, request: Request, db = Depends(get_db)):
         )
         db.add(account)
 
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        # Two sign ups with the same name at the same moment: the second one lands here.
+        db.rollback()
+        raise HTTPException(status_code = 400, detail = "That username or email is already taken.")
     db.refresh(account)
 
     try:
@@ -140,8 +171,8 @@ def resend_code(data: EmailOnly, request: Request, db = Depends(get_db)):
     if account is None or account.email_verified:
         return {"email": data.email}
 
+    _count_email(request)
     try:
-        check_ip_limit(_client_ip(request))
         _send_code(db, account, VERIFY)
     except CodeError as error:
         raise _http_error(error)
@@ -154,10 +185,7 @@ def resend_code(data: EmailOnly, request: Request, db = Depends(get_db)):
 @router.post("/password/forgot", response_model = CodeSent)
 def forgot_password(data: EmailOnly, request: Request, db = Depends(get_db)):
     """Always answers the same way, so it cannot be used to find out who has an account."""
-    try:
-        check_ip_limit(_client_ip(request))
-    except CodeError as error:
-        raise _http_error(error)
+    _count_email(request)
 
     account = _find_by_email(db, data.email)
 
@@ -195,12 +223,16 @@ def reset_password(data: ResetPassword, db = Depends(get_db)):
 
 
 @router.post("/login", response_model = Token)
-def login(user: UserLogin, db = Depends(get_db)):
+def login(user: UserLogin, request: Request, db = Depends(get_db)):
+    hit(f"login-ip:{client_ip(request)}", LOGIN_LIMIT_PER_IP_PER_MINUTE, 60, TOO_MANY)
+    hit(f"login-user:{user.username.lower()}", LOGIN_LIMIT_PER_USERNAME_PER_MINUTE, 60, TOO_MANY)
+
     existing_user = db.query(User).filter(
         (User.username == user.username)
     ).first()
 
-    if not existing_user or not verify_password(user.password, existing_user.password_hash):
+    password_hash = existing_user.password_hash if existing_user else None
+    if not verify_password_or_dummy(user.password, password_hash):
         raise HTTPException(
             status_code = 401,
             detail = "Invalid username or password"

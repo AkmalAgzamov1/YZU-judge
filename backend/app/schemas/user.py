@@ -1,10 +1,13 @@
+from typing import Annotated
+
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 from datetime import datetime
 
+# Length rules are checked in the router, so students get a readable 400 instead of a 422.
 class UserCreate(BaseModel):
-    username: str = Field(min_length = 3)
-    password: str = Field(min_length = 8)
+    username: str
+    password: str
     email: EmailStr
 
 class UserOut(BaseModel):
@@ -16,9 +19,10 @@ class UserOut(BaseModel):
     created_at: datetime
     is_admin: bool = False
 
+# Only a cap against huge requests; the real rules are checked at sign up.
 class UserLogin(BaseModel):
-    username: str
-    password: str
+    username: Annotated[str, Field(max_length = 256)]
+    password: Annotated[str, Field(max_length = 1024)]
 
 class Token(BaseModel):
     access_token: str
@@ -34,9 +38,9 @@ class EmailOnly(BaseModel):
 
 class VerifyEmail(BaseModel):
     email: EmailStr
-    code: str
+    code: Annotated[str, Field(max_length = 32)]
 
 class ResetPassword(BaseModel):
     email: EmailStr
-    code: str
-    password: str = Field(min_length = 8)
+    code: Annotated[str, Field(max_length = 32)]
+    password: Annotated[str, Field(min_length = 8, max_length = 128)]

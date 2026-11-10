@@ -43,10 +43,10 @@ services:
 
   api:
     <<: *backend
-    command: >
-      sh -c "alembic upgrade head &&
-             uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 2
-             --root-path /api --proxy-headers --forwarded-allow-ips '*'"
+    # One line on purpose: in a folded block, lines indented deeper than the first keep
+    # their line breaks, and the uvicorn flags used to run as a separate shell command.
+    # The API port is not published, so only Caddy can send forwarded headers.
+    command: ["sh", "-c", "alembic upgrade head && exec uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 2 --root-path /api --proxy-headers --forwarded-allow-ips '*'"]
 
   worker:
     <<: *backend

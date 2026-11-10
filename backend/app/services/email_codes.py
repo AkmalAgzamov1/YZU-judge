@@ -7,18 +7,14 @@ Asking for a new code replaces the old one.
 
 import hashlib
 import hmac
-import logging
 import secrets
 from datetime import datetime, timedelta
 
-import redis
 from sqlalchemy.orm import Session
 
-from ..config import REDIS_URL, SECRET_KEY
+from ..config import SECRET_KEY
 from ..models.email_code import EmailCode
 from ..models.user import User
-
-logger = logging.getLogger(__name__)
 
 VERIFY = "verify"
 RESET = "reset"
@@ -27,10 +23,6 @@ CODE_LIFETIME = timedelta(minutes = 10)
 MAX_ATTEMPTS = 5
 RESEND_COOLDOWN = timedelta(seconds = 60)
 MAX_CODES_PER_HOUR = 5
-
-# Per IP, across all emails. Generous because a whole class may sign up from one
-# campus network at once; it is here to protect the provider's daily quota.
-MAX_SENDS_PER_IP_PER_HOUR = 50
 
 
 class CodeError(Exception):
@@ -124,31 +116,3 @@ def consume_code(db: Session, user: User, purpose: str, code: str, now: datetime
         raise CodeError(f"That code is not right. {left} {'try' if left == 1 else 'tries'} left.")
 
     active.used_at = now
-
-
-_redis = None
-
-
-def check_ip_limit(ip: str | None) -> None:
-    """Raises CodeError when one address asks for too many emails in an hour.
-
-    Fails open: if Redis is down, sending an email matters more than the limit.
-    """
-    global _redis
-
-    if not ip:
-        return
-
-    try:
-        if _redis is None:
-            _redis = redis.Redis.from_url(REDIS_URL, socket_timeout = 2)
-        key = f"email-codes:ip:{ip}"
-        count = _redis.incr(key)
-        if count == 1:
-            _redis.expire(key, 3600)
-    except redis.RedisError as error:
-        logger.warning("Email rate limit skipped, Redis is unavailable: %s", error)
-        return
-
-    if count > MAX_SENDS_PER_IP_PER_HOUR:
-        raise CodeError("Too many emails from your network. Try again in an hour.", 429)
