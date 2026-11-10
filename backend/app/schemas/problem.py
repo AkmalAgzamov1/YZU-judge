@@ -14,6 +14,7 @@ class ProblemCreate(BaseModel):
 
     is_cpe: bool
     topics: list[Topic] = []
+    sort_order: int = 0
 
 class ProblemOut(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -30,6 +31,7 @@ class ProblemOut(BaseModel):
     is_cpe: bool
     topics: list[Topic] = []
     is_published: bool = True
+    sort_order: int = 0
     created_by: int
 
 class ProblemUpdate(BaseModel):
@@ -41,6 +43,8 @@ class ProblemUpdate(BaseModel):
     memory_limit_mb: int
     is_cpe: bool
     topics: list[Topic] = []
+    # Left out means "keep the current value", so older scripts that PUT problems don't reset it.
+    sort_order: Optional[int] = None
 
 
 class ProblemStats(BaseModel):

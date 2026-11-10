@@ -38,12 +38,13 @@ interface FormState {
   difficulty: Difficulty;
   timeMs: string;
   memoryMb: string;
+  sortOrder: string;
   isCpe: boolean;
   topics: Topic[];
   description: string;
 }
 
-type FormErrors = Partial<Record<"title" | "uva" | "timeMs" | "memoryMb", string>>;
+type FormErrors = Partial<Record<"title" | "uva" | "timeMs" | "memoryMb" | "sortOrder", string>>;
 
 const emptyForm: FormState = {
   title: "",
@@ -51,6 +52,7 @@ const emptyForm: FormState = {
   difficulty: "easy",
   timeMs: "1000",
   memoryMb: "256",
+  sortOrder: "0",
   isCpe: true,
   topics: [],
   description: STATEMENT_TEMPLATE,
@@ -63,6 +65,7 @@ function toForm(problem: Problem): FormState {
     difficulty: problem.difficulty,
     timeMs: String(problem.time_limit_ms),
     memoryMb: String(problem.memory_limit_mb),
+    sortOrder: String(problem.sort_order ?? 0),
     isCpe: problem.is_cpe,
     topics: problem.topics ?? [],
     description: problem.description,
@@ -81,6 +84,7 @@ function validate(form: FormState): { errors: FormErrors; input?: ProblemInput }
   if (!isWhole(form.memoryMb) || Number(form.memoryMb) < 16 || Number(form.memoryMb) > 2048) {
     errors.memoryMb = "Between 16 and 2048 MB.";
   }
+  if (!/^-?\d+$/.test(form.sortOrder.trim())) errors.sortOrder = "A whole number, like 0 or 100.";
   if (Object.keys(errors).length > 0) return { errors };
 
   return {
@@ -91,6 +95,7 @@ function validate(form: FormState): { errors: FormErrors; input?: ProblemInput }
       difficulty: form.difficulty,
       time_limit_ms: Number(form.timeMs),
       memory_limit_mb: Number(form.memoryMb),
+      sort_order: Number(form.sortOrder),
       is_cpe: form.isCpe,
       topics: form.topics,
       description: form.description,
@@ -161,7 +166,7 @@ function ProblemForm({
 
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-8">
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr]">
         <Field
           id="title"
           label="Title"
@@ -195,6 +200,15 @@ function ProblemForm({
           value={form.memoryMb}
           onChange={(event) => set("memoryMb", event.target.value)}
           error={errors.memoryMb}
+        />
+        <Field
+          id="sort-order"
+          label="Sort order"
+          inputMode="numeric"
+          value={form.sortOrder}
+          onChange={(event) => set("sortOrder", event.target.value)}
+          error={errors.sortOrder}
+          hint="Higher shows first within its difficulty. Usually 0."
         />
       </div>
 
