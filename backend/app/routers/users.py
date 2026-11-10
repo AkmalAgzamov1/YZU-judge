@@ -19,7 +19,7 @@ from ..schemas.user import (
 )
 from ..security import hash_password, verify_password_or_dummy, create_access_token
 from ..rate_limit import client_ip, hit
-from ..dependencies import get_current_user
+from ..dependencies import get_current_user, get_token_payload
 from ..services import mailer
 from ..services.email_codes import RESET, VERIFY, CodeError, consume_code, issue_code
 
@@ -62,12 +62,13 @@ def _find_by_email(db, email: str) -> User | None:
     return db.query(User).filter(func.lower(User.email) == email.strip().lower()).first()
 
 
-def _token_response(user: User) -> dict:
+def _token_response(user: User, auth_time: int | None = None) -> dict:
+    """A new sign in starts a new session; a refresh passes the old auth_time on."""
     access_token = create_access_token({
         "user_id": user.id,
         "username": user.username,
         "tv": user.token_version,
-    })
+    }, auth_time = auth_time)
     return {"access_token": access_token, "token_type": "bearer"}
 
 
@@ -265,6 +266,9 @@ def get_me(current_user: User = Depends(get_current_user)):
 
 
 @router.post("/refresh", response_model = Token)
-def refresh_token(current_user: User = Depends(get_current_user)):
-    """Trades a still valid token for a fresh one, so active users are never signed out."""
-    return _token_response(current_user)
+def refresh_token(current_user: User = Depends(get_current_user), payload: dict = Depends(get_token_payload)):
+    """Trades a still valid token for a fresh one, up to MAX_SESSION_DAYS after the last sign in.
+
+    Tokens from before auth_time existed have none, so they start a new window here.
+    """
+    return _token_response(current_user, auth_time = payload.get("auth_time"))

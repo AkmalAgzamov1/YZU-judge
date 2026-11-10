@@ -38,6 +38,10 @@ def get_current_user(credentials = Depends(oauth2_scheme), db = Depends(get_db))
 
     return user
 
+
+def get_token_payload(credentials = Depends(oauth2_scheme)) -> dict:
+    return decode_access_token(credentials.credentials)
+
 def get_current_admin_user(current_user: User = Depends(get_current_user)):
     if not current_user.is_admin: 
         raise HTTPException(
