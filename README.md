@@ -83,6 +83,8 @@ DATABASE_URL=postgresql://user:password@localhost:5432/yzu_judge
 REDIS_URL=redis://localhost:6379/0
 ```
 
+Without a `RESEND_API_KEY`, sign up and password reset codes are printed in the API's log instead of being emailed, so you can test accounts locally.
+
 Then:
 
 ```bash

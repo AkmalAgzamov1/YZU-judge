@@ -13,6 +13,7 @@ from app.models.problem import Problem
 from app.models.user import User  # noqa: F401
 from app.models.mock_exam import MockExam  # noqa: F401  # submissions.mock_exam_id
 from app.models.cpe_paper import CpePaper  # noqa: F401  # mock_exams.paper_id
+from app.models.email_code import EmailCode
 from app.services.judge_service import load_testcases, judge_submission
 
 
@@ -21,6 +22,35 @@ logger = logging.getLogger(__name__)
 # Far longer than a real judgment. If a slow queue trips this, the verdict still
 # replaces the error once the job runs.
 STUCK_SUBMISSION_AGE = timedelta(minutes=15)
+
+# An account nobody verified in a day is most likely a typo or a fake address.
+UNVERIFIED_ACCOUNT_AGE = timedelta(days=1)
+
+
+@celery_app.task(ignore_result=True)
+def delete_unverified_accounts():
+    """Frees the usernames and emails of sign ups that were never verified.
+
+    Unverified accounts cannot sign in, so they have no submissions to lose.
+    Their codes go with them through ON DELETE CASCADE.
+    """
+    db = SessionLocal()
+    cutoff = datetime.utcnow() - UNVERIFIED_ACCOUNT_AGE
+
+    try:
+        deleted = (
+            db.query(User)
+            .filter(User.email_verified.is_(False), User.created_at < cutoff)
+            .delete(synchronize_session=False)
+        )
+        # Old codes are useless after 10 minutes; keep a day for the hourly limits.
+        db.query(EmailCode).filter(EmailCode.created_at < cutoff).delete(synchronize_session=False)
+        db.commit()
+    finally:
+        db.close()
+
+    if deleted:
+        logger.info("Deleted %s accounts that never verified their email", deleted)
 
 
 @celery_app.task(ignore_result=True)

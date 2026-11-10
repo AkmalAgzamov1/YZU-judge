@@ -4,6 +4,8 @@ import { AuthProvider } from "./auth/AuthContext";
 import RequireAdmin from "./auth/RequireAdmin";
 import RequireAuth from "./auth/RequireAuth";
 import Account from "./pages/Account";
+import ForgotPassword from "./pages/ForgotPassword";
+import VerifyEmail from "./pages/VerifyEmail";
 import Landing from "./pages/Landing";
 import Legal from "./pages/Legal";
 import Login from "./pages/Login";
@@ -34,6 +36,8 @@ export default function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/verify-email" element={<VerifyEmail />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/problems" element={<Problems />} />
           <Route
             path="/problems/:id"

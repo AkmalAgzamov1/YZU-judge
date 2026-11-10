@@ -16,6 +16,26 @@ const columns = "md:grid-cols-[1fr_120px_96px_80px_128px]";
 export default function AdminUsers() {
   const [state, setState] = useState<LoadState>({ kind: "loading" });
   const [attempt, setAttempt] = useState(0);
+  const [verifyingId, setVerifyingId] = useState<number | null>(null);
+  const [verifyError, setVerifyError] = useState("");
+
+  async function verify(id: number) {
+    setVerifyingId(id);
+    setVerifyError("");
+
+    try {
+      await adminApi.verifyUser(id);
+      setState((current) =>
+        current.kind === "ready"
+          ? { ...current, users: current.users.map((user) => (user.id === id ? { ...user, email_verified: true } : user)) }
+          : current,
+      );
+    } catch (error) {
+      setVerifyError(error instanceof ApiError ? error.message : "The user could not be verified.");
+    } finally {
+      setVerifyingId(null);
+    }
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -78,6 +98,46 @@ export default function AdminUsers() {
         <Message title="No accounts yet" body="Users show up here as soon as they register." />
       )}
 
+      {state.kind === "ready" && state.users.some((user) => !user.email_verified) && (
+        <section aria-labelledby="unverified-heading" className="mb-12">
+          <h2 id="unverified-heading" className="font-mono text-xs text-neutral-500">
+            Waiting for email verification
+          </h2>
+          <p className="mt-2 text-sm text-neutral-400">
+            They cannot sign in yet and are deleted a day after signing up. Verify one by hand only if you know the
+            email is theirs, for example when the code never arrives.
+          </p>
+          <ul className="mt-4 divide-y divide-white/10 border-y border-white/10">
+            {state.users
+              .filter((user) => !user.email_verified)
+              .map((user) => (
+                <li key={user.id} className="flex items-center justify-between gap-4 px-3 py-3">
+                  <span className="min-w-0">
+                    <span className="block truncate text-base font-medium text-white">{user.username}</span>
+                    <span className="block truncate text-sm text-neutral-500">
+                      {user.email}
+                      {user.created_at && ` · signed up ${formatRelative(user.created_at)}`}
+                    </span>
+                  </span>
+                  <button
+                    type="button"
+                    disabled={verifyingId === user.id}
+                    onClick={() => void verify(user.id)}
+                    className={buttonSecondary}
+                  >
+                    {verifyingId === user.id ? "Verifying…" : "Mark verified"}
+                  </button>
+                </li>
+              ))}
+          </ul>
+          {verifyError && (
+            <p role="alert" className="mt-3 text-sm text-red-300">
+              {verifyError}
+            </p>
+          )}
+        </section>
+      )}
+
       {state.kind === "ready" && state.users.length > 0 && (
         <>
           <div aria-hidden="true" className={`hidden gap-4 px-3 pb-3 font-mono text-xs text-neutral-500 md:grid ${columns}`}>
@@ -99,6 +159,9 @@ export default function AdminUsers() {
                       <span className="truncate text-base font-medium text-white">{user.username}</span>
                       {user.is_admin && (
                         <span className="rounded border border-white/10 px-1 font-mono text-xs text-neutral-400">admin</span>
+                      )}
+                      {!user.email_verified && (
+                        <span className="rounded border border-yzu-yellow/40 px-1 font-mono text-xs text-yzu-yellow">unverified</span>
                       )}
                     </span>
                     <span className="block truncate text-sm text-neutral-500">{user.email}</span>

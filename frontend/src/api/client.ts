@@ -14,6 +14,10 @@ type RegisterRequest =
 type CurrentUser =
   paths["/users/me"]["get"]["responses"][200]["content"]["application/json"];
 
+type CodeSent = components["schemas"]["CodeSent"];
+
+type ResetPasswordRequest = components["schemas"]["ResetPassword"];
+
 type Problem = components["schemas"]["ProblemOut"];
 
 type Submission = components["schemas"]["SubmissionOut"];
@@ -52,24 +56,47 @@ export const SESSION_EXPIRED_EVENT = "yzu-judge:session-expired";
 
 export class ApiError extends Error {
   public readonly status: number;
+  // The server's "detail", which is sometimes an object with more than a message.
+  public readonly detail: unknown;
 
-  constructor(status: number, message: string) {
+  constructor(status: number, message: string, detail: unknown = undefined) {
     super(message);
     this.name = "ApiError";
     this.status = status;
+    this.detail = detail;
   }
 }
-function getErrorMessage(payload: unknown, fallback: string): string {
-  if (
-    typeof payload === "object" &&
-    payload !== null &&
-    "detail" in payload
-  ) {
-    const detail = payload.detail;
 
-    if (typeof detail === "string") {
-      return detail;
-    }
+// Login answers 403 with this when the password was right but the email is unverified.
+export interface UnverifiedEmailDetail {
+  code: "email_not_verified";
+  message: string;
+  email: string;
+}
+
+export function unverifiedEmail(error: unknown): UnverifiedEmailDetail | null {
+  if (!(error instanceof ApiError) || error.status !== 403) return null;
+  const detail = error.detail as Partial<UnverifiedEmailDetail> | null;
+  return detail?.code === "email_not_verified" && typeof detail.email === "string"
+    ? (detail as UnverifiedEmailDetail)
+    : null;
+}
+
+function getDetail(payload: unknown): unknown {
+  return typeof payload === "object" && payload !== null && "detail" in payload
+    ? payload.detail
+    : undefined;
+}
+
+function getErrorMessage(payload: unknown, fallback: string): string {
+  const detail = getDetail(payload);
+
+  if (typeof detail === "string") {
+    return detail;
+  }
+
+  if (typeof detail === "object" && detail !== null && "message" in detail && typeof detail.message === "string") {
+    return detail.message;
   }
 
   return fallback;
@@ -111,6 +138,7 @@ async function request<T>(
     throw new ApiError(
       response.status,
       getErrorMessage(payload, `Request failed (${response.status})`),
+      getDetail(payload),
     );
   }
 
@@ -125,8 +153,37 @@ export const authApi = {
     });
   },
 
-  register(data: RegisterRequest): Promise<CurrentUser> {
-    return request<CurrentUser>("/users/register", {
+  // Creates an unverified account and emails it a code; verifyEmail signs in.
+  register(data: RegisterRequest): Promise<CodeSent> {
+    return request<CodeSent>("/users/register", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  },
+
+  verifyEmail(email: string, code: string): Promise<LoginResponse> {
+    return request<LoginResponse>("/users/verify-email", {
+      method: "POST",
+      body: JSON.stringify({ email, code }),
+    });
+  },
+
+  resendCode(email: string): Promise<CodeSent> {
+    return request<CodeSent>("/users/resend-code", {
+      method: "POST",
+      body: JSON.stringify({ email }),
+    });
+  },
+
+  forgotPassword(email: string): Promise<CodeSent> {
+    return request<CodeSent>("/users/password/forgot", {
+      method: "POST",
+      body: JSON.stringify({ email }),
+    });
+  },
+
+  resetPassword(data: ResetPasswordRequest): Promise<LoginResponse> {
+    return request<LoginResponse>("/users/password/reset", {
       method: "POST",
       body: JSON.stringify(data),
     });
@@ -220,6 +277,10 @@ export const mockExamsApi = {
 export const adminApi = {
   users(): Promise<AdminUser[]> {
     return request<AdminUser[]>("/admin/users");
+  },
+
+  verifyUser(id: number): Promise<unknown> {
+    return request(`/admin/users/${id}/verify`, { method: "POST" });
   },
 
   submissions(userId?: number): Promise<AdminSubmission[]> {

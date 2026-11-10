@@ -1,6 +1,6 @@
-"""Read-only views of users and their submissions for the admin panel."""
+"""Views of users and their submissions for the admin panel."""
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
@@ -31,6 +31,7 @@ def get_users(current_user: User = Depends(get_current_admin_user), db: Session 
             username = user.username,
             email = user.email,
             is_admin = user.is_admin,
+            email_verified = user.email_verified,
             created_at = user.created_at,
             submissions = total,
             accepted = accepted_count,
@@ -39,6 +40,17 @@ def get_users(current_user: User = Depends(get_current_admin_user), db: Session 
         )
         for user, total, accepted_count, solved, last in rows
     ]
+
+
+@router.post("/users/{user_id}/verify", status_code = 204)
+def verify_user(user_id: int, current_user: User = Depends(get_current_admin_user), db: Session = Depends(get_db)):
+    """For a student whose code emails never arrive: the admin vouches for the address."""
+    user = db.query(User).filter(User.id == user_id).first()
+    if user is None:
+        raise HTTPException(status_code = 404, detail = "User not found")
+
+    user.email_verified = True
+    db.commit()
 
 
 @router.get("/submissions", response_model = list[AdminSubmissionOut])

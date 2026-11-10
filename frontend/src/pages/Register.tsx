@@ -61,8 +61,8 @@ export default function Register() {
     setIsSubmitting(true);
 
     try {
-      await register(username.trim(), email.trim(), password);
-      navigate("/problems", { replace: true });
+      const sentTo = await register(username.trim(), email.trim(), password);
+      navigate("/verify-email", { state: { email: sentTo } });
     } catch (err) {
       if (err instanceof ApiError) {
         setError(err.message);

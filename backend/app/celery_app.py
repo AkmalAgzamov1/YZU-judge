@@ -17,5 +17,9 @@ celery_app.conf.update(
             "task": "app.tasks.reap_stuck_submissions",
             "schedule": 60.0,
         },
+        "delete-unverified-accounts": {
+            "task": "app.tasks.delete_unverified_accounts",
+            "schedule": 3600.0,
+        },
     },
 )

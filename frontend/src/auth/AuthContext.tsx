@@ -12,11 +12,14 @@ interface AuthContextValue {
   user: CurrentUser | null;
   isLoading: boolean;
   login: (username: string, password: string) => Promise<void>;
+  // Creates an unverified account; resolves to the email the code went to.
   register: (
     username: string,
     email: string,
     password: string,
-  ) => Promise<void>;
+  ) => Promise<string>;
+  // Signs in with a token from email verification or a password reset.
+  signInWithToken: (token: string) => Promise<void>;
   logout: () => void;
   // True after the server rejected a stored token, until the next sign in.
   sessionExpired: boolean;
@@ -102,31 +105,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  const signInWithToken = useCallback(async (token: string) => {
+    localStorage.setItem(TOKEN_KEY, token);
+    setSessionExpired(false);
+
+    try {
+      const currentUser = await authApi.me();
+      setUser(currentUser);
+    } catch (error) {
+      localStorage.removeItem(TOKEN_KEY);
+      setUser(null);
+      throw error;
+    }
+  }, []);
+
   const login = useCallback(
     async (username: string, password: string) => {
       const result = await authApi.login({ username, password });
-
-      localStorage.setItem(TOKEN_KEY, result.access_token);
-      setSessionExpired(false);
-
-      try {
-        const currentUser = await authApi.me();
-        setUser(currentUser);
-      } catch (error) {
-        localStorage.removeItem(TOKEN_KEY);
-        setUser(null);
-        throw error;
-      }
+      await signInWithToken(result.access_token);
     },
-    [],
+    [signInWithToken],
   );
 
   const register = useCallback(
     async (username: string, email: string, password: string) => {
-      await authApi.register({ username, email, password });
-      await login(username, password);
+      const result = await authApi.register({ username, email, password });
+      return result.email;
     },
-    [login],
+    [],
   );
 
   const logout = useCallback(() => {
@@ -136,7 +142,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider
-      value={{ user, isLoading, login, register, logout, sessionExpired }}
+      value={{ user, isLoading, login, register, signInWithToken, logout, sessionExpired }}
     >
       {children}
     </AuthContext.Provider>
