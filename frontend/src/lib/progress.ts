@@ -4,10 +4,17 @@ export type SolveStatus = "solved" | "attempted";
 
 const difficultyOrder: Record<Problem["difficulty"], number> = { easy: 0, medium: 1, hard: 2 };
 
-export function sortByDifficulty(problems: Problem[]) {
-  return [...problems].sort(
-    (a, b) => difficultyOrder[a.difficulty] - difficultyOrder[b.difficulty] || a.id - b.id,
+// Easy to hard; inside one difficulty a higher sort_order goes first (warm-ups like A + B), then by id.
+export function compareProblems(a: Problem, b: Problem) {
+  return (
+    difficultyOrder[a.difficulty] - difficultyOrder[b.difficulty] ||
+    (b.sort_order ?? 0) - (a.sort_order ?? 0) ||
+    a.id - b.id
   );
+}
+
+export function sortByDifficulty(problems: Problem[]) {
+  return [...problems].sort(compareProblems);
 }
 
 // A problem is solved once any submission is accepted, attempted otherwise.

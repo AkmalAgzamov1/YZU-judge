@@ -50,7 +50,9 @@ def create_problem(problem: ProblemCreate, current_user: User = Depends(get_curr
 
         is_cpe = problem.is_cpe,
 
-        topics = normalize_topics(problem.topics)
+        topics = normalize_topics(problem.topics),
+
+        sort_order = problem.sort_order
     )
 
     db.add(new_problem)
@@ -79,7 +81,7 @@ def get_problems(current_user: User | None = Depends(get_optional_user), db: Ses
     if not is_admin(current_user):
         query = query.filter(Problem.is_published == True)
 
-    return query.order_by(Problem.id).all()
+    return query.order_by(Problem.sort_order.desc(), Problem.id).all()
 
 
 @router.get("/admin/stats", response_model = list[ProblemStats])
@@ -212,6 +214,8 @@ def update_problem(problem_id: int, problem_data: ProblemUpdate, current_user: U
     problem.memory_limit_mb = problem_data.memory_limit_mb
     problem.is_cpe = problem_data.is_cpe
     problem.topics = normalize_topics(problem_data.topics)
+    if problem_data.sort_order is not None:
+        problem.sort_order = problem_data.sort_order
 
     db.commit()
     db.refresh(problem)

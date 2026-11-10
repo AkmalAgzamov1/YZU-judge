@@ -13,7 +13,7 @@ import DifficultyLabel, {
 import { buttonSecondary, focusRing } from "../components/ui";
 import { formatTime } from "../lib/format";
 import { STAR_UVA_IDS } from "../lib/nextCpe";
-import { buildStatuses, type SolveStatus } from "../lib/progress";
+import { buildStatuses, compareProblems, type SolveStatus } from "../lib/progress";
 import { isTopic, TOPICS, topicLabel, type Topic } from "../lib/topics";
 import TopicChips from "../components/TopicChips";
 
@@ -24,7 +24,6 @@ type LoadState =
   | { kind: "ready"; problems: Problem[] };
 
 const difficulties: Difficulty[] = ["easy", "medium", "hard"];
-const difficultyOrder: Record<Difficulty, number> = { easy: 0, medium: 1, hard: 2 };
 
 const statusFilters = ["solved", "attempted", "untried"] as const;
 type StatusFilter = (typeof statusFilters)[number];
@@ -211,10 +210,7 @@ export default function Problems() {
           problem.title.toLowerCase().includes(needle) ||
           String(problem.uva_id ?? "").includes(needle),
       )
-      .sort(
-        (a, b) =>
-          difficultyOrder[a.difficulty] - difficultyOrder[b.difficulty] || a.id - b.id,
-      );
+      .sort(compareProblems);
   }, [problems, difficulty, source, status, query, visibleStatuses, selectedTopics]);
 
   const topicCounts = useMemo(() => {

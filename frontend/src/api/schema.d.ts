@@ -738,6 +738,11 @@ export interface components {
              * @default []
              */
             topics: ("implementation" | "math" | "number-theory" | "strings" | "sorting" | "greedy" | "brute-force" | "dp" | "graphs" | "data-structures" | "geometry" | "simulation")[];
+            /**
+             * Sort Order
+             * @default 0
+             */
+            sort_order: number;
         };
         /** ProblemHelpOut */
         ProblemHelpOut: {
@@ -796,6 +801,11 @@ export interface components {
              * @default true
              */
             is_published: boolean;
+            /**
+             * Sort Order
+             * @default 0
+             */
+            sort_order: number;
             /** Created By */
             created_by: number;
         };
@@ -832,6 +842,8 @@ export interface components {
              * @default []
              */
             topics: ("implementation" | "math" | "number-theory" | "strings" | "sorting" | "greedy" | "brute-force" | "dp" | "graphs" | "data-structures" | "geometry" | "simulation")[];
+            /** Sort Order */
+            sort_order?: number | null;
         };
         /** SampleOut */
         SampleOut: {

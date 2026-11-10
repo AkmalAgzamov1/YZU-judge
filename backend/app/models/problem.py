@@ -24,6 +24,10 @@ class Problem(Base):
     is_published = Column(Boolean, nullable = False, default = False)
     difficulty = Column(Enum("easy", "medium", "hard", name = "problem_difficulty"), nullable = False)
 
+    # Higher comes first within the same difficulty. 0 for almost every problem; raise it to pin
+    # warm-ups like A + B to the top of the list.
+    sort_order = Column(Integer, nullable = False, default = 0, server_default = "0")
+
     # Help for easy and medium problems, written by scripts/cpe_help.py. Never part of ProblemOut:
     # routers/problem_help.py hands it out only once the unlock rules are met.
     hints = Column(ARRAY(String), nullable = False, default = list, server_default = "{}")
