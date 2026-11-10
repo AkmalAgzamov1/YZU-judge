@@ -2,7 +2,7 @@ import { ArrowRight } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import Reveal from "../../components/Reveal";
-import { buttonPrimary } from "../../components/ui";
+import { buttonPrimary, buttonSecondary } from "../../components/ui";
 
 export default function Hero() {
   const { user } = useAuth();
@@ -35,10 +35,18 @@ export default function Hero() {
 
           <Reveal delay={240}>
             <div className="mt-10 flex flex-col gap-6 sm:flex-row sm:items-center">
-              <Link to={user ? "/problems" : "/register"} className={`${buttonPrimary} self-start`}>
-                {user ? "Continue practicing" : "Create your free account"}
-                <ArrowRight size={18} weight="bold" aria-hidden="true" />
-              </Link>
+              <div className="flex flex-wrap gap-3">
+                <Link to={user ? "/problems" : "/register"} className={buttonPrimary}>
+                  {user ? "Continue practicing" : "Create your free account"}
+                  <ArrowRight size={18} weight="bold" aria-hidden="true" />
+                </Link>
+                {/* Visitors can read every problem before signing up. */}
+                {!user && (
+                  <Link to="/problems" className={buttonSecondary}>
+                    Browse problems
+                  </Link>
+                )}
+              </div>
               <p className="font-mono text-sm text-neutral-500">
                 Free for YZU students
               </p>

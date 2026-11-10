@@ -4,6 +4,7 @@ import { ApiError, authApi } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
 import AuthLayout from "../components/AuthLayout";
 import CodeField from "../components/CodeField";
+import JunkMailNotice from "../components/JunkMailNotice";
 import { buttonPrimary, focusRing } from "../components/ui";
 import { isSixDigits, useCooldown } from "../lib/useCooldown";
 
@@ -101,6 +102,8 @@ export default function VerifyEmail() {
     <AuthLayout title="Check your email" subtitle={`We sent a 6-digit code to ${email}.`}>
       <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
         <CodeField value={code} onChange={setCode} error={codeError} />
+
+        <JunkMailNotice email={email} />
 
         {notice && (
           <p role="status" className="rounded-lg border border-emerald-400/30 bg-emerald-400/10 px-3 py-2 text-sm text-emerald-300">

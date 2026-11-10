@@ -4,6 +4,7 @@ import { ApiError, authApi } from "../api/client";
 import { useAuth } from "../auth/AuthContext";
 import AuthLayout from "../components/AuthLayout";
 import CodeField from "../components/CodeField";
+import JunkMailNotice from "../components/JunkMailNotice";
 import Field from "../components/Field";
 import { buttonPrimary, focusRing } from "../components/ui";
 import { isSixDigits, useCooldown } from "../lib/useCooldown";
@@ -152,6 +153,7 @@ export default function ForgotPassword() {
     >
       <form onSubmit={handleResetSubmit} noValidate className="flex flex-col gap-6">
         <CodeField value={code} onChange={setCode} error={errors.code} />
+        <JunkMailNotice email={email} />
         <Field
           id="password"
           label="New password"

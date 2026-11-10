@@ -61,15 +61,20 @@ export default function SiteNav() {
   }, [open]);
 
   const linkClass = (isActive: boolean) =>
-    `rounded-lg px-3 py-2 text-sm font-medium transition duration-300 ease-soft ${focusRing} ${
+    `whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium transition duration-300 ease-soft ${focusRing} ${
       isActive ? "bg-white/10 text-white" : "text-neutral-400 hover:text-white"
     }`;
 
+  // Everyone can browse the problems; only submitting needs an account.
+  const problemsLink = (
+    <Link to="/problems" className={linkClass(false)}>
+      Problems
+    </Link>
+  );
+
   const accountLinks = user ? (
     <>
-      <Link to="/problems" className={linkClass(false)}>
-        Problems
-      </Link>
+      {problemsLink}
       <NavLink to="/account" className={({ isActive }) => linkClass(isActive)} aria-label="Your account">
         <span className="flex items-center gap-2">
           <Avatar name={user.username} />
@@ -79,6 +84,7 @@ export default function SiteNav() {
     </>
   ) : (
     <>
+      {problemsLink}
       <NavLink
         to="/login"
         className={({ isActive }) =>
@@ -116,6 +122,11 @@ export default function SiteNav() {
         </Link>
       </div>
     ) : (
+      <Link key="problems" to="/problems" className={`block rounded-lg px-3 py-3 text-3xl font-semibold tracking-tight text-neutral-400 ${focusRing}`}>
+        Problems
+      </Link>
+    ),
+    user ? null : (
       <div key="auth" className="flex flex-col gap-3 px-3 pt-6">
         <Link to="/register" className={`${buttonPrimarySmall} py-3 text-base`}>
           Create account
@@ -125,20 +136,20 @@ export default function SiteNav() {
         </Link>
       </div>
     ),
-  ];
+  ].filter(Boolean);
 
   return (
     <>
       <header className="fixed inset-x-0 top-4 z-50 flex justify-center px-4">
         <nav
           aria-label="Main"
-          className="flex w-full items-center justify-between gap-2 rounded-2xl border border-white/10 bg-ink-1/70 p-2 backdrop-blur-xl md:w-auto md:justify-start"
+          className="flex w-full items-center justify-between gap-2 rounded-2xl border border-white/10 bg-ink-1/70 p-2 backdrop-blur-xl xl:w-auto xl:justify-start"
         >
           <Link to="/" className={`rounded-lg px-3 py-2 ${focusRing}`} aria-label="YZU Judge home">
             <Logo />
           </Link>
 
-          <div className="hidden items-center gap-1 md:flex">
+          <div className="hidden items-center gap-1 xl:flex">
             {sections.map(({ id, label }) => (
               <Link
                 key={id}
@@ -151,7 +162,7 @@ export default function SiteNav() {
             ))}
           </div>
 
-          <div className="hidden items-center gap-2 md:flex">
+          <div className="hidden items-center gap-2 xl:flex">
             <span aria-hidden="true" className="mx-2 h-6 w-px bg-white/10" />
             {accountLinks}
           </div>
@@ -162,7 +173,7 @@ export default function SiteNav() {
             aria-expanded={open}
             aria-controls="mobile-menu"
             aria-label={open ? "Close menu" : "Open menu"}
-            className={`relative h-10 w-10 rounded-lg transition duration-300 ease-soft hover:bg-white/10 md:hidden ${focusRing}`}
+            className={`relative h-10 w-10 rounded-lg transition duration-300 ease-soft hover:bg-white/10 xl:hidden ${focusRing}`}
           >
             <span
               className={`absolute top-1/2 left-1/2 h-0.5 w-4 -translate-x-1/2 rounded-full bg-white transition duration-500 ease-soft ${
@@ -182,7 +193,7 @@ export default function SiteNav() {
         id="mobile-menu"
         aria-hidden={!open}
         inert={!open}
-        className={`fixed inset-0 z-40 bg-ink-0/90 px-4 pt-24 backdrop-blur-2xl transition-opacity duration-300 ease-soft md:hidden ${
+        className={`fixed inset-0 z-40 bg-ink-0/90 px-4 pt-24 backdrop-blur-2xl transition-opacity duration-300 ease-soft xl:hidden ${
           open ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       >
