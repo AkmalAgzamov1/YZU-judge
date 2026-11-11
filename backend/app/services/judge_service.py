@@ -24,8 +24,31 @@ def load_testcases(db: Session, problem_id: int):
     ]
 
 
+def _normalize_newlines(text):
+    return text.replace("\r\n", "\n")
+
+
 def compare_output(actual_output, expected_output):
-    return actual_output.strip() == expected_output.strip()
+    """Returns "accepted", "presentation_error" or "wrong_answer".
+
+    Like UVa and the CPE judge: identical output is accepted, the same words with
+    other whitespace (a missing final newline, an extra blank line, trailing spaces)
+    is a presentation error, anything else is a wrong answer.
+    """
+    actual = _normalize_newlines(actual_output)
+    expected = _normalize_newlines(expected_output)
+
+    # A test file saved without its last newline must not fail every correct answer.
+    if expected.strip() != "" and not expected.endswith("\n"):
+        expected += "\n"
+
+    if actual == expected:
+        return "accepted"
+
+    if actual.split() == expected.split():
+        return "presentation_error"
+
+    return "wrong_answer"
 
 
 def judge_code(
@@ -58,14 +81,8 @@ def judge_code(
     elif result["exit_code"] != 0:
         verdict = "runtime_error"
 
-    elif not compare_output(
-        result["stdout"],
-        expected_output,
-    ):
-        verdict = "wrong_answer"
-
     else:
-        verdict = "accepted"
+        verdict = compare_output(result["stdout"], expected_output)
 
     return {
         **result,
@@ -128,13 +145,4 @@ def judge_submission(
     return {
         "verdict": "accepted",
         "results": results,
-        "missing_final_newline": any(
-            missing_final_newline(result["stdout"]) for result in results
-        ),
     }
-
-
-def missing_final_newline(output):
-    # compare_output forgives this, but UVa and the CPE judge byte for byte
-    # and answer Wrong Answer, so an accepted submission gets a warning.
-    return output.strip() != "" and not output.endswith("\n")

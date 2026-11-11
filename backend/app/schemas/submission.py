@@ -29,7 +29,7 @@ class SubmissionOut(BaseModel):
     mock_exam_id: int | None = None
     # Compiler messages when the verdict is compilation_error.
     compile_output: str | None = None
-    # Accepted, but UVa and the CPE would reject it for the missing newline at the end.
+    # Old submissions only: accepted back when a missing final newline was just a warning.
     missing_final_newline: bool = False
     status: Literal[
         "pending",
@@ -41,7 +41,8 @@ class SubmissionOut(BaseModel):
         "compilation_error",
         "runtime_error",
         "internal_error",
-        "output_limit_exceeded"
+        "output_limit_exceeded",
+        "presentation_error"
     ]
     created_at: datetime
 
@@ -57,7 +58,8 @@ class SubmissionResultOut(BaseModel):
         "time_limit_exceeded",
         "memory_limit_exceeded",
         "runtime_error",
-        "output_limit_exceeded"
+        "output_limit_exceeded",
+        "presentation_error"
     ]
     time_taken_ms: int
     memory_used_mb: int | None
