@@ -5,3 +5,4 @@ export const FOUNDER_EMAIL = "akmalagzamov06@gmail.com";
 
 // International students cannot sign up online; they email the account form here.
 export const CPE_ACCOUNT_EMAIL = "cpe.tcpc@gmail.com";
+export const FOUNDER_INSTAGRAM_HANDLE = "m.m.mmmmp";

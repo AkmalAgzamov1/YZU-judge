@@ -1,10 +1,19 @@
 import { EnvelopeSimple, InstagramLogo } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
-import { CPE_OFFICIAL_URL, FOUNDER_EMAIL, FOUNDER_INSTAGRAM_URL } from "../lib/links";
+import {
+  CPE_OFFICIAL_URL,
+  FOUNDER_EMAIL,
+  FOUNDER_INSTAGRAM_HANDLE,
+  FOUNDER_INSTAGRAM_URL,
+} from "../lib/links";
 import { focusRing } from "./ui";
 
-const iconButtonClass = `flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-neutral-400 transition duration-300 ease-soft hover:border-white/30 hover:text-white ${focusRing}`;
+// The circle lights up when the whole row (icon and text) is hovered.
+const iconButtonClass =
+  "flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 text-neutral-400 transition duration-300 ease-soft group-hover:border-white/30 group-hover:text-white";
+
+const contactClass = `flex w-fit items-center gap-3 rounded-full text-sm text-neutral-400 transition duration-300 ease-soft hover:text-white ${focusRing}`;
 
 const linkClass = `rounded-sm text-sm text-neutral-400 transition duration-300 ease-soft hover:text-white ${focusRing}`;
 
@@ -18,24 +27,29 @@ export default function SiteFooter() {
             A CPE practice site made at Yuan Ze University. Not affiliated with
             the CPE organizers.
           </p>
-          <div className="mt-1 flex gap-3">
+          <div className="mt-1 flex flex-col gap-2">
             <a
               href={FOUNDER_INSTAGRAM_URL}
               target="_blank"
               rel="noreferrer"
-              aria-label="Instagram"
-              title="Instagram"
-              className={iconButtonClass}
+              className={`${contactClass} group`}
             >
-              <InstagramLogo size={20} aria-hidden="true" />
+              <span className={iconButtonClass}>
+                <InstagramLogo size={20} aria-hidden="true" />
+              </span>
+              <span>
+                <span className="sr-only">Instagram: </span>
+                {FOUNDER_INSTAGRAM_HANDLE}
+              </span>
             </a>
-            <a
-              href={`mailto:${FOUNDER_EMAIL}`}
-              aria-label={`Email ${FOUNDER_EMAIL}`}
-              title={FOUNDER_EMAIL}
-              className={iconButtonClass}
-            >
-              <EnvelopeSimple size={20} aria-hidden="true" />
+            <a href={`mailto:${FOUNDER_EMAIL}`} className={`${contactClass} group`}>
+              <span className={iconButtonClass}>
+                <EnvelopeSimple size={20} aria-hidden="true" />
+              </span>
+              <span>
+                <span className="sr-only">Email: </span>
+                {FOUNDER_EMAIL}
+              </span>
             </a>
           </div>
         </div>
@@ -68,7 +82,7 @@ export default function SiteFooter() {
       </div>
 
       <div className="mx-auto mt-12 flex max-w-6xl flex-col gap-2 text-xs text-neutral-600 md:flex-row md:justify-between">
-        <p>© 2026 YZU Judge. Made in Taoyuan.</p>
+        <p>© 2026 YZU Judge. Made in a tiny room in Taoyuan by Akmal Agzamov.</p>
         <p>
           Logo of the YZU International Bachelor Program in Informatics. Campus photo by Emily
           rao, CC0, via{" "}
