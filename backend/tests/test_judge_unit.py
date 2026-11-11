@@ -65,6 +65,26 @@ class PythonJudgeTests(unittest.TestCase):
         result = judge_submission(fake_runner(["3\n"], []), "code", tests, 1000, 64)
         self.assertEqual(result["verdict"], "accepted")
 
+    def test_lenient_problem_accepts_a_missing_final_newline_with_a_warning(self):
+        # A + B is not a UVa problem, so it keeps the old behaviour.
+        result = judge_submission(
+            fake_runner(["3", "10\n"], []), "code", TESTS, 1000, 64, strict_output=False
+        )
+        self.assertEqual(result["verdict"], "accepted")
+        self.assertTrue(result["missing_final_newline"])
+
+    def test_lenient_problem_accepts_extra_blank_lines_at_the_end(self):
+        result = judge_submission(
+            fake_runner(["3\n\n\n", "10\n"], []), "code", TESTS, 1000, 64, strict_output=False
+        )
+        self.assertEqual(result["verdict"], "accepted")
+
+    def test_lenient_problem_still_rejects_other_words(self):
+        result = judge_submission(
+            fake_runner(["4\n", "10\n"], []), "code", TESTS, 1000, 64, strict_output=False
+        )
+        self.assertEqual(result["verdict"], "wrong_answer")
+
     def test_different_words_are_still_wrong_answer(self):
         result = judge_submission(fake_runner(["4\n", "10\n"], []), "code", TESTS, 1000, 64)
         self.assertEqual(result["verdict"], "wrong_answer")

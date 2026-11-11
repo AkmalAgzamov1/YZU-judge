@@ -28,15 +28,21 @@ def _normalize_newlines(text):
     return text.replace("\r\n", "\n")
 
 
-def compare_output(actual_output, expected_output):
+def compare_output(actual_output, expected_output, strict=True):
     """Returns "accepted", "presentation_error" or "wrong_answer".
 
-    Like UVa and the CPE judge: identical output is accepted, the same words with
-    other whitespace (a missing final newline, an extra blank line, trailing spaces)
-    is a presentation error, anything else is a wrong answer.
+    Strict, like UVa and the CPE judge: identical output is accepted, the same words
+    with other whitespace (a missing final newline, an extra blank line, trailing
+    spaces) is a presentation error, anything else is a wrong answer.
+
+    Not strict, for warm-ups that are not a UVa problem: whitespace at the very start
+    and end of the output is ignored.
     """
     actual = _normalize_newlines(actual_output)
     expected = _normalize_newlines(expected_output)
+
+    if not strict:
+        return "accepted" if actual.strip() == expected.strip() else "wrong_answer"
 
     # A test file saved without its last newline must not fail every correct answer.
     if expected.strip() != "" and not expected.endswith("\n"):
@@ -58,6 +64,7 @@ def judge_code(
     expected_output,
     time_limit_ms,
     memory_limit_mb,
+    strict_output=True,
     **run_options,
 ):
 
@@ -82,7 +89,7 @@ def judge_code(
         verdict = "runtime_error"
 
     else:
-        verdict = compare_output(result["stdout"], expected_output)
+        verdict = compare_output(result["stdout"], expected_output, strict_output)
 
     return {
         **result,
@@ -98,6 +105,7 @@ def judge_submission(
     memory_limit_mb,
     language="python",
     compile_code=None,
+    strict_output=True,
 ):
 
     results = []
@@ -130,6 +138,7 @@ def judge_submission(
             expected_output=testcase["output"],
             time_limit_ms=time_limit_ms,
             memory_limit_mb=memory_limit_mb,
+            strict_output=strict_output,
             **run_options,
         )
         result["testcase_id"] = testcase["id"]
@@ -145,4 +154,13 @@ def judge_submission(
     return {
         "verdict": "accepted",
         "results": results,
+        # Only a lenient problem gets here with such an output: a strict one answered
+        # presentation_error. UVa and the CPE would still reject it, so warn.
+        "missing_final_newline": any(
+            missing_final_newline(result["stdout"]) for result in results
+        ),
     }
+
+
+def missing_final_newline(output):
+    return output.strip() != "" and not output.endswith("\n")

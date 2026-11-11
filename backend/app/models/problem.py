@@ -24,6 +24,10 @@ class Problem(Base):
     is_published = Column(Boolean, nullable = False, default = False)
     difficulty = Column(Enum("easy", "medium", "hard", name = "problem_difficulty"), nullable = False)
 
+    # True: the output must match exactly, other whitespace is a presentation_error, as on UVa
+    # and the CPE. False for warm-ups like A + B that are not a UVa problem.
+    strict_output = Column(Boolean, nullable = False, default = True, server_default = "true")
+
     # Higher comes first within the same difficulty. 0 for almost every problem; raise it to pin
     # warm-ups like A + B to the top of the list.
     sort_order = Column(Integer, nullable = False, default = 0, server_default = "0")
