@@ -17,8 +17,8 @@ class Submission(Base):
     # Compiler messages, trimmed, when the verdict is compilation_error.
     compile_output = Column(Text, nullable = True)
 
-    # Only set by the old judge, which accepted a missing final newline with a warning.
-    # Such outputs are a presentation_error now.
+    # Accepted here, but the output does not end with a newline, which UVa and the CPE reject.
+    # Only lenient problems (strict_output false) can be accepted this way.
     missing_final_newline = Column(Boolean, nullable = False, default = False, server_default = "false")
 
     # Set when the submission was sent during a mock CPE exam.
