@@ -82,7 +82,7 @@ export default function SiteFooter() {
       </div>
 
       <div className="mx-auto mt-12 flex max-w-6xl flex-col gap-2 text-xs text-neutral-600 md:flex-row md:justify-between">
-        <p>© 2026 YZU Judge. Made in a tiny room in Taoyuan by Akmal Agzamov.</p>
+        <p>© 2026 YZU Judge. Made by Akmal Agzamov in his tiny room :)</p>
         <p>
           Logo of the YZU International Bachelor Program in Informatics. Campus photo by Emily
           rao, CC0, via{" "}
