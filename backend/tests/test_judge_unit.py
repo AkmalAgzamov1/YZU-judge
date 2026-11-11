@@ -32,20 +32,47 @@ def fake_runner(outputs, calls):
 class PythonJudgeTests(unittest.TestCase):
     def test_accepted_without_compiling(self):
         calls = []
-        result = judge_submission(fake_runner(["3", "10"], calls), "code", TESTS, 1000, 64)
+        result = judge_submission(fake_runner(["3\n", "10\n"], calls), "code", TESTS, 1000, 64)
         self.assertEqual(result["verdict"], "accepted")
         self.assertEqual(calls, [{}, {}])
 
-    def test_accepted_with_final_newline_has_no_warning(self):
+    def test_exact_output_is_accepted(self):
         result = judge_submission(fake_runner(["3\n", "10\n"], []), "code", TESTS, 1000, 64)
         self.assertEqual(result["verdict"], "accepted")
-        self.assertFalse(result["missing_final_newline"])
 
-    def test_missing_final_newline_is_accepted_with_a_warning(self):
-        # UVa and the CPE answer Wrong Answer here, so the student is warned.
-        result = judge_submission(fake_runner(["3\n", "10"], []), "code", TESTS, 1000, 64)
+    def test_missing_final_newline_is_a_presentation_error(self):
+        # The A + B solution that printed `cout << a + b;` with no newline.
+        calls = []
+        result = judge_submission(fake_runner(["3", "10\n"], calls), "code", TESTS, 1000, 64)
+        self.assertEqual(result["verdict"], "presentation_error")
+        self.assertEqual(result["results"][0]["verdict"], "presentation_error")
+        self.assertEqual(len(calls), 1)
+
+    def test_extra_blank_line_at_the_end_is_a_presentation_error(self):
+        result = judge_submission(fake_runner(["3\n\n", "10\n"], []), "code", TESTS, 1000, 64)
+        self.assertEqual(result["verdict"], "presentation_error")
+
+    def test_trailing_space_is_a_presentation_error(self):
+        result = judge_submission(fake_runner(["3 \n", "10\n"], []), "code", TESTS, 1000, 64)
+        self.assertEqual(result["verdict"], "presentation_error")
+
+    def test_windows_line_endings_are_not_a_presentation_error(self):
+        result = judge_submission(fake_runner(["3\r\n", "10\r\n"], []), "code", TESTS, 1000, 64)
         self.assertEqual(result["verdict"], "accepted")
-        self.assertTrue(result["missing_final_newline"])
+
+    def test_expected_file_without_final_newline_still_accepts_a_correct_answer(self):
+        tests = [{"id": 1, "input": "1 2\n", "output": "3"}]
+        result = judge_submission(fake_runner(["3\n"], []), "code", tests, 1000, 64)
+        self.assertEqual(result["verdict"], "accepted")
+
+    def test_different_words_are_still_wrong_answer(self):
+        result = judge_submission(fake_runner(["4\n", "10\n"], []), "code", TESTS, 1000, 64)
+        self.assertEqual(result["verdict"], "wrong_answer")
+
+    def test_split_or_merged_tokens_are_wrong_answer(self):
+        tests = [{"id": 1, "input": "", "output": "1 2\n"}]
+        result = judge_submission(fake_runner(["12\n"], []), "code", tests, 1000, 64)
+        self.assertEqual(result["verdict"], "wrong_answer")
 
     def test_stops_at_first_wrong_answer(self):
         calls = []
@@ -96,7 +123,7 @@ class CompiledJudgeTests(unittest.TestCase):
             return {"ok": True, "output": "", "binary": b"ELF"}
 
         result = judge_submission(
-            fake_runner(["3", "10"], calls), "src", TESTS, 1000, 64,
+            fake_runner(["3\n", "10\n"], calls), "src", TESTS, 1000, 64,
             language="cpp", compile_code=compile_code,
         )
         self.assertEqual(result["verdict"], "accepted")

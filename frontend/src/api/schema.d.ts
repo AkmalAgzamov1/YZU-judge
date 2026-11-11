@@ -631,7 +631,7 @@ export interface components {
              * Status
              * @enum {string}
              */
-            status: "pending" | "running" | "memory_limit_exceeded" | "accepted" | "wrong_answer" | "time_limit_exceeded" | "compilation_error" | "runtime_error" | "internal_error" | "output_limit_exceeded";
+            status: "pending" | "running" | "memory_limit_exceeded" | "accepted" | "wrong_answer" | "time_limit_exceeded" | "compilation_error" | "runtime_error" | "internal_error" | "output_limit_exceeded" | "presentation_error";
             /** Mock Exam Id */
             mock_exam_id: number | null;
             /**
@@ -1029,7 +1029,7 @@ export interface components {
              * Status
              * @enum {string}
              */
-            status: "pending" | "running" | "memory_limit_exceeded" | "accepted" | "wrong_answer" | "time_limit_exceeded" | "compilation_error" | "runtime_error" | "internal_error" | "output_limit_exceeded";
+            status: "pending" | "running" | "memory_limit_exceeded" | "accepted" | "wrong_answer" | "time_limit_exceeded" | "compilation_error" | "runtime_error" | "internal_error" | "output_limit_exceeded" | "presentation_error";
             /**
              * Created At
              * Format: date-time
@@ -1048,7 +1048,7 @@ export interface components {
              * Verdict
              * @enum {string}
              */
-            verdict: "accepted" | "wrong_answer" | "time_limit_exceeded" | "memory_limit_exceeded" | "runtime_error" | "output_limit_exceeded";
+            verdict: "accepted" | "wrong_answer" | "time_limit_exceeded" | "memory_limit_exceeded" | "runtime_error" | "output_limit_exceeded" | "presentation_error";
             /** Time Taken Ms */
             time_taken_ms: number;
             /** Memory Used Mb */

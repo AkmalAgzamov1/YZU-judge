@@ -85,6 +85,12 @@ export default function TestResults({ submission, results }: TestResultsProps) {
           </p>
         </div>
       )}
+      {submission.status === "presentation_error" && (
+        <p className="mt-3 font-sans text-sm leading-relaxed text-neutral-400">
+          The numbers and words are right, but the whitespace is not: UVa and the CPE compare the output exactly.
+          Check the newline after the last line, extra blank lines, and spaces at the end of a line.
+        </p>
+      )}
       {submission.status === "compilation_error" && submission.compile_output && (
         <pre className="mt-4 max-h-72 overflow-auto rounded-md border border-orange-400/30 bg-ink-1 p-3 text-xs whitespace-pre text-orange-200">
           {submission.compile_output}

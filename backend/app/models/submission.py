@@ -6,7 +6,7 @@ class Submission(Base):
     __tablename__ = "submissions"
     id = Column(Integer, nullable = False, primary_key = True, autoincrement = True)
 
-    status = Column(Enum("pending", "running", "memory_limit_exceeded","accepted", "wrong_answer", "time_limit_exceeded", "compilation_error", "runtime_error", "internal_error", "output_limit_exceeded", name = "submission_status"), nullable = False, default = "pending")
+    status = Column(Enum("pending", "running", "memory_limit_exceeded","accepted", "wrong_answer", "time_limit_exceeded", "compilation_error", "runtime_error", "internal_error", "output_limit_exceeded", "presentation_error", name = "submission_status"), nullable = False, default = "pending")
 
     user_id = Column(Integer, ForeignKey("users.id"), nullable = False)
     problem_id = Column(Integer, ForeignKey("problems.id"), nullable = False)
@@ -17,7 +17,8 @@ class Submission(Base):
     # Compiler messages, trimmed, when the verdict is compilation_error.
     compile_output = Column(Text, nullable = True)
 
-    # Accepted here, but the output does not end with a newline, which UVa and the CPE reject.
+    # Only set by the old judge, which accepted a missing final newline with a warning.
+    # Such outputs are a presentation_error now.
     missing_final_newline = Column(Boolean, nullable = False, default = False, server_default = "false")
 
     # Set when the submission was sent during a mock CPE exam.
