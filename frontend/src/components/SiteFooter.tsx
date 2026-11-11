@@ -1,7 +1,10 @@
+import { EnvelopeSimple, InstagramLogo } from "@phosphor-icons/react";
 import { Link } from "react-router-dom";
 import Logo from "./Logo";
-import { CPE_OFFICIAL_URL } from "../lib/links";
+import { CPE_OFFICIAL_URL, FOUNDER_EMAIL, FOUNDER_INSTAGRAM_URL } from "../lib/links";
 import { focusRing } from "./ui";
+
+const iconButtonClass = `flex h-10 w-10 items-center justify-center rounded-full border border-white/10 text-neutral-400 transition duration-300 ease-soft hover:border-white/30 hover:text-white ${focusRing}`;
 
 const linkClass = `rounded-sm text-sm text-neutral-400 transition duration-300 ease-soft hover:text-white ${focusRing}`;
 
@@ -15,6 +18,26 @@ export default function SiteFooter() {
             A CPE practice site made at Yuan Ze University. Not affiliated with
             the CPE organizers.
           </p>
+          <div className="mt-1 flex gap-3">
+            <a
+              href={FOUNDER_INSTAGRAM_URL}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Instagram"
+              title="Instagram"
+              className={iconButtonClass}
+            >
+              <InstagramLogo size={20} aria-hidden="true" />
+            </a>
+            <a
+              href={`mailto:${FOUNDER_EMAIL}`}
+              aria-label={`Email ${FOUNDER_EMAIL}`}
+              title={FOUNDER_EMAIL}
+              className={iconButtonClass}
+            >
+              <EnvelopeSimple size={20} aria-hidden="true" />
+            </a>
+          </div>
         </div>
 
         <nav aria-label="Footer" className="grid grid-cols-2 gap-x-12 gap-y-3">
