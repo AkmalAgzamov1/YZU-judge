@@ -6,6 +6,7 @@ import { tags } from "@lezer/highlight";
 import CodeMirror from "@uiw/react-codemirror";
 import { type KeyboardEvent } from "react";
 import type { Extension } from "@codemirror/state";
+import { useI18n } from "../../i18n";
 import type { Language } from "../../lib/languages";
 
 const editorTheme = EditorView.theme(
@@ -51,6 +52,8 @@ const extensionsFor: Record<Language, Extension[]> = {
 };
 
 export default function CodeEditor({ value, onChange, onSubmit, readOnly = false, language = "python" }: CodeEditorProps) {
+  const { t } = useI18n();
+
   // Catch Ctrl/Cmd + Enter before CodeMirror turns it into a new line.
   function handleKeyDownCapture(event: KeyboardEvent<HTMLDivElement>) {
     if (onSubmit && event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
@@ -72,7 +75,7 @@ export default function CodeEditor({ value, onChange, onSubmit, readOnly = false
         height={readOnly ? "auto" : "100%"}
         maxHeight={readOnly ? "480px" : undefined}
         className="h-full"
-        aria-label="Code editor"
+        aria-label={t("Code editor")}
         basicSetup={{ foldGutter: false, highlightActiveLine: !readOnly, autocompletion: !readOnly }}
       />
     </div>

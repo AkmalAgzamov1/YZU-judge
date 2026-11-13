@@ -6,6 +6,8 @@ import AuthLayout from "../components/AuthLayout";
 import CodeField from "../components/CodeField";
 import JunkMailNotice from "../components/JunkMailNotice";
 import { buttonPrimary, focusRing } from "../components/ui";
+import { useI18n } from "../i18n";
+import { tr } from "../i18n/translate";
 import { isSixDigits, useCooldown } from "../lib/useCooldown";
 
 // Keeps the address through a page reload; router state alone would lose it.
@@ -34,11 +36,12 @@ function writePendingEmail(email: string | null) {
 }
 
 function message(error: unknown): string {
-  return error instanceof ApiError ? error.message : "Something went wrong. Please try again.";
+  return error instanceof ApiError ? error.message : tr("Something went wrong. Please try again.");
 }
 
 export default function VerifyEmail() {
   const { signInWithToken } = useAuth();
+  const { t, tx } = useI18n();
   const navigate = useNavigate();
   const location = useLocation();
   const state = (location.state ?? null) as VerifyState | null;
@@ -66,7 +69,7 @@ export default function VerifyEmail() {
     setNotice("");
 
     if (!isSixDigits(code)) {
-      setCodeError("Enter the 6-digit code from the email.");
+      setCodeError(t("Enter the 6-digit code from the email."));
       return;
     }
     setCodeError("");
@@ -90,7 +93,7 @@ export default function VerifyEmail() {
 
     try {
       await authApi.resendCode(email);
-      setNotice("We sent a new code. The old one no longer works.");
+      setNotice(t("We sent a new code. The old one no longer works."));
       setCode("");
       cooldown.start();
     } catch (err) {
@@ -99,7 +102,7 @@ export default function VerifyEmail() {
   }
 
   return (
-    <AuthLayout title="Check your email" subtitle={`We sent a 6-digit code to ${email}.`}>
+    <AuthLayout title={t("Check your email")} subtitle={t("We sent a 6-digit code to {email}.", { email })}>
       <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
         <CodeField value={code} onChange={setCode} error={codeError} />
 
@@ -118,27 +121,31 @@ export default function VerifyEmail() {
         )}
 
         <button type="submit" disabled={isSubmitting} className={buttonPrimary}>
-          {isSubmitting ? "Checking…" : "Verify and sign in"}
+          {isSubmitting ? t("Checking…") : t("Verify and sign in")}
         </button>
       </form>
 
       <div className="mt-8 flex flex-col items-center gap-3 text-sm text-neutral-400">
         <p>
-          No email? Check your spam folder, or{" "}
-          <button
-            type="button"
-            onClick={handleResend}
-            disabled={cooldown.secondsLeft > 0}
-            className={`rounded-sm font-semibold text-white underline-offset-4 hover:underline disabled:cursor-default disabled:font-normal disabled:text-neutral-500 disabled:no-underline ${focusRing}`}
-          >
-            {cooldown.secondsLeft > 0 ? `send a new code in ${cooldown.secondsLeft}s` : "send a new code"}
-          </button>
-          .
+          {tx("No email? Check your spam folder, or {resend}.", {
+            resend: (
+              <button
+                type="button"
+                onClick={handleResend}
+                disabled={cooldown.secondsLeft > 0}
+                className={`rounded-sm font-semibold text-white underline-offset-4 hover:underline disabled:cursor-default disabled:font-normal disabled:text-neutral-500 disabled:no-underline ${focusRing}`}
+              >
+                {cooldown.secondsLeft > 0
+                  ? t("send a new code in {seconds}s", { seconds: cooldown.secondsLeft })
+                  : t("send a new code")}
+              </button>
+            ),
+          })}
         </p>
         <p>
-          Wrong email?{" "}
+          {t("Wrong email?")}{" "}
           <Link to="/register" className={`rounded-sm font-semibold text-white underline-offset-4 hover:underline ${focusRing}`}>
-            Sign up again
+            {t("Sign up again")}
           </Link>
         </p>
       </div>

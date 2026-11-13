@@ -1,3 +1,4 @@
+import { localizeApiMessage, tr } from "../i18n/translate";
 import type { components, paths } from "./schema";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8000";
@@ -92,11 +93,11 @@ function getErrorMessage(payload: unknown, fallback: string): string {
   const detail = getDetail(payload);
 
   if (typeof detail === "string") {
-    return detail;
+    return localizeApiMessage(detail);
   }
 
   if (typeof detail === "object" && detail !== null && "message" in detail && typeof detail.message === "string") {
-    return detail.message;
+    return localizeApiMessage(detail.message);
   }
 
   return fallback;
@@ -123,7 +124,7 @@ async function request<T>(
       headers,
     });
   } catch {
-    throw new ApiError(0, "Cannot connect to the server. Is the backend running?");
+    throw new ApiError(0, tr("Cannot connect to the server. Is the backend running?"));
   }
 
   const payload: unknown = await response.json().catch(() => null);
@@ -137,7 +138,7 @@ async function request<T>(
   if (!response.ok) {
     throw new ApiError(
       response.status,
-      getErrorMessage(payload, `Request failed (${response.status})`),
+      getErrorMessage(payload, tr("Request failed ({status})", { status: response.status })),
       getDetail(payload),
     );
   }

@@ -3,8 +3,9 @@
 @import "@fontsource-variable/geist-mono";
 
 @theme {
-  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+  /* Geist has no Chinese glyphs, so those fall through to the system's Traditional Chinese font. */
+  --font-sans: "Geist Variable", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", ui-monospace, monospace;
 
   /* Dark surfaces, the only background colors allowed */
   --color-ink-0: #000000;

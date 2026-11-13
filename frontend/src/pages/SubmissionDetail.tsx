@@ -7,6 +7,7 @@ import CodeEditor from "../components/problem/CodeEditor";
 import PendingMessage from "../components/problem/PendingMessage";
 import TestResults from "../components/problem/TestResults";
 import { buttonPrimary, buttonSecondary, focusRing } from "../components/ui";
+import { useI18n } from "../i18n";
 import { saveDraft } from "../lib/drafts";
 import { isLanguage, savePreferredLanguage } from "../lib/languages";
 import { formatDateTime, languageLabel, problemLabel } from "../lib/format";
@@ -15,6 +16,7 @@ import { isFinished, verdictColor, verdictLabel } from "../lib/verdicts";
 
 function SubmissionView({ submissionId }: { submissionId: number }) {
   const navigate = useNavigate();
+  const { t } = useI18n();
   const { submission, results, error, fatal, stale } = useJudge(submissionId);
   const [problem, setProblem] = useState<Problem | null>(null);
   const [copied, setCopied] = useState(false);
@@ -61,15 +63,15 @@ function SubmissionView({ submissionId }: { submissionId: number }) {
     return (
       <div className="mx-auto flex max-w-xl flex-col items-center py-24 text-center">
         <h1 className="text-3xl font-semibold text-white">
-          {fatal.status === 403 ? "This submission is not yours" : "No such submission"}
+          {fatal.status === 403 ? t("This submission is not yours") : t("No such submission")}
         </h1>
         <p className="mt-3 text-base text-neutral-400">
           {fatal.status === 403
-            ? "You can only view your own submissions."
-            : "It may have been removed, or the link is wrong."}
+            ? t("You can only view your own submissions.")
+            : t("It may have been removed, or the link is wrong.")}
         </p>
         <Link to="/submissions" className={`${buttonPrimary} mt-8`}>
-          Back to submissions
+          {t("Back to submissions")}
         </Link>
       </div>
     );
@@ -82,11 +84,11 @@ function SubmissionView({ submissionId }: { submissionId: number }) {
         className={`inline-flex items-center gap-2 rounded-lg text-sm text-neutral-400 transition duration-300 ease-soft hover:text-white ${focusRing}`}
       >
         <ArrowLeft size={16} aria-hidden="true" />
-        Submissions
+        {t("Submissions")}
       </Link>
 
       {!submission ? (
-        <div aria-busy="true" aria-label="Loading submission" className="mt-8 animate-pulse">
+        <div aria-busy="true" aria-label={t("Loading submission")} className="mt-8 animate-pulse">
           <div className="h-4 w-64 rounded bg-ink-2" />
           <div className="mt-4 h-8 w-96 max-w-full rounded-lg bg-ink-2" />
           <div className="mt-8 h-64 rounded-lg bg-ink-1" />
@@ -111,23 +113,23 @@ function SubmissionView({ submissionId }: { submissionId: number }) {
                   isFinished(submission.status) ? "" : "animate-pulse"
                 }`}
               >
-                {verdictLabel[submission.status]}
+                {t(verdictLabel[submission.status])}
               </p>
             </div>
             <div className="flex gap-3">
               <button type="button" onClick={copyCode} className={buttonSecondary}>
                 {copied ? <Check size={16} aria-hidden="true" /> : <Copy size={16} aria-hidden="true" />}
-                {copied ? "Copied" : "Copy code"}
+                {copied ? t("Copied") : t("Copy code")}
               </button>
               <button type="button" onClick={openInEditor} className={buttonPrimary}>
                 <PencilSimple size={16} aria-hidden="true" />
-                Open in editor
+                {t("Open in editor")}
               </button>
             </div>
           </div>
 
           <div className="mt-8 grid items-start gap-4 lg:grid-cols-[3fr_2fr]">
-            <section aria-label="Submitted code" className="overflow-hidden rounded-lg border border-white/10">
+            <section aria-label={t("Submitted code")} className="overflow-hidden rounded-lg border border-white/10">
               <CodeEditor
                 value={submission.code}
                 readOnly
@@ -136,7 +138,7 @@ function SubmissionView({ submissionId }: { submissionId: number }) {
             </section>
 
             <section
-              aria-label="Judge output"
+              aria-label={t("Judge output")}
               aria-live="polite"
               className="rounded-lg border border-white/10 bg-ink-0 p-4 font-mono text-sm"
             >
@@ -146,7 +148,7 @@ function SubmissionView({ submissionId }: { submissionId: number }) {
               ) : (
                 <PendingMessage status={submission.status} stale={stale} />
               )}
-              {error && <p className="mt-3 text-yzu-red">{error} Retrying…</p>}
+              {error && <p className="mt-3 text-yzu-red">{error} {t("Retrying…")}</p>}
             </section>
           </div>
         </>
@@ -157,6 +159,7 @@ function SubmissionView({ submissionId }: { submissionId: number }) {
 
 export default function SubmissionDetail() {
   const { id } = useParams();
+  const { t } = useI18n();
   const submissionId = Number(id);
 
   return (
@@ -165,9 +168,9 @@ export default function SubmissionDetail() {
         <SubmissionView key={submissionId} submissionId={submissionId} />
       ) : (
         <div className="mx-auto flex max-w-xl flex-col items-center py-24 text-center">
-          <h1 className="text-3xl font-semibold text-white">No such submission</h1>
+          <h1 className="text-3xl font-semibold text-white">{t("No such submission")}</h1>
           <Link to="/submissions" className={`${buttonPrimary} mt-8`}>
-            Back to submissions
+            {t("Back to submissions")}
           </Link>
         </div>
       )}

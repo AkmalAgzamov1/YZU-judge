@@ -3,6 +3,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ApiError, problemsApi, type ProblemHelp as Help } from "../../api/client";
 import { useAuth } from "../../auth/AuthContext";
+import { useI18n } from "../../i18n";
 import { LANGUAGES, loadPreferredLanguage, type Language } from "../../lib/languages";
 import { buttonSecondary, focusRing } from "../ui";
 import CodeEditor from "./CodeEditor";
@@ -28,12 +29,14 @@ function saveOpened(problemId: number, count: number) {
 }
 
 function Requirement({ done, children }: { done: boolean; children: ReactNode }) {
+  const { t } = useI18n();
+
   return (
     <li className={`flex items-center gap-2 ${done ? "text-neutral-300" : "text-neutral-500"}`}>
       {done ? (
-        <CheckCircle size={16} weight="fill" className="text-green-400" aria-label="Done" />
+        <CheckCircle size={16} weight="fill" className="text-green-400" aria-label={t("Done")} />
       ) : (
-        <Circle size={16} aria-label="Not yet" />
+        <Circle size={16} aria-label={t("Not done")} />
       )}
       {children}
     </li>
@@ -54,6 +57,7 @@ interface ProblemHelpProps {
 // and the server refuses them there too.
 export default function ProblemHelp({ problemId, open, refreshKey, onAvailableChange }: ProblemHelpProps) {
   const { user, isLoading: authLoading } = useAuth();
+  const { t, tx } = useI18n();
   const location = useLocation();
 
   const [help, setHelp] = useState<Help | null>(null);
@@ -121,7 +125,7 @@ export default function ProblemHelp({ problemId, open, refreshKey, onAvailableCh
         saveOpened(problemId, hint.number);
       }
     } catch (openError) {
-      setError(openError instanceof ApiError ? openError.message : "The hint could not be loaded. Try again.");
+      setError(openError instanceof ApiError ? openError.message : t("The hint could not be loaded. Try again."));
     } finally {
       setOpening(false);
     }
@@ -130,18 +134,18 @@ export default function ProblemHelp({ problemId, open, refreshKey, onAvailableCh
   const solution = help.solution_unlocked ? help.solution : null;
 
   return (
-    <section id="problem-help" aria-label="Hints and solution" className="mt-4 rounded-lg border border-white/10 p-4">
+    <section id="problem-help" aria-label={t("Hints and solution")} className="mt-4 rounded-lg border border-white/10 p-4">
       <p className="text-sm text-neutral-400">
         {hintCount > 0
-          ? "Give it a real try first. Hints open one at a time, and each one gives away a bit more."
-          : "Give it a real try first. This one is simple enough that it has no hints, just a reference solution."}
+          ? t("Give it a real try first. Hints open one at a time, and each one gives away a bit more.")
+          : t("Give it a real try first. This one is simple enough that it has no hints, just a reference solution.")}
       </p>
 
       {hints.length > 0 && (
         <ol className="mt-4 flex flex-col gap-3">
           {hints.map((hint, index) => (
             <li key={index} className="rounded-lg border border-white/10 bg-ink-1 p-4">
-              <span className="font-mono text-xs text-neutral-500">Hint {index + 1}</span>
+              <span className="font-mono text-xs text-neutral-500">{t("Hint {n}", { n: index + 1 })}</span>
               <p className="mt-1 text-base text-neutral-200">{hint}</p>
             </li>
           ))}
@@ -151,7 +155,7 @@ export default function ProblemHelp({ problemId, open, refreshKey, onAvailableCh
       {!allHintsOpen && (
         <button type="button" onClick={openNextHint} disabled={opening} className={`${buttonSecondary} mt-4`}>
           <Lightbulb size={18} aria-hidden="true" />
-          {opening ? "Opening…" : `Show hint ${hints.length + 1} of ${hintCount}`}
+          {opening ? t("Opening…") : t("Show hint {n} of {total}", { n: hints.length + 1, total: hintCount })}
         </button>
       )}
       {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
@@ -159,31 +163,34 @@ export default function ProblemHelp({ problemId, open, refreshKey, onAvailableCh
       <div className="mt-6 rounded-lg border border-white/10 bg-ink-1 p-4">
         <div className="flex items-center gap-2 text-base font-semibold text-white">
           {solution ? <LockOpen size={18} aria-hidden="true" /> : <Lock size={18} aria-hidden="true" />}
-          Reference solution
+          {t("Reference solution")}
         </div>
 
         {!solution && (
           <>
-            <p className="mt-1 text-sm text-neutral-400">Unlocks when you have:</p>
+            <p className="mt-1 text-sm text-neutral-400">{t("Unlocks when you have:")}</p>
             <ul className="mt-3 flex flex-col gap-2 text-sm">
               {hintCount > 0 && (
                 <Requirement done={allHintsOpen}>
-                  Opened every hint ({Math.min(hints.length, hintCount)} of {hintCount})
+                  {t("Opened every hint ({opened} of {total})", { opened: Math.min(hints.length, hintCount), total: hintCount })}
                 </Requirement>
               )}
               {user ? (
-                <Requirement done={Boolean(help.has_submitted)}>Submitted at least one attempt</Requirement>
+                <Requirement done={Boolean(help.has_submitted)}>{t("Submitted at least one attempt")}</Requirement>
               ) : (
                 <Requirement done={false}>
                   <span>
-                    <Link
-                      to="/login"
-                      state={{ from: location }}
-                      className={`rounded text-white underline underline-offset-2 ${focusRing}`}
-                    >
-                      Signed in
-                    </Link>{" "}
-                    and submitted at least one attempt
+                    {tx("<a>Signed in</a> and submitted at least one attempt", {
+                      a: (text) => (
+                        <Link
+                          to="/login"
+                          state={{ from: location }}
+                          className={`rounded text-white underline underline-offset-2 ${focusRing}`}
+                        >
+                          {text}
+                        </Link>
+                      ),
+                    })}
                   </span>
                 </Requirement>
               )}
@@ -193,14 +200,14 @@ export default function ProblemHelp({ problemId, open, refreshKey, onAvailableCh
 
         {solution && !solutionShown && (
           <button type="button" onClick={() => setSolutionShown(true)} className={`${buttonSecondary} mt-4`}>
-            Show solution
+            {t("Show solution")}
           </button>
         )}
 
         {solution && solutionShown && (
           <div className="mt-4">
             <Statement markdown={solution.explanation} />
-            <div role="group" aria-label="Solution language" className="mt-4 inline-flex rounded-lg border border-white/10 bg-ink-2 p-1">
+            <div role="group" aria-label={t("Solution language")} className="mt-4 inline-flex rounded-lg border border-white/10 bg-ink-2 p-1">
               {LANGUAGES.map((option) => (
                 <button
                   key={option.id}

@@ -11,6 +11,8 @@ import DifficultyLabel, {
   type Difficulty,
 } from "../components/DifficultyLabel";
 import { buttonSecondary, focusRing } from "../components/ui";
+import { useI18n } from "../i18n";
+import { tr } from "../i18n/translate";
 import { formatTime } from "../lib/format";
 import { STAR_UVA_IDS } from "../lib/nextCpe";
 import { buildStatuses, compareProblems, type SolveStatus } from "../lib/progress";
@@ -29,17 +31,19 @@ const statusFilters = ["solved", "attempted", "untried"] as const;
 type StatusFilter = (typeof statusFilters)[number];
 
 function StatusIcon({ status }: { status?: SolveStatus }) {
+  const { t } = useI18n();
+
   if (status === "solved") {
     return (
-      <CheckCircle size={20} weight="fill" className="text-emerald-400" aria-label="Solved" />
+      <CheckCircle size={20} weight="fill" className="text-emerald-400" aria-label={t("Solved")} />
     );
   }
   if (status === "attempted") {
     return (
-      <CircleHalf size={20} weight="fill" className="text-yzu-yellow" aria-label="Attempted" />
+      <CircleHalf size={20} weight="fill" className="text-yzu-yellow" aria-label={t("Attempted")} />
     );
   }
-  return <Circle size={20} className="text-neutral-700" aria-label="Not tried" />;
+  return <Circle size={20} className="text-neutral-700" aria-label={t("Not tried")} />;
 }
 
 interface SegmentedProps<T extends string> {
@@ -72,12 +76,13 @@ function Segmented<T extends string>({ label, options, value, onChange }: Segmen
 }
 
 function Progress({ problems, statuses }: { problems: Problem[]; statuses: Map<number, SolveStatus> }) {
+  const { t } = useI18n();
   const solved = problems.filter((problem) => statuses.get(problem.id) === "solved");
 
   return (
     <dl className="flex flex-wrap items-baseline gap-x-6 gap-y-2 font-mono text-sm">
       <div className="flex items-baseline gap-2">
-        <dt className="text-neutral-500">Solved</dt>
+        <dt className="text-neutral-500">{t("Solved")}</dt>
         <dd className="text-white">
           <span className="text-2xl font-semibold">{solved.length}</span>
           <span className="text-neutral-500"> / {problems.length}</span>
@@ -85,7 +90,7 @@ function Progress({ problems, statuses }: { problems: Problem[]; statuses: Map<n
       </div>
       {difficulties.map((difficulty) => (
         <div key={difficulty} className="flex items-baseline gap-2">
-          <dt className={difficultyColor[difficulty]}>{difficultyLabel[difficulty]}</dt>
+          <dt className={difficultyColor[difficulty]}>{t(difficultyLabel[difficulty])}</dt>
           <dd className="text-neutral-300">
             {solved.filter((problem) => problem.difficulty === difficulty).length}
           </dd>
@@ -96,8 +101,10 @@ function Progress({ problems, statuses }: { problems: Problem[]; statuses: Map<n
 }
 
 function SkeletonRows() {
+  const { t } = useI18n();
+
   return (
-    <ul aria-busy="true" aria-label="Loading problems" className="divide-y divide-white/10 border-y border-white/10">
+    <ul aria-busy="true" aria-label={t("Loading problems")} className="divide-y divide-white/10 border-y border-white/10">
       {Array.from({ length: 6 }, (_, index) => (
         <li key={index} className="flex animate-pulse items-center gap-4 px-3 py-4">
           <span className="h-5 w-5 rounded-full bg-ink-2" />
@@ -112,6 +119,7 @@ function SkeletonRows() {
 
 export default function Problems() {
   const { user, isLoading: authLoading } = useAuth();
+  const { t, tx } = useI18n();
   const [state, setState] = useState<LoadState>({ kind: "loading" });
   const [statuses, setStatuses] = useState<Map<number, SolveStatus>>(new Map());
   const [attempt, setAttempt] = useState(0);
@@ -129,7 +137,7 @@ export default function Problems() {
         setState({
           kind: "error",
           message:
-            error instanceof ApiError ? error.message : "The problem list could not be loaded.",
+            error instanceof ApiError ? error.message : tr("The problem list could not be loaded."),
         });
       },
     );
@@ -226,22 +234,28 @@ export default function Problems() {
       <div className="mx-auto max-w-6xl py-12">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
-            <h1 className="text-4xl font-semibold tracking-tight text-white">Problems</h1>
+            <h1 className="text-4xl font-semibold tracking-tight text-white">{t("Problems")}</h1>
             <p className="mt-2 text-base text-neutral-400">
               {state.kind === "ready"
-                ? `${problems.length} problems, ${problems.filter((problem) => problem.is_cpe).length} of them from past CPE exams. Sorted from easy to hard.`
-                : "Past CPE problems, sorted from easy to hard."}
+                ? t("{total} problems, {cpe} of them from past CPE exams. Sorted from easy to hard.", {
+                    total: problems.length,
+                    cpe: problems.filter((problem) => problem.is_cpe).length,
+                  })
+                : t("Past CPE problems, sorted from easy to hard.")}
             </p>
             <p className="mt-2 flex items-center gap-1.5 text-sm text-neutral-500">
               <Star weight="fill" aria-hidden="true" className="h-4 w-4 shrink-0 text-yzu-yellow" />
               <span>
-                One star list: every CPE has one of these.{" "}
-                <Link
-                  to={{ pathname: "/", hash: "#next-cpe" }}
-                  className={`rounded-sm text-neutral-300 underline underline-offset-2 hover:text-white ${focusRing}`}
-                >
-                  Why it matters
-                </Link>
+                {tx("One star list: every CPE has one of these. <a>Why it matters</a>", {
+                  a: (text) => (
+                    <Link
+                      to={{ pathname: "/", hash: "#next-cpe" }}
+                      className={`rounded-sm text-neutral-300 underline underline-offset-2 hover:text-white ${focusRing}`}
+                    >
+                      {text}
+                    </Link>
+                  ),
+                })}
               </span>
             </p>
           </div>
@@ -252,39 +266,39 @@ export default function Problems() {
 
         <div className="mt-8 flex flex-col gap-3 lg:flex-row lg:items-center">
           <Segmented<Difficulty>
-            label="Difficulty"
+            label={t("Difficulty")}
             value={difficulty}
             onChange={(value) => setParam("difficulty", value)}
             options={[
-              { value: "all", label: "All" },
-              ...difficulties.map((value) => ({ value, label: difficultyLabel[value] })),
+              { value: "all", label: t("All") },
+              ...difficulties.map((value) => ({ value, label: t(difficultyLabel[value]) })),
             ]}
           />
           <Segmented<"cpe" | "other">
-            label="Source"
+            label={t("Source")}
             value={source}
             onChange={(value) => setParam("source", value)}
             options={[
-              { value: "all", label: "All" },
-              { value: "cpe", label: "Past CPE" },
-              { value: "other", label: "Other" },
+              { value: "all", label: t("All") },
+              { value: "cpe", label: t("Past CPE") },
+              { value: "other", label: t("Other") },
             ]}
           />
           {user && (
             <Segmented<StatusFilter>
-              label="Status"
+              label={t("Status")}
               value={status}
               onChange={(value) => setParam("status", value)}
               options={[
-                { value: "all", label: "All" },
-                { value: "solved", label: "Solved" },
-                { value: "attempted", label: "Attempted" },
-                { value: "untried", label: "Not tried" },
+                { value: "all", label: t("All") },
+                { value: "solved", label: t("Solved") },
+                { value: "attempted", label: t("Attempted") },
+                { value: "untried", label: t("Not tried") },
               ]}
             />
           )}
           <label className="relative lg:ml-auto lg:w-72">
-            <span className="sr-only">Search problems</span>
+            <span className="sr-only">{t("Search problems")}</span>
             <MagnifyingGlass
               size={18}
               aria-hidden="true"
@@ -294,14 +308,14 @@ export default function Problems() {
               type="search"
               value={query}
               onChange={(event) => setParam("q", event.target.value)}
-              placeholder="Search by title or UVa number"
+              placeholder={t("Search by title or UVa number")}
               className="w-full rounded-lg border border-white/10 bg-ink-1 py-2 pr-3 pl-10 text-base text-white placeholder:text-neutral-600 transition duration-300 ease-soft hover:border-white/20 focus:bg-ink-2 focus:outline-2 focus:outline-offset-2 focus:outline-white"
             />
           </label>
         </div>
 
         {state.kind === "ready" && topicCounts.size > 0 && (
-          <div role="group" aria-label="Topics" className="mt-3 flex flex-wrap gap-2">
+          <div role="group" aria-label={t("Topics")} className="mt-3 flex flex-wrap gap-2">
             {TOPICS.filter((topic) => topicCounts.has(topic) || selectedTopics.includes(topic)).map((topic) => {
               const on = selectedTopics.includes(topic);
               return (
@@ -314,7 +328,7 @@ export default function Problems() {
                     on ? "border-white bg-white text-black" : "border-white/10 bg-ink-1 text-neutral-400 hover:text-white"
                   }`}
                 >
-                  {topicLabel[topic]}
+                  {t(topicLabel[topic])}
                   <span className="font-mono text-xs text-neutral-600">
                     {topicCounts.get(topic) ?? 0}
                   </span>
@@ -329,7 +343,7 @@ export default function Problems() {
 
           {state.kind === "error" && (
             <Message
-              title="Problems could not be loaded"
+              title={t("Problems could not be loaded")}
               body={state.message}
               action={
                 <button
@@ -340,7 +354,7 @@ export default function Problems() {
                     setAttempt((value) => value + 1);
                   }}
                 >
-                  Try again
+                  {t("Try again")}
                 </button>
               }
             />
@@ -348,18 +362,18 @@ export default function Problems() {
 
           {state.kind === "ready" && problems.length === 0 && (
             <Message
-              title="The problem set is being prepared"
-              body="Past CPE problems are being added right now. Check back soon."
+              title={t("The problem set is being prepared")}
+              body={t("Past CPE problems are being added right now. Check back soon.")}
             />
           )}
 
           {state.kind === "ready" && problems.length > 0 && filtered.length === 0 && (
             <Message
-              title="No problems match these filters"
-              body="Try another difficulty or a shorter search."
+              title={t("No problems match these filters")}
+              body={t("Try another difficulty or a shorter search.")}
               action={
                 <button type="button" className={buttonSecondary} onClick={() => setParams({}, { replace: true })}>
-                  Clear filters
+                  {t("Clear filters")}
                 </button>
               }
             />
@@ -373,10 +387,10 @@ export default function Problems() {
               >
                 <span />
                 <span>UVa</span>
-                <span>Title</span>
-                <span>Difficulty</span>
-                <span className="text-right">Time</span>
-                <span className="text-right">Memory</span>
+                <span>{t("Title")}</span>
+                <span>{t("Difficulty")}</span>
+                <span className="text-right">{t("Time")}</span>
+                <span className="text-right">{t("Memory")}</span>
               </div>
               <ul className="divide-y divide-white/10 border-y border-white/10">
                 {filtered.map((problem) => (
@@ -395,9 +409,9 @@ export default function Problems() {
                             {problem.title}
                           </span>
                           {problem.uva_id !== null && problem.uva_id !== undefined && STAR_UVA_IDS.has(problem.uva_id) && (
-                            <span title="On the CPE one star list: every CPE has one of these" className="shrink-0">
+                            <span title={t("On the CPE one star list: every CPE has one of these")} className="shrink-0">
                               <Star weight="fill" aria-hidden="true" className="h-4 w-4 text-yzu-yellow" />
-                              <span className="sr-only">One star list</span>
+                              <span className="sr-only">{t("One star list")}</span>
                             </span>
                           )}
                         </span>
@@ -414,7 +428,7 @@ export default function Problems() {
                         <span className="mt-1 flex gap-3 font-mono text-xs text-neutral-500 md:hidden">
                           {problem.uva_id && <span>UVa {problem.uva_id}</span>}
                           <span className={difficultyColor[problem.difficulty]}>
-                            {difficultyLabel[problem.difficulty]}
+                            {t(difficultyLabel[problem.difficulty])}
                           </span>
                           <span>{formatTime(problem.time_limit_ms)}</span>
                           <span>{problem.memory_limit_mb} MB</span>

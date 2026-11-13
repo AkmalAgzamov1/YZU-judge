@@ -1,4 +1,5 @@
 import type { Problem, Submission } from "../api/client";
+import { dateLocale, tr } from "../i18n/translate";
 
 export function formatTime(ms: number) {
   return ms >= 1000 ? `${(ms / 1000).toFixed(1)} s` : `${ms} ms`;
@@ -16,19 +17,19 @@ function parseServerDate(iso: string) {
 export function formatRelative(iso: string) {
   const date = parseServerDate(iso);
   const seconds = Math.round((Date.now() - date.getTime()) / 1000);
-  if (seconds < 60) return "just now";
+  if (seconds < 60) return tr("just now");
   const minutes = Math.round(seconds / 60);
-  if (minutes < 60) return `${minutes} min ago`;
+  if (minutes < 60) return tr("{n} min ago", { n: minutes });
   const hours = Math.round(minutes / 60);
-  if (hours < 24) return `${hours} h ago`;
+  if (hours < 24) return tr("{n} h ago", { n: hours });
   const days = Math.round(hours / 24);
-  if (days === 1) return "yesterday";
-  if (days < 7) return `${days} days ago`;
-  return date.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  if (days === 1) return tr("yesterday");
+  if (days < 7) return tr("{n} days ago", { n: days });
+  return date.toLocaleDateString(dateLocale(), { month: "short", day: "numeric" });
 }
 
 export function formatDateTime(iso: string) {
-  return parseServerDate(iso).toLocaleString(undefined, {
+  return parseServerDate(iso).toLocaleString(dateLocale(), {
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -38,7 +39,7 @@ export function formatDateTime(iso: string) {
 }
 
 export function problemLabel(problem: Problem | undefined, problemId: number) {
-  if (!problem) return `Problem #${problemId}`;
+  if (!problem) return tr("Problem #{id}", { id: problemId });
   return problem.uva_id ? `UVa ${problem.uva_id} · ${problem.title}` : problem.title;
 }
 

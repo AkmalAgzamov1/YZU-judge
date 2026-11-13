@@ -3,9 +3,11 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import Reveal from "../../components/Reveal";
 import { buttonPrimary } from "../../components/ui";
+import { useI18n } from "../../i18n";
 
 export default function FinalCta() {
   const { user } = useAuth();
+  const { t } = useI18n();
 
   return (
     <section className="px-4 pt-24 pb-24">
@@ -13,17 +15,16 @@ export default function FinalCta() {
         <div className="grid items-end gap-12 border-t border-white/10 pt-16 lg:grid-cols-[2fr_1fr]">
           <div>
             <h2 className="text-hero max-w-[680px] text-5xl font-semibold tracking-tight md:text-6xl">
-              Your next CPE sitting
+              {t("Your next CPE sitting")}
               <br />
-              is closer than it looks
+              {t("is closer than it looks")}
             </h2>
             <p className="mt-6 max-w-[680px] text-lg text-neutral-400">
-              Solve your first past CPE problem tonight.
-              <br className="hidden md:block" /> Free for every YZU student,
-              nothing to install.
+              {t("Solve your first past CPE problem tonight.")}
+              <br className="hidden md:block" /> {t("Free for every YZU student, nothing to install.")}
             </p>
             <Link to={user ? "/problems" : "/register"} className={`${buttonPrimary} mt-8`}>
-              {user ? "Continue practicing" : "Create your free account"}
+              {user ? t("Continue practicing") : t("Create your free account")}
               <ArrowRight size={18} weight="bold" aria-hidden="true" />
             </Link>
           </div>

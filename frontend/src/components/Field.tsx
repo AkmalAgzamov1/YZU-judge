@@ -1,5 +1,6 @@
 import { Eye, EyeSlash } from "@phosphor-icons/react";
 import { useState, type InputHTMLAttributes } from "react";
+import { useI18n } from "../i18n";
 import { focusRing } from "./ui";
 
 interface FieldProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -10,6 +11,7 @@ interface FieldProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export default function Field({ id, label, error, hint, type, ...inputProps }: FieldProps) {
+  const { t } = useI18n();
   const [revealed, setRevealed] = useState(false);
   const isPassword = type === "password";
   const describedBy = error ? `${id}-error` : hint ? `${id}-hint` : undefined;
@@ -39,7 +41,7 @@ export default function Field({ id, label, error, hint, type, ...inputProps }: F
           <button
             type="button"
             onClick={() => setRevealed((value) => !value)}
-            aria-label={revealed ? "Hide password" : "Show password"}
+            aria-label={revealed ? t("Hide password") : t("Show password")}
             aria-pressed={revealed}
             className={`absolute top-1/2 right-1 -translate-y-1/2 rounded-md p-2 text-neutral-500 transition duration-300 ease-soft hover:text-white ${focusRing}`}
           >

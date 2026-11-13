@@ -5,9 +5,11 @@ import { cpePapersApi, type CpePaper } from "../api/client";
 import AppShell from "../components/AppShell";
 import ProblemWorkspace from "../components/problem/ProblemWorkspace";
 import { buttonPrimary, focusRing } from "../components/ui";
+import { useI18n } from "../i18n";
 
 // Tags a problem with the past CPE papers it appeared in.
 function PaperTags({ problemId }: { problemId: number }) {
+  const { t } = useI18n();
   const [papers, setPapers] = useState<CpePaper[]>([]);
 
   useEffect(() => {
@@ -31,7 +33,7 @@ function PaperTags({ problemId }: { problemId: number }) {
     <>
       {papers.map((paper) => (
         <span key={paper.id} className="rounded border border-white/10 px-1 text-xs text-neutral-400">
-          From {paper.title}
+          {t("From {paper}", { paper: paper.title })}
         </span>
       ))}
     </>
@@ -40,6 +42,7 @@ function PaperTags({ problemId }: { problemId: number }) {
 
 export default function ProblemPage() {
   const { id } = useParams();
+  const { t } = useI18n();
   const problemId = Number(id);
 
   return (
@@ -54,16 +57,16 @@ export default function ProblemPage() {
               className={`inline-flex items-center gap-2 rounded-lg text-sm text-neutral-400 transition duration-300 ease-soft hover:text-white ${focusRing}`}
             >
               <ArrowLeft size={16} aria-hidden="true" />
-              Problems
+              {t("Problems")}
             </Link>
           }
           metaSlot={<PaperTags problemId={problemId} />}
         />
       ) : (
         <div className="mx-auto flex max-w-xl flex-col items-center py-24 text-center">
-          <h1 className="text-3xl font-semibold text-white">No such problem</h1>
+          <h1 className="text-3xl font-semibold text-white">{t("No such problem")}</h1>
           <Link to="/problems" className={`${buttonPrimary} mt-8`}>
-            Back to problems
+            {t("Back to problems")}
           </Link>
         </div>
       )}

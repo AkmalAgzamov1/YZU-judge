@@ -5,14 +5,16 @@ import { useAuth } from "../auth/AuthContext";
 import AuthLayout from "../components/AuthLayout";
 import Field from "../components/Field";
 import { buttonPrimary, focusRing } from "../components/ui";
+import { useI18n, type Key } from "../i18n";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// Translation keys, turned into text where the form shows them.
 interface Errors {
-  username?: string;
-  email?: string;
-  password?: string;
-  confirmPassword?: string;
+  username?: Key;
+  email?: Key;
+  password?: Key;
+  confirmPassword?: Key;
 }
 
 function validate(
@@ -43,6 +45,7 @@ function validate(
 
 export default function Register() {
   const { register } = useAuth();
+  const { t, tx } = useI18n();
   const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
@@ -70,7 +73,7 @@ export default function Register() {
       if (err instanceof ApiError) {
         setError(err.message);
       } else {
-        setError("Something went wrong. Please try again.");
+        setError(t("Something went wrong. Please try again."));
       }
     } finally {
       setIsSubmitting(false);
@@ -79,46 +82,46 @@ export default function Register() {
 
   return (
     <AuthLayout
-      title="Create your account"
-      subtitle="Free for every YZU student."
+      title={t("Create your account")}
+      subtitle={t("Free for every YZU student.")}
     >
       <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
         <Field
           id="username"
-          label="Username"
+          label={t("Username")}
           autoComplete="username"
           value={username}
           onChange={(event) => setUsername(event.target.value)}
-          error={errors.username}
+          error={errors.username && t(errors.username)}
         />
         <Field
           id="email"
-          label="Email"
+          label={t("Email")}
           type="email"
           autoComplete="email"
           placeholder="s1131234@mail.yzu.edu.tw"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
-          error={errors.email}
+          error={errors.email && t(errors.email)}
         />
         <Field
           id="password"
-          label="Password"
+          label={t("Password")}
           type="password"
           autoComplete="new-password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
-          error={errors.password}
-          hint="At least 8 characters."
+          error={errors.password && t(errors.password)}
+          hint={t("At least 8 characters.")}
         />
         <Field
           id="confirm-password"
-          label="Confirm password"
+          label={t("Confirm password")}
           type="password"
           autoComplete="new-password"
           value={confirmPassword}
           onChange={(event) => setConfirmPassword(event.target.value)}
-          error={errors.confirmPassword}
+          error={errors.confirmPassword && t(errors.confirmPassword)}
         />
 
         {error && (
@@ -128,26 +131,32 @@ export default function Register() {
         )}
 
         <button type="submit" disabled={isSubmitting} className={buttonPrimary}>
-          {isSubmitting ? "Creating account…" : "Create account"}
+          {isSubmitting ? t("Creating account…") : t("Create account")}
         </button>
 
         <p className="text-center text-xs text-neutral-500">
-          By creating an account, you agree to the{" "}
-          <Link to="/terms" className={`rounded-sm text-neutral-300 underline underline-offset-2 hover:text-white ${focusRing}`}>
-            Terms of use
-          </Link>{" "}
-          and{" "}
-          <Link to="/privacy" className={`rounded-sm text-neutral-300 underline underline-offset-2 hover:text-white ${focusRing}`}>
-            Privacy policy
-          </Link>
-          .
+          {tx(
+            "By creating an account, you agree to the <terms>Terms of use</terms> and <privacy>Privacy policy</privacy>.",
+            {
+              terms: (text) => (
+                <Link to="/terms" className={`rounded-sm text-neutral-300 underline underline-offset-2 hover:text-white ${focusRing}`}>
+                  {text}
+                </Link>
+              ),
+              privacy: (text) => (
+                <Link to="/privacy" className={`rounded-sm text-neutral-300 underline underline-offset-2 hover:text-white ${focusRing}`}>
+                  {text}
+                </Link>
+              ),
+            },
+          )}
         </p>
       </form>
 
       <p className="mt-8 text-center text-sm text-neutral-400">
-        Already have an account?{" "}
+        {t("Already have an account?")}{" "}
         <Link to="/login" className={`rounded-sm font-semibold text-white underline-offset-4 hover:underline ${focusRing}`}>
-          Sign in
+          {t("Sign in")}
         </Link>
       </p>
     </AuthLayout>
