@@ -126,7 +126,7 @@ Everything runs on one Linux server with Docker: Postgres, Redis, the API, the j
 2. Copy `.env.production.example` to `.env` and fill it in (`openssl rand -hex 32` for the secrets).
 3. On your own machine, `bash deploy/export_local.sh` packs the problems, tests and help into `deploy/out/`. Copy that folder to the server.
 4. On the server, `bash deploy/import_on_server.sh` loads it and starts everything.
-5. Add `deploy/backup.sh` to cron for daily backups.
+5. Add `deploy/backup.sh` to cron for daily backups. Fill in `BACKUP_S3_*` in `.env` and each day is also copied to a Cloudflare R2 bucket, so the backups survive losing the server. The script's header says how to restore.
 6. Run `bash deploy/install_auto_deploy.sh` once.
 
 After that, every push to `main` is live within about a minute: the server checks GitHub every minute, rebuilds, and re-applies the statements or hints when their JSON changed (`journalctl -u yzu-auto-deploy` shows what it did).
