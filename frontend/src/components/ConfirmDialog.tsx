@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactNode } from "react";
+import { useI18n } from "../i18n";
 import { buttonPrimary, buttonSecondary } from "./ui";
 
 interface ConfirmDialogProps {
@@ -23,6 +24,7 @@ export default function ConfirmDialog({
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
+  const { t } = useI18n();
   const ref = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
@@ -46,10 +48,10 @@ export default function ConfirmDialog({
       {error && <p className="mt-4 text-sm text-yzu-red">{error}</p>}
       <div className="mt-6 flex justify-end gap-3">
         <button type="button" className={buttonSecondary} onClick={onCancel} disabled={busy}>
-          Cancel
+          {t("Cancel")}
         </button>
         <button type="button" className={buttonPrimary} onClick={onConfirm} disabled={busy}>
-          {busy ? "One moment…" : confirmLabel}
+          {busy ? t("One moment…") : confirmLabel}
         </button>
       </div>
     </dialog>

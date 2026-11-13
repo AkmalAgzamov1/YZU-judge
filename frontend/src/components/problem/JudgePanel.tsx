@@ -1,4 +1,5 @@
 import type { Submission } from "../../api/client";
+import { useI18n } from "../../i18n";
 import useJudge from "../../lib/useJudge";
 import { isFinished } from "../../lib/verdicts";
 import PendingMessage from "./PendingMessage";
@@ -13,6 +14,7 @@ interface JudgePanelProps {
 }
 
 export default function JudgePanel({ submissionId, submitting, submitError, onFinished }: JudgePanelProps) {
+  const { t } = useI18n();
   const { submission, results, error, fatal, stale } = useJudge(submissionId, onFinished);
 
   let body;
@@ -20,18 +22,18 @@ export default function JudgePanel({ submissionId, submitting, submitError, onFi
   if (submitError) {
     body = <p className="text-yzu-red">{submitError}</p>;
   } else if (submitting) {
-    body = <p className="animate-pulse text-neutral-400">sending your code…</p>;
+    body = <p className="animate-pulse text-neutral-400">{t("sending your code…")}</p>;
   } else if (submissionId == null) {
     body = (
       <p className="text-neutral-500">
-        Submit your code to see the verdict here.{" "}
-        <span className="text-neutral-600">Ctrl + Enter also works.</span>
+        {t("Submit your code to see the verdict here.")}{" "}
+        <span className="text-neutral-600">{t("Ctrl + Enter also works.")}</span>
       </p>
     );
   } else if (fatal) {
     body = <p className="text-yzu-red">{fatal.message}</p>;
   } else if (!submission) {
-    body = <p className="animate-pulse text-neutral-400">loading submission…</p>;
+    body = <p className="animate-pulse text-neutral-400">{t("loading submission…")}</p>;
   } else if (!isFinished(submission.status)) {
     body = <PendingMessage status={submission.status} stale={stale} />;
   } else {
@@ -40,7 +42,7 @@ export default function JudgePanel({ submissionId, submitting, submitError, onFi
 
   return (
     <section
-      aria-label="Judge output"
+      aria-label={t("Judge output")}
       aria-live="polite"
       className="rounded-lg border border-white/10 bg-ink-0 p-4 font-mono text-sm"
     >
@@ -48,7 +50,7 @@ export default function JudgePanel({ submissionId, submitting, submitError, onFi
         <p className="mb-3 text-neutral-600">$ submission #{submissionId}</p>
       )}
       {body}
-      {error && <p className="mt-3 text-yzu-red">{error} Retrying…</p>}
+      {error && <p className="mt-3 text-yzu-red">{error} {t("Retrying…")}</p>}
     </section>
   );
 }

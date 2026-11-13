@@ -5,6 +5,8 @@ import { ApiError, problemsApi, submissionsApi, type Problem, type Submission } 
 import AppShell from "../components/AppShell";
 import Message from "../components/Message";
 import { buttonPrimary, buttonSecondary, focusRing } from "../components/ui";
+import { useI18n, type Key } from "../i18n";
+import { tr } from "../i18n/translate";
 import { formatDateTime, formatRelative, languageLabel, problemLabel } from "../lib/format";
 import { isFinished, verdictColor, verdictLabel } from "../lib/verdicts";
 
@@ -19,7 +21,7 @@ const verdictFilters = [
   { value: "wrong_answer", label: "Wrong answer" },
   { value: "time_limit_exceeded", label: "Time limit" },
   { value: "other", label: "Other" },
-] as const;
+] as const satisfies readonly { value: string; label: Key }[];
 type VerdictFilter = (typeof verdictFilters)[number]["value"];
 
 const PAGE_SIZE = 25;
@@ -33,13 +35,11 @@ function matchesVerdict(submission: Submission, filter: VerdictFilter) {
   return submission.status === filter;
 }
 
-function plural(count: number, word: string) {
-  return `${count} ${word}${count === 1 ? "" : "s"}`;
-}
-
 function SkeletonRows() {
+  const { t } = useI18n();
+
   return (
-    <ul aria-busy="true" aria-label="Loading submissions" className="divide-y divide-white/10 border-y border-white/10">
+    <ul aria-busy="true" aria-label={t("Loading submissions")} className="divide-y divide-white/10 border-y border-white/10">
       {Array.from({ length: 6 }, (_, index) => (
         <li key={index} className="flex animate-pulse items-center gap-4 px-3 py-4">
           <span className="h-4 w-12 rounded bg-ink-2" />
@@ -53,6 +53,7 @@ function SkeletonRows() {
 }
 
 export default function Submissions() {
+  const { t, tn } = useI18n();
   const [state, setState] = useState<LoadState>({ kind: "loading" });
   const [attempt, setAttempt] = useState(0);
   const [shown, setShown] = useState(PAGE_SIZE);
@@ -74,7 +75,7 @@ export default function Submissions() {
         if (cancelled) return;
         setState({
           kind: "error",
-          message: error instanceof ApiError ? error.message : "Your submissions could not be loaded.",
+          message: error instanceof ApiError ? error.message : tr("Your submissions could not be loaded."),
         });
       },
     );
@@ -156,22 +157,22 @@ export default function Submissions() {
       <div className="mx-auto max-w-6xl py-12">
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div>
-            <h1 className="text-4xl font-semibold tracking-tight text-white">Submissions</h1>
-            <p className="mt-2 text-base text-neutral-400">Everything you have sent to the judge, newest first.</p>
+            <h1 className="text-4xl font-semibold tracking-tight text-white">{t("Submissions")}</h1>
+            <p className="mt-2 text-base text-neutral-400">{t("Everything you have sent to the judge, newest first.")}</p>
           </div>
           {summary && summary.total > 0 && (
             <p className="font-mono text-sm text-neutral-500">
-              <span className="text-white">{plural(summary.total, "submission")}</span>
+              <span className="text-white">{tn(summary.total, "{n} submission", "{n} submissions")}</span>
               {" · "}
-              <span className="text-emerald-400">{summary.accepted} accepted</span>
+              <span className="text-emerald-400">{t("{n} accepted", { n: summary.accepted })}</span>
               {" · "}
-              {plural(summary.solved, "problem")} solved
+              {tn(summary.solved, "{n} problem solved", "{n} problems solved")}
             </p>
           )}
         </div>
 
         <div className="mt-8 flex flex-col gap-3 lg:flex-row lg:items-center">
-          <div role="group" aria-label="Verdict" className="flex flex-wrap rounded-lg border border-white/10 bg-ink-1 p-1">
+          <div role="group" aria-label={t("Verdict")} className="flex flex-wrap rounded-lg border border-white/10 bg-ink-1 p-1">
             {verdictFilters.map((filter) => (
               <button
                 key={filter.value}
@@ -182,12 +183,12 @@ export default function Submissions() {
                   verdict === filter.value ? "bg-ink-3 text-white" : "text-neutral-400 hover:text-white"
                 }`}
               >
-                {filter.label}
+                {t(filter.label)}
               </button>
             ))}
           </div>
           <label className="relative lg:ml-auto lg:w-72">
-            <span className="sr-only">Search by problem</span>
+            <span className="sr-only">{t("Search by problem")}</span>
             <MagnifyingGlass
               size={18}
               aria-hidden="true"
@@ -197,7 +198,7 @@ export default function Submissions() {
               type="search"
               value={query}
               onChange={(event) => setParam("q", event.target.value)}
-              placeholder="Problem or UVa number"
+              placeholder={t("Problem or UVa number")}
               className="w-full rounded-lg border border-white/10 bg-ink-1 py-2 pr-3 pl-10 text-base text-white placeholder:text-neutral-600 transition duration-300 ease-soft hover:border-white/20 focus:bg-ink-2 focus:outline-2 focus:outline-offset-2 focus:outline-white"
             />
           </label>
@@ -208,7 +209,7 @@ export default function Submissions() {
 
           {state.kind === "error" && (
             <Message
-              title="Submissions could not be loaded"
+              title={t("Submissions could not be loaded")}
               body={state.message}
               action={
                 <button
@@ -219,7 +220,7 @@ export default function Submissions() {
                     setAttempt((value) => value + 1);
                   }}
                 >
-                  Try again
+                  {t("Try again")}
                 </button>
               }
             />
@@ -227,11 +228,11 @@ export default function Submissions() {
 
           {state.kind === "ready" && state.submissions.length === 0 && (
             <Message
-              title="No submissions yet"
-              body="Pick a problem, write a solution and submit it. Every attempt shows up here."
+              title={t("No submissions yet")}
+              body={t("Pick a problem, write a solution and submit it. Every attempt shows up here.")}
               action={
                 <Link to="/problems" className={buttonPrimary}>
-                  Browse problems
+                  {t("Browse problems")}
                 </Link>
               }
             />
@@ -239,11 +240,11 @@ export default function Submissions() {
 
           {state.kind === "ready" && state.submissions.length > 0 && filtered.length === 0 && (
             <Message
-              title="No submissions match these filters"
-              body="Try another verdict or a shorter search."
+              title={t("No submissions match these filters")}
+              body={t("Try another verdict or a shorter search.")}
               action={
                 <button type="button" className={buttonSecondary} onClick={() => setParams({}, { replace: true })}>
-                  Clear filters
+                  {t("Clear filters")}
                 </button>
               }
             />
@@ -256,10 +257,10 @@ export default function Submissions() {
                 className="hidden grid-cols-[72px_1fr_176px_72px_96px] gap-4 px-3 pb-3 font-mono text-xs text-neutral-500 md:grid"
               >
                 <span>#</span>
-                <span>Problem</span>
-                <span>Verdict</span>
-                <span>Language</span>
-                <span className="text-right">When</span>
+                <span>{t("Problems")}</span>
+                <span>{t("Verdict")}</span>
+                <span>{t("Language")}</span>
+                <span className="text-right">{t("When")}</span>
               </div>
               <ul className="divide-y divide-white/10 border-y border-white/10">
                 {filtered.slice(0, shown).map((submission) => {
@@ -279,7 +280,7 @@ export default function Submissions() {
                             pending ? "animate-pulse" : ""
                           }`}
                         >
-                          {verdictLabel[submission.status]}
+                          {t(verdictLabel[submission.status])}
                         </span>
                         <span className="hidden font-mono text-sm text-neutral-400 md:block">
                           {languageLabel[submission.language]}
@@ -298,9 +299,9 @@ export default function Submissions() {
               {filtered.length > shown && (
                 <div className="mt-6 flex justify-center">
                   <button type="button" className={buttonSecondary} onClick={() => setShown((value) => value + PAGE_SIZE)}>
-                    Show more
+                    {t("Show more")}
                     <span className="font-mono text-sm text-neutral-500">
-                      {Math.min(PAGE_SIZE, filtered.length - shown)} of {filtered.length - shown}
+                      {t("{shown} of {left}", { shown: Math.min(PAGE_SIZE, filtered.length - shown), left: filtered.length - shown })}
                     </span>
                   </button>
                 </div>

@@ -14,6 +14,8 @@ import AppShell from "../components/AppShell";
 import ConfirmDialog from "../components/ConfirmDialog";
 import Message from "../components/Message";
 import { buttonPrimary, buttonSecondary, focusRing } from "../components/ui";
+import { useI18n, type Key } from "../i18n";
+import { tr } from "../i18n/translate";
 import { formatClock, formatDuration, PASS_BAR, useCountdown } from "../lib/mock";
 import { serverDate } from "../lib/progress";
 
@@ -28,17 +30,17 @@ type LoadState =
       practiceSolved: Set<number>;
     };
 
-const rules = [
+const rules: { term: Key; value: Key }[] = [
   { term: "Time", value: "3 hours, one sitting. The clock runs on the server." },
   { term: "Problems", value: "The exact problems of that CPE, in the same order." },
   { term: "Judging", value: "Hidden tests, strict limits, a verdict per submission." },
-  { term: "To pass", value: `${PASS_BAR} problems solved before time runs out.` },
+  { term: "To pass", value: "{n} problems solved before time runs out." },
 ];
 
-function formatDate(isoDate: string) {
+function formatDate(isoDate: string, locale: string | undefined) {
   // held_on is a plain date, so read it as local midnight.
   const [year, month, day] = isoDate.split("-").map(Number);
-  return new Date(year, month - 1, day).toLocaleDateString(undefined, {
+  return new Date(year, month - 1, day).toLocaleDateString(locale, {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -46,24 +48,25 @@ function formatDate(isoDate: string) {
 }
 
 function ActiveBanner({ exam }: { exam: MockExam }) {
+  const { t, tx } = useI18n();
   const left = useCountdown(exam.ends_at, exam.server_time);
 
   return (
     <section
-      aria-label="Exam in progress"
+      aria-label={t("Exam in progress")}
       className="flex flex-col gap-4 rounded-2xl border border-yzu-yellow/40 bg-ink-1 p-6 sm:flex-row sm:items-center sm:justify-between"
     >
       <div className="flex items-center gap-4">
         <Timer size={28} className="shrink-0 text-yzu-yellow" aria-hidden="true" />
         <div>
-          <p className="font-mono text-sm text-neutral-500">Exam in progress</p>
+          <p className="font-mono text-sm text-neutral-500">{t("Exam in progress")}</p>
           <p className="mt-1 text-lg font-semibold text-white">
-            {exam.paper_title} · <span className="font-mono">{formatClock(left)}</span> left
+            {exam.paper_title} · {tx("{clock} left", { clock: <span className="font-mono">{formatClock(left)}</span> })}
           </p>
         </div>
       </div>
       <Link to={`/mock/${exam.id}`} className={`${buttonPrimary} self-start sm:self-auto`}>
-        Resume
+        {t("Resume")}
         <ArrowRight size={18} weight="bold" aria-hidden="true" />
       </Link>
     </section>
@@ -72,6 +75,7 @@ function ActiveBanner({ exam }: { exam: MockExam }) {
 
 export default function MockHome() {
   const navigate = useNavigate();
+  const { t, locale } = useI18n();
   const [state, setState] = useState<LoadState>({ kind: "loading" });
   const [attempt, setAttempt] = useState(0);
   const [pending, setPending] = useState<CpePaper | null>(null);
@@ -100,7 +104,7 @@ export default function MockHome() {
         if (cancelled) return;
         setState({
           kind: "error",
-          message: error instanceof ApiError ? error.message : "Mock exams could not be loaded.",
+          message: error instanceof ApiError ? error.message : tr("Mock exams could not be loaded."),
         });
       },
     );
@@ -129,7 +133,7 @@ export default function MockHome() {
       const exam = await mockExamsApi.start(pending.id);
       navigate(`/mock/${exam.id}`);
     } catch (error) {
-      setStartError(error instanceof ApiError ? error.message : "The exam could not be started. Try again.");
+      setStartError(error instanceof ApiError ? error.message : t("The exam could not be started. Try again."));
       setStarting(false);
     }
   }
@@ -144,24 +148,23 @@ export default function MockHome() {
       <div className="mx-auto max-w-6xl py-12">
         <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-end">
           <div>
-            <h1 className="text-4xl font-semibold tracking-tight text-white">Mock CPE</h1>
+            <h1 className="text-4xl font-semibold tracking-tight text-white">{t("Mock CPE")}</h1>
             <p className="mt-2 max-w-[680px] text-base text-neutral-400">
-              Take a real past CPE under exam conditions. Same problems, same order, same three
-              hours.
+              {t("Take a real past CPE under exam conditions. Same problems, same order, same three hours.")}
             </p>
           </div>
           <dl className="divide-y divide-white/10 border-y border-white/10">
             {rules.map((rule) => (
               <div key={rule.term} className="grid grid-cols-[96px_1fr] gap-4 py-3 text-sm">
-                <dt className="font-mono text-neutral-500">{rule.term}</dt>
-                <dd className="text-neutral-300">{rule.value}</dd>
+                <dt className="font-mono text-neutral-500">{t(rule.term)}</dt>
+                <dd className="text-neutral-300">{t(rule.value, { n: PASS_BAR })}</dd>
               </div>
             ))}
           </dl>
         </div>
 
         {state.kind === "loading" && (
-          <div aria-busy="true" aria-label="Loading papers" className="mt-12 flex animate-pulse flex-col gap-4">
+          <div aria-busy="true" aria-label={t("Loading papers")} className="mt-12 flex animate-pulse flex-col gap-4">
             <div className="h-20 rounded-lg bg-ink-1" />
             <div className="h-20 rounded-lg bg-ink-1" />
           </div>
@@ -170,7 +173,7 @@ export default function MockHome() {
         {state.kind === "error" && (
           <div className="mt-12">
             <Message
-              title="Mock exams could not be loaded"
+              title={t("Mock exams could not be loaded")}
               body={state.message}
               action={
                 <button
@@ -181,7 +184,7 @@ export default function MockHome() {
                     setAttempt((value) => value + 1);
                   }}
                 >
-                  Try again
+                  {t("Try again")}
                 </button>
               }
             />
@@ -192,16 +195,16 @@ export default function MockHome() {
           <div className="mt-12 flex flex-col gap-12">
             {state.active && <ActiveBanner exam={state.active} />}
 
-            <section aria-label="Past CPE papers">
-              <h2 className="font-mono text-sm text-neutral-500">Past CPE papers</h2>
+            <section aria-label={t("Past CPE papers")}>
+              <h2 className="font-mono text-sm text-neutral-500">{t("Past CPE papers")}</h2>
               {state.papers.length === 0 ? (
                 <div className="mt-4">
                   <Message
-                    title="No CPE papers yet"
-                    body="Past CPE papers are being added. Until then, practice single problems."
+                    title={t("No CPE papers yet")}
+                    body={t("Past CPE papers are being added. Until then, practice single problems.")}
                     action={
                       <Link to="/problems" className={buttonPrimary}>
-                        Browse problems
+                        {t("Browse problems")}
                       </Link>
                     }
                   />
@@ -217,10 +220,10 @@ export default function MockHome() {
                       >
                         <div className="min-w-0">
                           <p className="truncate text-base font-medium text-white">{paper.title}</p>
-                          <p className="font-mono text-xs text-neutral-500">{formatDate(paper.held_on)}</p>
+                          <p className="font-mono text-xs text-neutral-500">{formatDate(paper.held_on, locale)}</p>
                         </div>
                         <span className="hidden font-mono text-sm text-neutral-400 md:block">
-                          {paper.problems.length} problems
+                          {t("{n} problems", { n: paper.problems.length })}
                         </span>
                         <span
                           className={`col-start-1 font-mono text-sm md:col-start-auto ${
@@ -231,19 +234,19 @@ export default function MockHome() {
                                 : "text-yzu-yellow"
                           }`}
                         >
-                          {best === undefined ? "Not taken yet" : `Best ${best} / ${paper.problems.length}`}
+                          {best === undefined ? t("Not taken yet") : t("Best {best} / {total}", { best, total: paper.problems.length })}
                         </span>
                         <button
                           type="button"
                           disabled={state.active != null}
-                          title={state.active ? "Finish your current exam first" : undefined}
+                          title={state.active ? t("Finish your current exam first") : undefined}
                           onClick={() => {
                             setStartError(null);
                             setPending(paper);
                           }}
                           className={`col-start-2 row-span-2 row-start-1 md:col-start-auto md:row-span-1 md:row-start-auto ${buttonSecondary}`}
                         >
-                          Start
+                          {t("Start")}
                         </button>
                       </li>
                     );
@@ -253,8 +256,8 @@ export default function MockHome() {
             </section>
 
             {state.exams.some((exam) => !exam.is_active) && (
-              <section aria-label="Your mock exams">
-                <h2 className="font-mono text-sm text-neutral-500">Your mock exams</h2>
+              <section aria-label={t("Your mock exams")}>
+                <h2 className="font-mono text-sm text-neutral-500">{t("Your mock exams")}</h2>
                 <ul className="mt-4 divide-y divide-white/10 border-y border-white/10">
                   {state.exams
                     .filter((exam) => !exam.is_active)
@@ -273,10 +276,10 @@ export default function MockHome() {
                               {exam.solved_count} / {exam.problem_count}
                             </span>
                             <span className={`font-mono text-sm ${passed ? "text-emerald-400" : "text-neutral-500"}`}>
-                              {passed ? "Would pass" : "Not yet"}
+                              {passed ? t("Would pass") : t("Not yet")}
                             </span>
                             <span className="text-right font-mono text-xs text-neutral-500 md:text-sm">
-                              {serverDate(exam.started_at).toLocaleDateString(undefined, { month: "short", day: "numeric" })}
+                              {serverDate(exam.started_at).toLocaleDateString(locale, { month: "short", day: "numeric" })}
                               {" · "}
                               {formatDuration(used)}
                             </span>
@@ -293,22 +296,25 @@ export default function MockHome() {
 
       <ConfirmDialog
         open={pending != null}
-        title={pending ? `Start ${pending.title}?` : ""}
-        confirmLabel="Start the clock"
+        title={pending ? t("Start {title}?", { title: pending.title }) : ""}
+        confirmLabel={t("Start the clock")}
         busy={starting}
         error={startError}
         onConfirm={start}
         onCancel={() => setPending(null)}
       >
         <p>
-          You get {pending ? formatDuration(pending.duration_minutes) : ""} for{" "}
-          {pending?.problems.length} problems. The clock starts now and does not pause, even if you
-          close the tab.
+          {t("You get {duration} for {n} problems. The clock starts now and does not pause, even if you close the tab.", {
+            duration: pending ? formatDuration(pending.duration_minutes) : "",
+            n: pending?.problems.length ?? 0,
+          })}
         </p>
         {alreadySolved > 0 && (
           <p className="text-yzu-yellow">
-            You already solved {alreadySolved} of these problems in practice, so this mock will feel
-            easier than the real one.
+            {t(
+              "You already solved {n} of these problems in practice, so this mock will feel easier than the real one.",
+              { n: alreadySolved },
+            )}
           </p>
         )}
       </ConfirmDialog>

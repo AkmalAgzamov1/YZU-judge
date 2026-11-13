@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import { useI18n, type Key } from "../i18n";
 import Avatar from "./Avatar";
+import LanguageSwitch from "./LanguageSwitch";
 import Logo from "./Logo";
 import { buttonGhostSmall, buttonPrimarySmall, focusRing } from "./ui";
 
-const sections = [
+const sections: { id: string; label: Key }[] = [
   { id: "why", label: "Why the CPE" },
   { id: "register", label: "Registration" },
   { id: "features", label: "Features" },
@@ -42,6 +44,7 @@ function useActiveSection(enabled: boolean) {
 
 export default function SiteNav() {
   const { user } = useAuth();
+  const { t } = useI18n();
   const location = useLocation();
   const [open, setOpen] = useState(false);
   const activeSection = useActiveSection(location.pathname === "/");
@@ -68,14 +71,14 @@ export default function SiteNav() {
   // Everyone can browse the problems; only submitting needs an account.
   const problemsLink = (
     <Link to="/problems" className={linkClass(false)}>
-      Problems
+      {t("Problems")}
     </Link>
   );
 
   const accountLinks = user ? (
     <>
       {problemsLink}
-      <NavLink to="/account" className={({ isActive }) => linkClass(isActive)} aria-label="Your account">
+      <NavLink to="/account" className={({ isActive }) => linkClass(isActive)} aria-label={t("Your account")}>
         <span className="flex items-center gap-2">
           <Avatar name={user.username} />
           {user.username}
@@ -91,10 +94,10 @@ export default function SiteNav() {
           `${buttonGhostSmall} ${isActive ? "bg-white/10 text-white" : ""}`
         }
       >
-        Sign in
+        {t("Sign in")}
       </NavLink>
       <Link to="/register" className={buttonPrimarySmall}>
-        Create account
+        {t("Create account")}
       </Link>
     </>
   );
@@ -109,33 +112,36 @@ export default function SiteNav() {
           activeSection === id ? "text-white" : "text-neutral-400"
         }`}
       >
-        {label}
+        {t(label)}
       </Link>
     )),
     user ? (
       <div key="app" className="flex flex-col gap-1">
         <Link to="/problems" className={`block rounded-lg px-3 py-3 text-3xl font-semibold tracking-tight text-neutral-400 ${focusRing}`}>
-          Problems
+          {t("Problems")}
         </Link>
         <Link to="/account" className={`block rounded-lg px-3 py-3 text-3xl font-semibold tracking-tight text-neutral-400 ${focusRing}`}>
-          Your account
+          {t("Your account")}
         </Link>
       </div>
     ) : (
       <Link key="problems" to="/problems" className={`block rounded-lg px-3 py-3 text-3xl font-semibold tracking-tight text-neutral-400 ${focusRing}`}>
-        Problems
+        {t("Problems")}
       </Link>
     ),
     user ? null : (
       <div key="auth" className="flex flex-col gap-3 px-3 pt-6">
         <Link to="/register" className={`${buttonPrimarySmall} py-3 text-base`}>
-          Create account
+          {t("Create account")}
         </Link>
         <Link to="/login" className={`${buttonGhostSmall} border border-white/10 py-3 text-base`}>
-          Sign in
+          {t("Sign in")}
         </Link>
       </div>
     ),
+    <div key="language" className="px-3 pt-6">
+      <LanguageSwitch className="border border-white/10 py-3 text-base" />
+    </div>,
   ].filter(Boolean);
 
   return (
@@ -145,7 +151,7 @@ export default function SiteNav() {
           aria-label="Main"
           className="flex w-full items-center justify-between gap-2 rounded-2xl border border-white/10 bg-ink-1/70 p-2 backdrop-blur-xl xl:w-auto xl:justify-start"
         >
-          <Link to="/" className={`rounded-lg px-3 py-2 ${focusRing}`} aria-label="YZU Judge home">
+          <Link to="/" className={`rounded-lg px-3 py-2 ${focusRing}`} aria-label={t("YZU Judge home")}>
             <Logo />
           </Link>
 
@@ -157,7 +163,7 @@ export default function SiteNav() {
                 aria-current={activeSection === id ? "true" : undefined}
                 className={linkClass(activeSection === id)}
               >
-                {label}
+                {t(label)}
               </Link>
             ))}
           </div>
@@ -165,6 +171,7 @@ export default function SiteNav() {
           <div className="hidden items-center gap-2 xl:flex">
             <span aria-hidden="true" className="mx-2 h-6 w-px bg-white/10" />
             {accountLinks}
+            <LanguageSwitch />
           </div>
 
           <button
@@ -172,7 +179,7 @@ export default function SiteNav() {
             onClick={() => setOpen((value) => !value)}
             aria-expanded={open}
             aria-controls="mobile-menu"
-            aria-label={open ? "Close menu" : "Open menu"}
+            aria-label={open ? t("Close menu") : t("Open menu")}
             className={`relative h-10 w-10 rounded-lg transition duration-300 ease-soft hover:bg-white/10 xl:hidden ${focusRing}`}
           >
             <span

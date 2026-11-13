@@ -5,6 +5,7 @@ import { useAuth } from "../auth/AuthContext";
 import AuthLayout from "../components/AuthLayout";
 import Field from "../components/Field";
 import { buttonPrimary, focusRing } from "../components/ui";
+import { useI18n } from "../i18n";
 
 interface Errors {
   username?: string;
@@ -13,6 +14,7 @@ interface Errors {
 
 export default function Login() {
   const { login, sessionExpired } = useAuth();
+  const { t } = useI18n();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -29,8 +31,8 @@ export default function Login() {
     setError("");
 
     const nextErrors: Errors = {};
-    if (!username.trim()) nextErrors.username = "Enter your username.";
-    if (!password) nextErrors.password = "Enter your password.";
+    if (!username.trim()) nextErrors.username = t("Enter your username.");
+    if (!password) nextErrors.password = t("Enter your password.");
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
 
@@ -46,7 +48,7 @@ export default function Login() {
       } else if (err instanceof ApiError) {
         setError(err.message);
       } else {
-        setError("Something went wrong. Please try again.");
+        setError(t("Something went wrong. Please try again."));
       }
     } finally {
       setIsSubmitting(false);
@@ -54,17 +56,17 @@ export default function Login() {
   }
 
   return (
-    <AuthLayout title="Welcome back" subtitle="Sign in to keep practicing for the CPE.">
+    <AuthLayout title={t("Welcome back")} subtitle={t("Sign in to keep practicing for the CPE.")}>
       {sessionExpired && (
         <p role="status" className="mb-6 rounded-lg border border-yzu-yellow/40 bg-yzu-yellow/10 px-3 py-2 text-sm text-yzu-yellow">
-          Your session expired. Sign in again to continue where you left off.
+          {t("Your session expired. Sign in again to continue where you left off.")}
         </p>
       )}
 
       <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
         <Field
           id="username"
-          label="Username"
+          label={t("Username")}
           autoComplete="username"
           value={username}
           onChange={(event) => setUsername(event.target.value)}
@@ -72,7 +74,7 @@ export default function Login() {
         />
         <Field
           id="password"
-          label="Password"
+          label={t("Password")}
           type="password"
           autoComplete="current-password"
           value={password}
@@ -84,7 +86,7 @@ export default function Login() {
           to="/forgot-password"
           className={`-mt-3 self-end rounded-sm text-sm text-neutral-400 underline-offset-4 hover:text-white hover:underline ${focusRing}`}
         >
-          Forgot password?
+          {t("Forgot password?")}
         </Link>
 
         {error && (
@@ -94,14 +96,14 @@ export default function Login() {
         )}
 
         <button type="submit" disabled={isSubmitting} className={buttonPrimary}>
-          {isSubmitting ? "Signing in…" : "Sign in"}
+          {isSubmitting ? t("Signing in…") : t("Sign in")}
         </button>
       </form>
 
       <p className="mt-8 text-center text-sm text-neutral-400">
-        New to YZU Judge?{" "}
+        {t("New to YZU Judge?")}{" "}
         <Link to="/register" className={`rounded-sm font-semibold text-white underline-offset-4 hover:underline ${focusRing}`}>
-          Create a free account
+          {t("Create a free account")}
         </Link>
       </p>
     </AuthLayout>

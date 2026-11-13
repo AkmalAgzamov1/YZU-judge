@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ApiError, submissionsApi, type Submission, type SubmissionResult } from "../api/client";
+import { tr } from "../i18n/translate";
 import { isFinished } from "./verdicts";
 
 const STALE_AFTER_MS = 60_000;
@@ -52,7 +53,7 @@ export default function useJudge(
           setFatal(err);
           return;
         }
-        setError(err instanceof ApiError ? err.message : "Lost connection to the judge.");
+        setError(err instanceof ApiError ? err.message : tr("Lost connection to the judge."));
         timer = setTimeout(() => tick(id), 3000);
       }
     }

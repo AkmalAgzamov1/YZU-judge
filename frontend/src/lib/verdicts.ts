@@ -1,9 +1,11 @@
 import type { Submission, SubmissionResult } from "../api/client";
+import type { Key } from "../i18n/translate";
 
 export type SubmissionStatus = Submission["status"];
 export type TestVerdict = SubmissionResult["verdict"];
 
-export const verdictLabel: Record<SubmissionStatus, string> = {
+// English labels, which are also the translation keys: show them with t().
+export const verdictLabel: Record<SubmissionStatus, Key> = {
   pending: "In queue",
   running: "Running",
   accepted: "Accepted",

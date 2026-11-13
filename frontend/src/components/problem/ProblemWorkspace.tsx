@@ -10,6 +10,8 @@ import {
   type Submission,
 } from "../../api/client";
 import { useAuth } from "../../auth/AuthContext";
+import { useI18n } from "../../i18n";
+import { tr } from "../../i18n/translate";
 import { loadDraft, saveDraft } from "../../lib/drafts";
 import {
   isLanguage,
@@ -51,8 +53,10 @@ interface ProblemWorkspaceProps {
 }
 
 function StatementSkeleton() {
+  const { t } = useI18n();
+
   return (
-    <div aria-busy="true" aria-label="Loading problem" className="animate-pulse">
+    <div aria-busy="true" aria-label={t("Loading problem")} className="animate-pulse">
       <div className="h-4 w-48 rounded bg-ink-2" />
       <div className="mt-4 h-8 w-80 max-w-full rounded-lg bg-ink-2" />
       <div className="mt-8 flex flex-col gap-3">
@@ -74,6 +78,7 @@ export default function ProblemWorkspace({
   onExamEnded,
 }: ProblemWorkspaceProps) {
   const { user, isLoading: authLoading } = useAuth();
+  const { t } = useI18n();
   const navigate = useNavigate();
   const location = useLocation();
   const draftScope = mockExamId != null ? `mock:${mockExamId}` : undefined;
@@ -109,7 +114,7 @@ export default function ProblemWorkspace({
         } else {
           setState({
             kind: "error",
-            message: error instanceof ApiError ? error.message : "The problem could not be loaded.",
+            message: error instanceof ApiError ? error.message : tr("The problem could not be loaded."),
           });
         }
       },
@@ -162,7 +167,7 @@ export default function ProblemWorkspace({
     }
     if (submitting) return;
     if (!code.trim()) {
-      setSubmitError("Write some code before submitting.");
+      setSubmitError(t("Write some code before submitting."));
       return;
     }
 
@@ -180,13 +185,13 @@ export default function ProblemWorkspace({
       setHistoryVersion((value) => value + 1);
     } catch (error) {
       if (error instanceof ApiError && error.status === 409 && mockExamId != null) {
-        setSubmitError("Time is up. This submission was not sent.");
+        setSubmitError(t("Time is up. This submission was not sent."));
         onExamEnded?.();
       } else if (error instanceof ApiError && error.status === 503) {
-        setSubmitError("The judge is offline right now. Your code is saved here, try again in a minute.");
+        setSubmitError(t("The judge is offline right now. Your code is saved here, try again in a minute."));
         setHistoryVersion((value) => value + 1);
       } else {
-        setSubmitError(error instanceof ApiError ? error.message : "Your code could not be sent. Try again.");
+        setSubmitError(error instanceof ApiError ? error.message : t("Your code could not be sent. Try again."));
       }
     } finally {
       setSubmitting(false);
@@ -210,10 +215,10 @@ export default function ProblemWorkspace({
     return (
       <div className="mx-auto flex max-w-xl flex-col items-center py-24 text-center">
         <h1 className="text-3xl font-semibold text-white">
-          {state.kind === "missing" ? "No such problem" : "Problem could not be loaded"}
+          {state.kind === "missing" ? t("No such problem") : t("Problem could not be loaded")}
         </h1>
         <p className="mt-3 text-base text-neutral-400">
-          {state.kind === "missing" ? "It may have been removed, or the link is wrong." : state.message}
+          {state.kind === "missing" ? t("It may have been removed, or the link is wrong.") : state.message}
         </p>
         <div className="mt-8 flex gap-3">
           {state.kind === "error" && (
@@ -225,12 +230,12 @@ export default function ProblemWorkspace({
                 setAttempt((value) => value + 1);
               }}
             >
-              Try again
+              {t("Try again")}
             </button>
           )}
           {mockExamId == null && (
             <Link to="/problems" className={buttonPrimary}>
-              Back to problems
+              {t("Back to problems")}
             </Link>
           )}
         </div>
@@ -248,18 +253,18 @@ export default function ProblemWorkspace({
   return (
     <div className={`mx-auto max-w-6xl lg:grid lg:grid-cols-2 lg:divide-x lg:divide-white/10 ${heightClass}`}>
       <div className={`-mx-4 bg-ink-0 px-4 py-3 lg:hidden ${mockExamId == null ? "sticky top-16 z-10" : ""}`}>
-        <div role="tablist" aria-label="View" className="flex rounded-lg border border-white/10 bg-ink-1 p-1">
+        <div role="tablist" aria-label={t("View")} className="flex rounded-lg border border-white/10 bg-ink-1 p-1">
           <button type="button" role="tab" aria-selected={tab === "problem"} className={tabClass("problem")} onClick={() => setTab("problem")}>
-            Problem
+            {t("Problem")}
           </button>
           <button type="button" role="tab" aria-selected={tab === "code"} className={tabClass("code")} onClick={() => setTab("code")}>
-            Code
+            {t("Code")}
           </button>
         </div>
       </div>
 
       <section
-        aria-label="Problem statement"
+        aria-label={t("Problem statement")}
         className={`${tab === "problem" ? "block" : "hidden"} py-8 lg:block lg:overflow-y-auto lg:pr-8`}
       >
         {topSlot}
@@ -294,7 +299,7 @@ export default function ProblemWorkspace({
                       onClick={() => setTopicsShown(true)}
                       className={`rounded font-mono text-xs text-neutral-500 underline-offset-4 transition duration-300 ease-soft hover:text-white hover:underline ${focusRing}`}
                     >
-                      Show topics
+                      {t("Show topics")}
                     </button>
                   ))}
                 {helpAvailable && (
@@ -308,7 +313,7 @@ export default function ProblemWorkspace({
                     }`}
                   >
                     <Lightbulb size={14} aria-hidden="true" />
-                    {helpOpen ? "Hide hints and solution" : "Stuck? Hints and solution"}
+                    {helpOpen ? t("Hide hints and solution") : t("Stuck? Hints and solution")}
                   </button>
                 )}
               </div>
@@ -331,11 +336,11 @@ export default function ProblemWorkspace({
       </section>
 
       <section
-        aria-label="Code"
+        aria-label={t("Code")}
         className={`${tab === "code" ? "flex" : "hidden"} flex-col gap-4 py-8 lg:flex lg:overflow-y-auto lg:pl-8`}
       >
         <div className="flex items-center justify-between gap-3">
-          <div role="group" aria-label="Language" className="flex rounded-lg border border-white/10 bg-ink-1 p-1">
+          <div role="group" aria-label={t("Language")} className="flex rounded-lg border border-white/10 bg-ink-1 p-1">
             {LANGUAGES.map((option) => (
               <button
                 key={option.id}
@@ -353,7 +358,7 @@ export default function ProblemWorkspace({
           </div>
 
           <button type="button" onClick={submit} disabled={submitting} className={buttonPrimary}>
-            {user ? (submitting ? "Sending…" : "Submit") : "Sign in to submit"}
+            {user ? (submitting ? t("Sending…") : t("Submit")) : t("Sign in to submit")}
             {user && <PaperPlaneRight size={16} weight="bold" aria-hidden="true" />}
           </button>
         </div>

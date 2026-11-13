@@ -7,15 +7,19 @@ import ConfirmDialog from "../components/ConfirmDialog";
 import { difficultyColor, difficultyLabel } from "../components/DifficultyLabel";
 import ProblemWorkspace from "../components/problem/ProblemWorkspace";
 import { buttonPrimary, buttonSecondary, focusRing } from "../components/ui";
+import { useI18n } from "../i18n";
+import { tr } from "../i18n/translate";
 import { formatClock, formatDuration, letter, PASS_BAR, useCountdown } from "../lib/mock";
 import { serverDate } from "../lib/progress";
 
 type ExamProblem = MockExam["problems"][number];
 
 function StatusIcon({ status }: { status: ExamProblem["status"] }) {
-  if (status === "solved") return <CheckCircle size={16} weight="fill" className="text-emerald-400" aria-label="Solved" />;
-  if (status === "attempted") return <CircleHalf size={16} weight="fill" className="text-yzu-yellow" aria-label="Attempted" />;
-  return <Circle size={16} className="text-neutral-600" aria-label="Not tried" />;
+  const { t } = useI18n();
+
+  if (status === "solved") return <CheckCircle size={16} weight="fill" className="text-emerald-400" aria-label={t("Solved")} />;
+  if (status === "attempted") return <CircleHalf size={16} weight="fill" className="text-yzu-yellow" aria-label={t("Attempted")} />;
+  return <Circle size={16} className="text-neutral-600" aria-label={t("Not tried")} />;
 }
 
 function clockColor(ms: number) {
@@ -25,6 +29,7 @@ function clockColor(ms: number) {
 }
 
 function ExamView({ exam, onRefresh }: { exam: MockExam; onRefresh: () => void }) {
+  const { t, tx } = useI18n();
   const left = useCountdown(exam.ends_at, exam.server_time);
   const firstOpen = exam.problems.find((problem) => problem.status !== "solved") ?? exam.problems[0];
   const [position, setPosition] = useState(firstOpen.position);
@@ -52,7 +57,7 @@ function ExamView({ exam, onRefresh }: { exam: MockExam; onRefresh: () => void }
       await mockExamsApi.finish(exam.id);
       onRefresh();
     } catch (error) {
-      setFinishError(error instanceof ApiError ? error.message : "The exam could not be finished. Try again.");
+      setFinishError(error instanceof ApiError ? error.message : t("The exam could not be finished. Try again."));
       setFinishing(false);
     }
   }
@@ -65,7 +70,7 @@ function ExamView({ exam, onRefresh }: { exam: MockExam; onRefresh: () => void }
             {exam.paper_title}
           </p>
 
-          <div role="tablist" aria-label="Problems" className="order-3 flex w-full gap-1 overflow-x-auto lg:order-none lg:w-auto">
+          <div role="tablist" aria-label={t("Problems")} className="order-3 flex w-full gap-1 overflow-x-auto lg:order-none lg:w-auto">
             {exam.problems.map((problem) => (
               <button
                 key={problem.position}
@@ -87,7 +92,7 @@ function ExamView({ exam, onRefresh }: { exam: MockExam; onRefresh: () => void }
           <div className="ml-auto flex items-center gap-4">
             <p
               aria-live="off"
-              aria-label={`${formatClock(left)} left`}
+              aria-label={t("{clock} left", { clock: formatClock(left) })}
               className={`font-mono text-2xl font-semibold tabular-nums ${clockColor(left)}`}
             >
               {formatClock(left)}
@@ -100,7 +105,7 @@ function ExamView({ exam, onRefresh }: { exam: MockExam; onRefresh: () => void }
                 setConfirming(true);
               }}
             >
-              Finish
+              {t("Finish")}
             </button>
           </div>
         </div>
@@ -113,7 +118,7 @@ function ExamView({ exam, onRefresh }: { exam: MockExam; onRefresh: () => void }
         heightClass="lg:h-[calc(100svh-7.5rem)]"
         metaSlot={
           <span className="rounded border border-white/10 px-1 text-xs text-neutral-400">
-            Problem {letter(current.position)} of {exam.problem_count}
+            {t("Problem {letter} of {total}", { letter: letter(current.position), total: exam.problem_count })}
           </span>
         }
         onSubmissionFinished={onRefresh}
@@ -122,16 +127,17 @@ function ExamView({ exam, onRefresh }: { exam: MockExam; onRefresh: () => void }
 
       <ConfirmDialog
         open={confirming}
-        title="Finish the exam now?"
-        confirmLabel="Finish exam"
+        title={t("Finish the exam now?")}
+        confirmLabel={t("Finish exam")}
         busy={finishing}
         error={finishError}
         onConfirm={finish}
         onCancel={() => setConfirming(false)}
       >
         <p>
-          You still have <span className="font-mono text-white">{formatClock(left)}</span>. Submissions
-          still in the queue will count. You cannot submit after finishing.
+          {tx("You still have {clock}. Submissions still in the queue will count. You cannot submit after finishing.", {
+            clock: <span className="font-mono text-white">{formatClock(left)}</span>,
+          })}
         </p>
       </ConfirmDialog>
     </>
@@ -139,6 +145,7 @@ function ExamView({ exam, onRefresh }: { exam: MockExam; onRefresh: () => void }
 }
 
 function Results({ exam }: { exam: MockExam }) {
+  const { t, tn, locale } = useI18n();
   const passed = exam.solved_count >= PASS_BAR;
   const missing = PASS_BAR - exam.solved_count;
   const ended = serverDate(exam.finished_at ?? exam.ends_at);
@@ -147,19 +154,20 @@ function Results({ exam }: { exam: MockExam }) {
   return (
     <div className="mx-auto max-w-6xl py-12">
       <p className="font-mono text-sm text-neutral-500">
-        {exam.paper_title} · {serverDate(exam.started_at).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })} · {formatDuration(used)} used
+        {exam.paper_title} · {serverDate(exam.started_at).toLocaleDateString(locale, { month: "short", day: "numeric", year: "numeric" })} · {t("{duration} used", { duration: formatDuration(used) })}
       </p>
       <h1 className="text-hero mt-3 text-5xl font-semibold tracking-tight">
-        Solved {exam.solved_count} of {exam.problem_count}
+        {t("Solved {solved} of {total}", { solved: exam.solved_count, total: exam.problem_count })}
       </h1>
       <p className={`mt-4 text-2xl font-semibold ${passed ? "text-emerald-400" : "text-yzu-yellow"}`}>
         {passed
-          ? "You would pass this CPE"
-          : `Not yet. ${missing} more problem${missing === 1 ? "" : "s"} needed to pass.`}
+          ? t("You would pass this CPE")
+          : tn(missing, "Not yet. {n} more problem needed to pass.", "Not yet. {n} more problems needed to pass.")}
       </p>
       <p className="mt-2 max-w-[680px] text-sm text-neutral-500">
-        Most departments ask for {PASS_BAR} problems in one sitting. Check the rule for your department and
-        enrollment year.
+        {t("Most departments ask for {n} problems in one sitting. Check the rule for your department and enrollment year.", {
+          n: PASS_BAR,
+        })}
       </p>
 
       <ul className="mt-12 divide-y divide-white/10 border-y border-white/10">
@@ -175,7 +183,7 @@ function Results({ exam }: { exam: MockExam }) {
                 {problem.title}
               </span>
               <span className={`hidden text-sm md:block ${difficultyColor[problem.difficulty]}`}>
-                {difficultyLabel[problem.difficulty]}
+                {t(difficultyLabel[problem.difficulty])}
               </span>
               <span
                 className={`text-right font-mono text-sm ${
@@ -187,10 +195,10 @@ function Results({ exam }: { exam: MockExam }) {
                 }`}
               >
                 {problem.status === "solved"
-                  ? `Solved at ${formatClock((problem.solved_at_minutes ?? 0) * 60_000).slice(0, -3)}`
+                  ? t("Solved at {time}", { time: formatClock((problem.solved_at_minutes ?? 0) * 60_000).slice(0, -3) })
                   : problem.status === "attempted"
-                    ? "Attempted"
-                    : "Not attempted"}
+                    ? t("Attempted")
+                    : t("Not attempted")}
               </span>
             </Link>
           </li>
@@ -199,10 +207,10 @@ function Results({ exam }: { exam: MockExam }) {
 
       <div className="mt-8 flex flex-wrap gap-3">
         <Link to="/mock" className={buttonPrimary}>
-          Back to Mock CPE
+          {t("Back to Mock CPE")}
         </Link>
         <Link to="/submissions" className={buttonSecondary}>
-          Review submissions
+          {t("Review submissions")}
         </Link>
       </div>
     </div>
@@ -210,6 +218,7 @@ function Results({ exam }: { exam: MockExam }) {
 }
 
 function MockExamView({ examId }: { examId: number }) {
+  const { t } = useI18n();
   const [exam, setExam] = useState<MockExam | null>(null);
   const [error, setError] = useState<ApiError | null>(null);
   const [version, setVersion] = useState(0);
@@ -222,7 +231,7 @@ function MockExamView({ examId }: { examId: number }) {
         if (!cancelled) setExam(loaded);
       },
       (err: unknown) => {
-        if (!cancelled) setError(err instanceof ApiError ? err : new ApiError(0, "The exam could not be loaded."));
+        if (!cancelled) setError(err instanceof ApiError ? err : new ApiError(0, tr("The exam could not be loaded.")));
       },
     );
 
@@ -237,11 +246,11 @@ function MockExamView({ examId }: { examId: number }) {
     return (
       <div className="mx-auto flex max-w-xl flex-col items-center py-24 text-center">
         <h1 className="text-3xl font-semibold text-white">
-          {error.status === 403 ? "This exam is not yours" : error.status === 404 ? "No such exam" : "Exam could not be loaded"}
+          {error.status === 403 ? t("This exam is not yours") : error.status === 404 ? t("No such exam") : t("Exam could not be loaded")}
         </h1>
         <p className="mt-3 text-base text-neutral-400">{error.message}</p>
         <Link to="/mock" className={`${buttonPrimary} mt-8`}>
-          Back to Mock CPE
+          {t("Back to Mock CPE")}
         </Link>
       </div>
     );
@@ -249,7 +258,7 @@ function MockExamView({ examId }: { examId: number }) {
 
   if (!exam) {
     return (
-      <div aria-busy="true" aria-label="Loading exam" className="mx-auto max-w-6xl animate-pulse py-12">
+      <div aria-busy="true" aria-label={t("Loading exam")} className="mx-auto max-w-6xl animate-pulse py-12">
         <div className="h-4 w-64 rounded bg-ink-2" />
         <div className="mt-4 h-12 w-96 max-w-full rounded-lg bg-ink-2" />
         <div className="mt-12 h-64 rounded-lg bg-ink-1" />
@@ -262,6 +271,7 @@ function MockExamView({ examId }: { examId: number }) {
 
 export default function MockExamPage() {
   const { id } = useParams();
+  const { t } = useI18n();
   const examId = Number(id);
 
   return (
@@ -270,9 +280,9 @@ export default function MockExamPage() {
         <MockExamView key={examId} examId={examId} />
       ) : (
         <div className="mx-auto flex max-w-xl flex-col items-center py-24 text-center">
-          <h1 className="text-3xl font-semibold text-white">No such exam</h1>
+          <h1 className="text-3xl font-semibold text-white">{t("No such exam")}</h1>
           <Link to="/mock" className={`${buttonPrimary} mt-8`}>
-            Back to Mock CPE
+            {t("Back to Mock CPE")}
           </Link>
         </div>
       )}

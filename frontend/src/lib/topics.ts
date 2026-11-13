@@ -1,9 +1,10 @@
 import type { Problem } from "../api/client";
+import type { Key } from "../i18n/translate";
 
 export type Topic = NonNullable<Problem["topics"]>[number];
 
-// Same order as app/topics.py on the backend.
-export const topicLabel: Record<Topic, string> = {
+// Same order as app/topics.py on the backend. The labels are also translation keys.
+export const topicLabel: Record<Topic, Key> = {
   implementation: "Implementation",
   math: "Math",
   "number-theory": "Number theory",

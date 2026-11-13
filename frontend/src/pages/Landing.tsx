@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import PageShell from "../components/PageShell";
 import TaglineReveal from "../components/TaglineReveal";
+import { useI18n } from "../i18n";
 import Benefits from "./landing/Benefits";
 import Faq from "./landing/Faq";
 import FinalCta from "./landing/FinalCta";
@@ -14,6 +15,7 @@ import WhyCpe from "./landing/WhyCpe";
 
 export default function Landing() {
   const { hash } = useLocation();
+  const { t } = useI18n();
 
   // Router links change the hash without scrolling, so scroll here.
   useEffect(() => {
@@ -27,13 +29,13 @@ export default function Landing() {
       <WhyCpe />
       <HowToRegister />
       <NextCpe />
-      <section aria-label="Our promise" className="mx-auto max-w-6xl px-4 py-24 lg:pl-[33.333%]">
+      <section aria-label={t("Our promise")} className="mx-auto max-w-6xl px-4 py-24 lg:pl-[33.333%]">
         <TaglineReveal
           lines={[
-            "Practice the format",
-            "until it feels familiar,",
-            "so the CPE costs you",
-            "an afternoon, not a year.",
+            t("Practice the format"),
+            t("until it feels familiar,"),
+            t("so the CPE costs you"),
+            t("an afternoon, not a year."),
           ]}
         />
       </section>

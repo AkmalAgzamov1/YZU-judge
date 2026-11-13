@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { tr } from "../i18n/translate";
 import { serverDate } from "./progress";
 
 // Problems needed in one sitting. Departments differ; this is the common rule.
@@ -17,7 +18,7 @@ export function formatClock(ms: number) {
 export function formatDuration(minutes: number) {
   const hours = Math.floor(minutes / 60);
   const rest = minutes % 60;
-  return hours > 0 ? `${hours} h ${rest} min` : `${rest} min`;
+  return hours > 0 ? tr("{h} h {m} min", { h: hours, m: rest }) : tr("{m} min", { m: rest });
 }
 
 // Milliseconds left until endsAt, ticking every second. serverTime corrects

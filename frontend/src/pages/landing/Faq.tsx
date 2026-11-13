@@ -2,9 +2,10 @@ import { Plus } from "@phosphor-icons/react";
 import Reveal from "../../components/Reveal";
 import SectionHeader from "../../components/SectionHeader";
 import { focusRing } from "../../components/ui";
+import { useI18n, type Key } from "../../i18n";
 import { CPE_OFFICIAL_URL } from "../../lib/links";
 
-const faqs = [
+const faqs: { q: Key; a: Key; link?: { href: string; label: Key } }[] = [
   {
     q: "What is the CPE?",
     a: "The Collegiate Programming Examination is a national programming test for university students in Taiwan. You get 3 hours and a set of problems in English, written in the style of the UVa Online Judge. A computer judges your code against hidden tests.",
@@ -41,20 +42,22 @@ const faqs = [
 ];
 
 export default function Faq() {
+  const { t } = useI18n();
+
   const schema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     mainEntity: faqs.map(({ q, a }) => ({
       "@type": "Question",
-      name: q,
-      acceptedAnswer: { "@type": "Answer", text: a },
+      name: t(q),
+      acceptedAnswer: { "@type": "Answer", text: t(a) },
     })),
   };
 
   return (
     <section id="faq" className="px-4 py-24">
       <div className="mx-auto max-w-6xl">
-        <SectionHeader index="06" label="FAQ" title="Questions students ask" />
+        <SectionHeader index="06" label={t("FAQ")} title={t("Questions students ask")} />
 
         <Reveal className="mt-16 lg:ml-[33.333%]">
           <div className="divide-y divide-white/10 border-y border-white/10">
@@ -63,7 +66,7 @@ export default function Faq() {
                 <summary
                   className={`flex cursor-pointer list-none items-center justify-between gap-6 py-6 text-lg font-semibold text-white transition duration-300 ease-soft hover:text-neutral-300 [&::-webkit-details-marker]:hidden ${focusRing}`}
                 >
-                  {q}
+                  {t(q)}
                   <Plus
                     size={20}
                     aria-hidden="true"
@@ -71,7 +74,7 @@ export default function Faq() {
                   />
                 </summary>
                 <p className="max-w-[680px] pb-6 text-base text-neutral-400">
-                  {a}
+                  {t(a)}
                   {link && (
                     <>
                       {" "}
@@ -81,7 +84,7 @@ export default function Faq() {
                         rel="noreferrer"
                         className={`rounded-sm text-white underline underline-offset-2 hover:text-neutral-300 ${focusRing}`}
                       >
-                        {link.label}
+                        {t(link.label)}
                       </a>
                     </>
                   )}

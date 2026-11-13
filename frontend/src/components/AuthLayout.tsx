@@ -1,6 +1,8 @@
 import { ArrowLeft } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { useI18n } from "../i18n";
+import LanguageSwitch from "./LanguageSwitch";
 import Logo from "./Logo";
 import { focusRing } from "./ui";
 
@@ -13,19 +15,24 @@ interface AuthLayoutProps {
 // One narrow centered column on a plain background, the pattern used by
 // Linear, Vercel and Supabase. No photo competing with the form.
 export default function AuthLayout({ title, subtitle, children }: AuthLayoutProps) {
+  const { t } = useI18n();
+
   return (
     <div className="flex min-h-svh flex-col px-4">
       <header className="mx-auto flex w-full max-w-6xl items-center justify-between py-6">
-        <Link to="/" className={`rounded-lg ${focusRing}`} aria-label="YZU Judge home">
+        <Link to="/" className={`rounded-lg ${focusRing}`} aria-label={t("YZU Judge home")}>
           <Logo />
         </Link>
-        <Link
-          to="/"
-          className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-neutral-400 transition duration-300 ease-soft hover:text-white ${focusRing}`}
-        >
-          <ArrowLeft size={16} aria-hidden="true" />
-          Back to home
-        </Link>
+        <div className="flex items-center gap-1">
+          <LanguageSwitch />
+          <Link
+            to="/"
+            className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-neutral-400 transition duration-300 ease-soft hover:text-white ${focusRing}`}
+          >
+            <ArrowLeft size={16} aria-hidden="true" />
+            {t("Back to home")}
+          </Link>
+        </div>
       </header>
 
       <main id="main" className="flex flex-1 items-center justify-center py-12">
@@ -49,10 +56,10 @@ export default function AuthLayout({ title, subtitle, children }: AuthLayoutProp
         <span>© 2026 YZU Judge</span>
         <span className="flex gap-4">
           <Link to="/privacy" className={`rounded-sm hover:text-neutral-400 ${focusRing}`}>
-            Privacy
+            {t("Privacy")}
           </Link>
           <Link to="/terms" className={`rounded-sm hover:text-neutral-400 ${focusRing}`}>
-            Terms
+            {t("Terms")}
           </Link>
         </span>
       </footer>

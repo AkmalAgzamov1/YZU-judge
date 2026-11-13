@@ -5,9 +5,12 @@ import { ApiError, problemsApi, submissionsApi, type Problem, type Submission } 
 import { useAuth } from "../auth/AuthContext";
 import AppShell from "../components/AppShell";
 import Avatar from "../components/Avatar";
+import LanguageSwitch from "../components/LanguageSwitch";
 import { difficultyColor, difficultyLabel, type Difficulty } from "../components/DifficultyLabel";
 import Message from "../components/Message";
 import { buttonPrimary, buttonSecondary, focusRing } from "../components/ui";
+import { useI18n } from "../i18n";
+import { tr } from "../i18n/translate";
 import { formatRelative, problemLabel } from "../lib/format";
 import {
   activityGrid,
@@ -45,6 +48,7 @@ function SectionTitle({ children }: { children: string }) {
 }
 
 function NextStep({ problems, submissions }: { problems: Problem[]; submissions: Submission[] }) {
+  const { t } = useI18n();
   const statuses = buildStatuses(submissions);
   const byId = new Map(problems.map((problem) => [problem.id, problem]));
 
@@ -58,27 +62,27 @@ function NextStep({ problems, submissions }: { problems: Problem[]; submissions:
   let to: string | null = null;
 
   if (lastUnsolved) {
-    eyebrow = "Continue where you left off";
+    eyebrow = t("Continue where you left off");
     title = problemLabel(byId.get(lastUnsolved.problem_id), lastUnsolved.problem_id);
-    detail = `Last verdict: ${verdictLabel[lastUnsolved.status]}`;
+    detail = t("Last verdict: {verdict}", { verdict: t(verdictLabel[lastUnsolved.status]) });
     to = `/problems/${lastUnsolved.problem_id}`;
   } else if (untried) {
-    eyebrow = submissions.length === 0 ? "Start with an easy one" : "Next up";
+    eyebrow = submissions.length === 0 ? t("Start with an easy one") : t("Next up");
     title = problemLabel(untried, untried.id);
-    detail = `${difficultyLabel[untried.difficulty]} · not tried yet`;
+    detail = t("{difficulty} · not tried yet", { difficulty: t(difficultyLabel[untried.difficulty]) });
     to = `/problems/${untried.id}`;
   } else if (problems.length > 0) {
-    eyebrow = "All done";
-    title = "You solved every problem in the set";
-    detail = "New past CPE problems are added over time. Check back soon.";
+    eyebrow = t("All done");
+    title = t("You solved every problem in the set");
+    detail = t("New past CPE problems are added over time. Check back soon.");
   } else {
-    eyebrow = "Getting started";
-    title = "The problem set is being prepared";
+    eyebrow = t("Getting started");
+    title = t("The problem set is being prepared");
   }
 
   return (
     <section
-      aria-label="Next step"
+      aria-label={t("Next step")}
       className="flex flex-col gap-6 rounded-2xl border border-white/10 bg-ink-1 p-6 md:flex-row md:items-center md:justify-between md:p-8"
     >
       <div className="min-w-0">
@@ -96,7 +100,7 @@ function NextStep({ problems, submissions }: { problems: Problem[]; submissions:
       </div>
       {to && (
         <Link to={to} className={`${buttonPrimary} shrink-0 self-start md:self-auto`}>
-          Open problem
+          {t("Open problem")}
           <ArrowRight size={18} weight="bold" aria-hidden="true" />
         </Link>
       )}
@@ -105,11 +109,12 @@ function NextStep({ problems, submissions }: { problems: Problem[]; submissions:
 }
 
 function DifficultyProgress({ problems, submissions }: { problems: Problem[]; submissions: Submission[] }) {
+  const { t } = useI18n();
   const statuses = buildStatuses(submissions);
 
   return (
-    <section aria-label="Progress by difficulty">
-      <SectionTitle>Progress</SectionTitle>
+    <section aria-label={t("Progress by difficulty")}>
+      <SectionTitle>{t("Progress")}</SectionTitle>
       <dl className="mt-4 flex flex-col gap-4">
         {difficulties.map((difficulty) => {
           const inLevel = problems.filter((problem) => problem.difficulty === difficulty);
@@ -119,7 +124,7 @@ function DifficultyProgress({ problems, submissions }: { problems: Problem[]; su
           return (
             <div key={difficulty} className="grid grid-cols-[72px_1fr_64px] items-center gap-4">
               <dt className={`text-sm font-medium ${difficultyColor[difficulty]}`}>
-                {difficultyLabel[difficulty]}
+                {t(difficultyLabel[difficulty])}
               </dt>
               <div aria-hidden="true" className="h-2 overflow-hidden rounded-full bg-ink-2">
                 <div
@@ -139,17 +144,18 @@ function DifficultyProgress({ problems, submissions }: { problems: Problem[]; su
 }
 
 function Activity({ submissions }: { submissions: Submission[] }) {
+  const { t, tn, locale } = useI18n();
   const counts = useMemo(() => countByDay(submissions), [submissions]);
   const grid = useMemo(() => activityGrid(counts, WEEKS), [counts]);
   const { current, best } = useMemo(() => streaks(counts), [counts]);
   const recent = grid.flat().filter((day) => !day.future && day.count > 0).length;
 
   return (
-    <section aria-label="Activity">
-      <SectionTitle>{`Activity, last ${WEEKS} weeks`}</SectionTitle>
+    <section aria-label={t("Activity")}>
+      <SectionTitle>{t("Activity, last {weeks} weeks", { weeks: WEEKS })}</SectionTitle>
       <div className="mt-4 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <div role="img" aria-label={`Active on ${recent} days in the last ${WEEKS} weeks`} className="flex gap-1">
+          <div role="img" aria-label={t("Active on {days} days in the last {weeks} weeks", { days: recent, weeks: WEEKS })} className="flex gap-1">
             {grid.map((week, index) => (
               <div key={index} className="flex flex-col gap-1">
                 {week.map((day) => (
@@ -158,7 +164,9 @@ function Activity({ submissions }: { submissions: Submission[] }) {
                     title={
                       day.future
                         ? undefined
-                        : `${day.count} submission${day.count === 1 ? "" : "s"} on ${day.date.toLocaleDateString(undefined, { month: "short", day: "numeric" })}`
+                        : tn(day.count, "{n} submission on {date}", "{n} submissions on {date}", {
+                            date: day.date.toLocaleDateString(locale, { month: "short", day: "numeric" }),
+                          })
                     }
                     className={`h-4 w-4 rounded-sm ${day.future ? "bg-transparent" : activityLevel(day.count)}`}
                   />
@@ -167,26 +175,26 @@ function Activity({ submissions }: { submissions: Submission[] }) {
             ))}
           </div>
           <div aria-hidden="true" className="mt-3 flex items-center gap-1 font-mono text-xs text-neutral-500">
-            <span className="mr-1">Less</span>
+            <span className="mr-1">{t("Less")}</span>
             {[0, 1, 2, 4, 7].map((count) => (
               <span key={count} className={`h-3 w-3 rounded-sm ${activityLevel(count)}`} />
             ))}
-            <span className="ml-1">More</span>
+            <span className="ml-1">{t("More")}</span>
           </div>
         </div>
 
         <dl className="flex gap-8 font-mono text-sm">
           <div>
-            <dt className="text-neutral-500">Current streak</dt>
+            <dt className="text-neutral-500">{t("Current streak")}</dt>
             <dd className="mt-1 flex items-center gap-2 text-2xl font-semibold text-white">
               {current > 0 && <Fire size={20} weight="fill" className="text-yzu-yellow" aria-hidden="true" />}
-              {current} {current === 1 ? "day" : "days"}
+              {tn(current, "{n} day", "{n} days")}
             </dd>
           </div>
           <div>
-            <dt className="text-neutral-500">Best streak</dt>
+            <dt className="text-neutral-500">{t("Best streak")}</dt>
             <dd className="mt-1 text-2xl font-semibold text-white">
-              {best} {best === 1 ? "day" : "days"}
+              {tn(best, "{n} day", "{n} days")}
             </dd>
           </div>
         </dl>
@@ -196,17 +204,18 @@ function Activity({ submissions }: { submissions: Submission[] }) {
 }
 
 function RecentSubmissions({ problems, submissions }: { problems: Problem[]; submissions: Submission[] }) {
+  const { t } = useI18n();
   const byId = new Map(problems.map((problem) => [problem.id, problem]));
 
   return (
-    <section aria-label="Recent submissions">
+    <section aria-label={t("Recent submissions")}>
       <div className="flex items-baseline justify-between">
-        <SectionTitle>Recent submissions</SectionTitle>
+        <SectionTitle>{t("Recent submissions")}</SectionTitle>
         <Link
           to="/submissions"
           className={`rounded-sm text-sm text-neutral-400 transition duration-300 ease-soft hover:text-white ${focusRing}`}
         >
-          View all
+          {t("View all")}
         </Link>
       </div>
       <ul className="mt-4 divide-y divide-white/10 border-y border-white/10">
@@ -220,7 +229,7 @@ function RecentSubmissions({ problems, submissions }: { problems: Problem[]; sub
                 {problemLabel(byId.get(submission.problem_id), submission.problem_id)}
               </span>
               <span className={`col-start-1 font-mono text-sm md:col-start-auto ${verdictColor[submission.status]}`}>
-                {verdictLabel[submission.status]}
+                {t(verdictLabel[submission.status])}
               </span>
               <span className="col-start-2 row-start-1 text-right font-mono text-xs text-neutral-500 md:col-start-auto md:row-start-auto md:text-sm">
                 {formatRelative(submission.created_at)}
@@ -234,8 +243,10 @@ function RecentSubmissions({ problems, submissions }: { problems: Problem[]; sub
 }
 
 function AccountSkeleton() {
+  const { t } = useI18n();
+
   return (
-    <div aria-busy="true" aria-label="Loading your progress" className="mt-12 flex animate-pulse flex-col gap-12">
+    <div aria-busy="true" aria-label={t("Loading your progress")} className="mt-12 flex animate-pulse flex-col gap-12">
       <div className="h-32 rounded-2xl bg-ink-1" />
       <div className="grid gap-12 lg:grid-cols-2">
         <div className="h-32 rounded-lg bg-ink-1" />
@@ -248,6 +259,7 @@ function AccountSkeleton() {
 
 export default function Account() {
   const { user, logout } = useAuth();
+  const { t, locale } = useI18n();
   const navigate = useNavigate();
   const [state, setState] = useState<LoadState>({ kind: "loading" });
   const [attempt, setAttempt] = useState(0);
@@ -264,7 +276,7 @@ export default function Account() {
         if (cancelled) return;
         setState({
           kind: "error",
-          message: error instanceof ApiError ? error.message : "Your progress could not be loaded.",
+          message: error instanceof ApiError ? error.message : tr("Your progress could not be loaded."),
         });
       },
     );
@@ -280,7 +292,7 @@ export default function Account() {
   }
 
   const memberSince = user
-    ? serverDate(user.created_at).toLocaleDateString(undefined, { month: "short", year: "numeric" })
+    ? serverDate(user.created_at).toLocaleDateString(locale, { month: "short", year: "numeric" })
     : "";
 
   return (
@@ -292,13 +304,17 @@ export default function Account() {
             <div className="min-w-0">
               <h1 className="truncate text-3xl font-semibold tracking-tight text-white">{user?.username}</h1>
               <p className="mt-1 truncate text-sm text-neutral-400">
-                {user?.email} · Member since {memberSince}
+                {user?.email} · {t("Member since {date}", { date: memberSince })}
               </p>
             </div>
           </div>
-          <button type="button" onClick={handleLogout} className={`${buttonSecondary} self-start sm:self-auto`}>
-            Sign out
-          </button>
+          <div className="flex items-center gap-3 self-start sm:self-auto">
+            {/* Phones only: the top bar has no room for it there. */}
+            <LanguageSwitch className="border border-white/10 sm:hidden" />
+            <button type="button" onClick={handleLogout} className={buttonSecondary}>
+              {t("Sign out")}
+            </button>
+          </div>
         </div>
 
         {state.kind === "loading" && <AccountSkeleton />}
@@ -306,7 +322,7 @@ export default function Account() {
         {state.kind === "error" && (
           <div className="mt-12">
             <Message
-              title="Your progress could not be loaded"
+              title={t("Your progress could not be loaded")}
               body={state.message}
               action={
                 <button
@@ -317,7 +333,7 @@ export default function Account() {
                     setAttempt((value) => value + 1);
                   }}
                 >
-                  Try again
+                  {t("Try again")}
                 </button>
               }
             />
