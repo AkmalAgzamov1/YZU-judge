@@ -18,8 +18,22 @@
 		reverse_proxy api:8000
 	}
 
+	# Vite puts a hash of the content in every file name here, so a file never changes
+	# and browsers can keep it for a year. A missing one is a 404, not the app page:
+	# a tab opened before a deploy asks for the old names and must not cache HTML as JS.
+	handle /assets/* {
+		root * /srv
+		@hashed file
+		header @hashed Cache-Control "public, max-age=31536000, immutable"
+		file_server
+	}
+
 	handle {
 		root * /srv
+		# Without this, browsers guess how long to keep index.html and keep showing
+		# the old site after a deploy until someone reloads. no-cache still lets them
+		# store it; they only ask first, and an unchanged page costs a tiny 304.
+		header Cache-Control "no-cache"
 		# React Router owns the paths, so unknown ones fall back to the app.
 		try_files {path} /index.html
 		file_server
