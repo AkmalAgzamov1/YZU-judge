@@ -14,6 +14,12 @@ x-backend: &backend
     EMAIL_FROM: ${EMAIL_FROM:-YZU Judge <codes@send.yzujudge.com>}
     TEST_DATA_DIR: /data/test_data
     API_DOCS: "off"
+    # Rate limits. Defaults match the app; set them in .env to fit the class size
+    # and the Resend plan (the free plan sends 100 emails a day).
+    REGISTER_LIMIT_PER_HOUR: ${REGISTER_LIMIT_PER_HOUR:-500}
+    LOGIN_LIMIT_PER_IP_PER_MINUTE: ${LOGIN_LIMIT_PER_IP_PER_MINUTE:-120}
+    EMAILS_PER_IP_PER_HOUR: ${EMAILS_PER_IP_PER_HOUR:-200}
+    EMAILS_PER_DAY_GLOBAL: ${EMAILS_PER_DAY_GLOBAL:-90}
   volumes:
     - test-data:/data/test_data
   depends_on:

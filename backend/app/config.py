@@ -36,3 +36,17 @@ EMAIL_FROM = os.getenv("EMAIL_FROM", "YZU Judge <codes@send.yzujudge.com>")
 # The interactive docs and the OpenAPI schema are a map of every endpoint. Development
 # keeps them (npm run gen:api reads the schema); docker-compose.prod.yml turns them off.
 API_DOCS = os.getenv("API_DOCS", "on").lower() != "off"
+
+# Sign up and code-email rate limits.
+#
+# Whole classes register from one campus address, so a low per network limit made a
+# lab compete with itself: half of 60 students got "Too many new accounts". The per
+# network numbers are therefore high. The real ceiling is the provider's daily email
+# quota below, because every code is one email and accounts cannot be verified without it.
+# All of these can be raised in .env for a bigger class or a paid Resend plan.
+REGISTER_LIMIT_PER_HOUR = int(os.getenv("REGISTER_LIMIT_PER_HOUR", 500))
+LOGIN_LIMIT_PER_IP_PER_MINUTE = int(os.getenv("LOGIN_LIMIT_PER_IP_PER_MINUTE", 120))
+LOGIN_LIMIT_PER_USERNAME_PER_MINUTE = int(os.getenv("LOGIN_LIMIT_PER_USERNAME_PER_MINUTE", 10))
+EMAILS_PER_IP_PER_HOUR = int(os.getenv("EMAILS_PER_IP_PER_HOUR", 200))
+# Resend's free plan sends 100 emails a day. Keep a small buffer; a paid plan raises this.
+EMAILS_PER_DAY_GLOBAL = int(os.getenv("EMAILS_PER_DAY_GLOBAL", 90))

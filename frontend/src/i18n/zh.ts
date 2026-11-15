@@ -577,6 +577,8 @@ export const apiMessages: Record<string, string> = {
   "Invalid username or password": "使用者名稱或密碼錯誤",
   "Too many attempts. Wait a minute and try again.": "嘗試次數過多，請一分鐘後再試。",
   "Too many emails from your network. Try again in an hour.": "你所在的網路寄出太多信件，請一小時後再試。",
+  "The site has already sent its full quota of verification emails today. Please try again tomorrow, or sign in if you already have an account.":
+    "本網站今日的驗證信額度已用完。請明天再試；若你已有帳號，請直接登入。",
   "We could not send the email right now. Try again in a minute.": "目前無法寄出信件，請一分鐘後再試。",
   "Username must be 3 to 32 characters.": "使用者名稱長度需為 3 到 32 個字元。",
   "Username cannot contain spaces or invisible characters.": "使用者名稱不能包含空白或不可見字元。",
