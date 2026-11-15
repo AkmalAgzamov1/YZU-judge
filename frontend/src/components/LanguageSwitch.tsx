@@ -6,6 +6,8 @@ const OPTIONS: { code: Lang; label: string; htmlLang: string }[] = [
   { code: "en", label: "EN", htmlLang: "en" },
   { code: "zh", label: "中文", htmlLang: "zh-Hant-TW" },
   { code: "vi", label: "Tiếng Việt", htmlLang: "vi" },
+  { code: "ru", label: "Русский", htmlLang: "ru" },
+  { code: "id", label: "Bahasa Indonesia", htmlLang: "id" },
 ];
 
 export default function LanguageSwitch({ className = "" }: { className?: string }) {

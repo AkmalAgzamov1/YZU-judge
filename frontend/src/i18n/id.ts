@@ -1,0 +1,616 @@
+// Indonesian (Bahasa Indonesia). Every line is keyed by the English text the page shows,
+// exactly as in zh.ts and vi.ts, so a {name} stays a value put in at runtime and <tag>…</tag>
+// still marks the words that become a link. If a line is ever missing the site falls back to English.
+export const id = {
+  // Browser tab
+  "YZU Judge · Practice the CPE before it counts": "YZU Judge · Latihan CPE sebelum nilainya dihitung",
+
+  // Navigation
+  "Problems": "Soal",
+  "Submissions": "Kiriman",
+  "Mock CPE": "CPE simulasi",
+  "Mock": "Simulasi",
+  "Admin": "Admin",
+  "Sign in": "Masuk",
+  "Create account": "Buat akun",
+  "Your account": "Akun kamu",
+  "YZU Judge home": "Beranda YZU Judge",
+  "Skip to content": "Lewat ke isi",
+  "Why the CPE": "Kenapa ikut CPE",
+  "Registration": "Pendaftaran",
+  "Features": "Fitur",
+  "How it works": "Cara kerjanya",
+  "FAQ": "Tanya jawab",
+  "Close menu": "Tutup menu",
+  "Open menu": "Buka menu",
+
+  // Footer
+  "A CPE practice site made at Yuan Ze University. Not affiliated with the CPE organizers.":
+    "Situs latihan CPE yang dibuat mahasiswa Universitas Yuan Ze. Tidak berafiliasi dengan penyelenggara CPE.",
+  "Privacy policy": "Kebijakan privasi",
+  "Terms of use": "Ketentuan penggunaan",
+  "Source on GitHub": "Sumber di GitHub",
+  "Official CPE website": "Situs resmi CPE",
+  "© 2026 YZU Judge. Made by Akmal Agzamov in his tiny room :)":
+    "© 2026 YZU Judge. Dibuat oleh Akmal Agzamov di kamarnya yang mungil :)",
+  "Logo of the YZU International Bachelor Program in Informatics. Campus photo by Emily rao, CC0, via <a>Wikimedia Commons</a>":
+    "Logo Program Sarjana Informatika Internasional YZU. Foto kampus oleh Emily rao, CC0, via <a>Wikimedia Commons</a>",
+  "Back to home": "Kembali ke beranda",
+  "Privacy": "Privasi",
+  "Terms": "Ketentuan",
+
+  // Landing: hero
+  "CPE practice for Yuan Ze University": "Latihan CPE untuk mahasiswa Universitas Yuan Ze",
+  "Pass the CPE": "Lulus CPE",
+  "and graduate on time": "dan lulus tepat waktu",
+  "Practice on past CPE problems with a judge that grades your code the way the exam does. Built at Yuan Ze for the departments that require it.":
+    "Berlatih dengan soal-soal CPE lama dan judge yang menilai kodemu seperti ujian sesungguhnya. Dibuat di Yuan Ze untuk jurusan yang mensyaratkannya.",
+  "Continue practicing": "Lanjutkan latihan",
+  "Create your free account": "Buat akun gratis",
+  "Browse problems": "Lihat soal",
+  "Free for YZU students": "Gratis untuk mahasiswa YZU",
+  "The main gate of Yuan Ze University, with the tall 元智大學 sign tower and the stone name wall under a blue sky":
+    "Gerbang utama Universitas Yuan Ze, dengan menara papan nama 元智大學 yang tinggi dan dinding batu bernama di bawah langit biru",
+  "Main gate, Yuan Ze University": "Gerbang utama, Universitas Yuan Ze",
+  "Taoyuan": "Taoyuan",
+
+  // Landing: tagline
+  "Our promise": "Janji kami",
+  "Practice the format": "Biasakan formatnya,",
+  "until it feels familiar,": "sampai terasa akrab,",
+  "so the CPE costs you": "agar CPE hanya memakan",
+  "an afternoon, not a year.": "sore hari, bukan setahun.",
+
+  // Landing: why the CPE
+  "The exam": "Ujian",
+  "Most students meet the CPE too late": "Kebanyakan mahasiswa mengetahui CPE terlalu terlambat",
+  "The Collegiate Programming Exam is a graduation requirement in several YZU engineering departments. Many freshmen have never heard of it. Some seniors see the format for the first time on exam day, and some of them stay an extra year because of it.":
+    "Ujian Pemrograman Perguruan Tinggi (CPE) adalah syarat kelulusan di beberapa jurusan teknik YZU. Banyak mahasiswa tahun pertama belum pernah mendengarnya. Sebagian mahasiswa tahun akhir pertama kali melihat formatnya justru di hari ujian, dan sebagian dari mereka harus menambah setahun karena itu.",
+  "Some of those seniors are my close friends. YZU Judge is my attempt to fix this, so the next class meets the CPE early and walks in prepared.":
+    "Beberapa dari mereka adalah sahabat dekatku. YZU Judge adalah usahaku memperbaiki ini, agar angkatan berikutnya mengenal CPE lebih awal dan datang dengan persiapan.",
+  "Duration": "Durasi",
+  "3 hours": "3 jam",
+  "One computer, no internet, no notes.": "Satu komputer, tanpa internet, tanpa catatan.",
+  "7, in English": "7 soal, dalam bahasa Inggris",
+  "UVa Online Judge style, from warmups to hard.": "Gaya UVa Online Judge, dari pemanasan hingga sulit.",
+  "Sittings": "Gelombang",
+  "About 4 a year": "Sekitar 4 per tahun",
+  "Roughly one per season. Each one you skip is one less chance.": "Kira-kira satu per musim. Setiap yang kamu lewatkan berarti satu peluang berkurang.",
+  "To graduate": "Untuk lulus",
+  "2 in one sitting": "2 dalam satu gelombang",
+  "Or 3 solved in total across separate sittings.": "Atau total 3 terpecahkan di beberapa gelombang terpisah.",
+  "Requirements differ by department and enrollment year. Confirm yours with your department office. Exam dates and registration are on the <a>official CPE website</a>.":
+    "Persyaratan berbeda menurut jurusan dan tahun masuk. Konfirmasikan milikmu dengan kantor jurusan. Jadwal ujian dan pendaftaran ada di <a>situs resmi CPE</a>.",
+
+  // Landing: how to register
+  "How to register for the CPE": "Cara mendaftar CPE",
+  "With a Taiwanese national ID card you sign up on the <a>official CPE website</a> yourself. The site cannot check an ARC, so international students need the CPE office to open the account for them.":
+    "Dengan kartu identitas nasional Taiwan kamu mendaftar sendiri di <a>situs resmi CPE</a>. Situs itu tidak bisa memeriksa ARC, jadi mahasiswa internasional perlu kantor CPE membuka akun untuk mereka.",
+  "The whole process takes one to two weeks. Start well before registration opens.":
+    "Seluruh proses butuh satu hingga dua minggu. Mulailah jauh sebelum pendaftaran dibuka.",
+  "Download and fill in the account form": "Unduh dan isi formulir akun",
+  "Download the <a>CPE account form (帳號處理單), PDF</a> and fill in your part: the date, your name, student ID, department, email, phone number and your ARC or passport number. Tick 外籍人士 (foreign national) as the reason.":
+    "Unduh <a>formulir akun CPE (帳號處理單), PDF</a> dan isi bagianmu: tanggal, nama, nomor mahasiswa, jurusan, email, nomor telepon, dan nomor ARC atau paspor. Centang 外籍人士 (warga asing) sebagai alasannya.",
+  "Print it and attach copies of your student ID and your ARC in the space at the bottom.":
+    "Cetak dan tempel salinan kartu mahasiswa dan ARC-mu di ruang kosong di bagian bawah.",
+  "Hand it in at your department office": "Serahkan ke kantor jurusanmu",
+  "Your department checks it, and a teacher fills in their part and signs it. When it is ready, the department contacts you and gives the signed form back.":
+    "Jurusanmu memeriksa, lalu seorang dosen mengisi bagiannya dan menandatanganinya. Saat selesai, jurusan menghubungi kamu dan mengembalikan formulir yang sudah bertanda tangan.",
+  "For IBPI students, the office is room R70201.": "Untuk mahasiswa IBPI, kantornya di ruang R70201.",
+  "Email the signed form to the CPE office": "Kirim formulir bertanda tangan ke email kantor CPE",
+  "Scan the signed form into one PDF and send it to {email}, from the same email you wrote on the form. Send it at least one week before registration closes.":
+    "Pindai formulir bertanda tangan menjadi satu PDF dan kirim ke {email}, dari email yang sama dengan yang kamu tulis di formulir. Kirim minimal satu minggu sebelum pendaftaran ditutup.",
+  "The form itself still lists an old address, cpe@cse.nsysu.edu.tw. Do not use it, send to {email}. A short message is enough:":
+    "Formulir itu sendiri masih mencantumkan alamat lama, cpe@cse.nsysu.edu.tw. Jangan gunakan itu, kirim ke {email}. Pesan singkat sudah cukup:",
+  "To": "Kepada",
+  "Subject": "Subjek",
+  "message": "isi pesan",
+  "Copy": "Salin",
+  "Copied": "Tersalin",
+  "Log in and change your password": "Masuk dan ganti kata sandimu",
+  "The CPE office usually answers within a few days. Your username and your password are both your ARC number, so change the password right after the first login and check that your name and details are correct. No reply three days before registration closes? Email them again.":
+    "Kantor CPE biasanya menjawab dalam beberapa hari. Nama pengguna dan kata sandimu sama-sama nomor ARC-mu, jadi ganti kata sandi segera setelah login pertama dan periksa bahwa nama dan datamu benar. Tidak ada balasan tiga hari sebelum pendaftaran ditutup? Kirim email lagi.",
+  "Sign up for the exam itself": "Daftar ke ujiannya sendiri",
+  "Having an account does not mean you are registered. Every sitting has its own registration window: log in on the <a>official CPE website</a> and sign up for the exam each time, choosing the school where you will take it.":
+    "Punya akun tidak berarti kamu terdaftar. Setiap gelombang punya jendela pendaftaran sendiri: masuk di <a>situs resmi CPE</a> dan daftar ke ujian setiap kali, memilih sekolah tempat kamu akan mengikuti ujian.",
+  "Seats at Yuan Ze fill up within 30 minutes to an hour after registration opens. To take the exam on campus instead of travelling to another school, sign up the moment it opens.":
+    "Kuota di Yuan Ze habis dalam 30 menit hingga satu jam setelah pendaftaran dibuka. Untuk mengikuti ujian di kampus sendiri alih-alih bepergian ke sekolah lain, daftarlah begitu pendaftaran dibuka.",
+  "If you sign up and miss the exam without a valid reason, you lose your place at the next one.":
+    "Jika kamu mendaftar dan melewatkan ujian tanpa alasan sah, kamu kehilangan tempatmu di ujian berikutnya.",
+
+  // Landing: next CPE
+  "Next CPE": "CPE berikutnya",
+  "The next date is on its way": "Tanggal berikutnya segera hadir",
+  "The next CPE is {date}": "CPE berikutnya adalah {date}",
+  "Every one of the last {count} CPE exams had exactly one problem from the official one star list, always as problem A, B or C. That one is meant to be solvable by anyone who passed an intro programming course, so it is the problem you cannot afford to miss.":
+    "Setiap dari {count} ujian CPE terakhir memiliki tepat satu soal dari daftar resmi satu bintang, selalu sebagai soal A, B, atau C. Soal itu dirancang agar bisa dipecahkan siapa pun yang telah lulus mata kuliah pengantar pemrograman, jadi ini soal yang tidak boleh kamu lewatkan.",
+  "Check the <a>official CPE website</a> for the next sitting.": "Cek <a>situs resmi CPE</a> untuk gelombang berikutnya.",
+  "Registration opens {opens} and closes {closes} (Taipei time).": "Pendaftaran dibuka {opens} dan ditutup {closes} (waktu Taipei).",
+  "Registration is open until {closes} (Taipei time).": "Pendaftaran terbuka hingga {closes} (waktu Taipei).",
+  "Registration for this sitting is closed.": "Pendaftaran untuk gelombang ini telah ditutup.",
+  "Sign up on the <a>official CPE website</a>. International student? <b>Get your account first</b>, it takes one to two weeks.":
+    "Daftar di <a>situs resmi CPE</a>. Mahasiswa internasional? <b>Uruskan akunmu dulu</b>, butuh satu hingga dua minggu.",
+  "days": "hari",
+  "hours": "jam",
+  "minutes": "menit",
+  "Time until the exam": "Waktu menuju ujian",
+  "Which star problem will it be?": "Soal bintang berapa yang akan keluar?",
+  "The CPE keeps an official list of {n} \"one star\" problems, the easiest level it has. Here is the trick: every CPE takes exactly one of its seven problems from this list. We checked all {count} past exams, and not a single one broke this rule.":
+    "CPE menyimpan daftar resmi berisi {n} soal \"satu bintang\", level termudah yang dimilikinya. Ini kuncinya: setiap CPE mengambil tepat satu dari tujuh soalnya dari daftar ini. Kami memeriksa semua {count} ujian sebelumnya, dan tidak satu pun melanggar aturan ini.",
+  "So the list is your free point. Practice all {n} and you walk into the exam already knowing one of the problems. You still need a second one to pass in a single sitting, but you start from 1, not from 0.":
+    "Jadi daftar itu adalah poin gratis bagimu. Latih semua {n} dan kamu masuk ke ujian dengan sudah mengetahui salah satu soalnya. Kamu tetap butuh satu lagi untuk lulus dalam satu gelombang, tapi kamu mulai dari 1, bukan dari 0.",
+  "We can't know which one comes next, but the past exams show a pattern: a problem from the list has never come back within {years} years. Below is the whole list, grouped by when each problem was last asked. Start from the top. Dashed ones are not on YZU Judge, because the CPE never published test data for them, so they open the UVa statement instead.":
+    "Kita tidak tahu mana yang keluar berikutnya, tapi ujian sebelumnya menunjukkan pola: sebuah soal dari daftar itu tidak pernah muncul kembali dalam {years} tahun. Di bawah ini seluruh daftar, dikelompokkan berdasarkan kapan soal itu terakhir diujikan. Mulai dari atas. Yang bergaris putus-putus tidak ada di YZU Judge, karena CPE tidak pernah merilis data tes untuknya, jadi soal itu membuka pernyataan di UVa sebagai gantinya.",
+  "Never asked yet": "Belum pernah keluar",
+  "On the list since the start, never picked.": "Ada dalam daftar sejak awal, belum pernah dipilih.",
+  "Due again": "Waktunya muncul lagi",
+  "Last asked more than {years} years before this exam.": "Terakhir diujikan lebih dari {years} tahun sebelum ujian ini.",
+  "Asked recently": "Baru keluar",
+  "None of the list has come back within {years} years, so these are unlikely.":
+    "Tidak ada dari daftar itu yang muncul kembali dalam {years} tahun, jadi kemungkinan besar tidak keluar.",
+  "Not on YZU Judge yet. Opens the UVa statement.": "Belum ada di YZU Judge. Membuka pernyataan di UVa.",
+
+  // Landing: features
+  "Practice": "Latihan",
+  "Real CPE problems, judged like the real exam": "Soal CPE sungguhan, dinilai seperti ujian sungguhan",
+  "Exam conditions": "Kondisi ujian",
+  "Read from standard input, print to standard output, beat a strict time limit. Your code runs in an isolated container, like on the real judge.":
+    "Baca dari masukan standar, cetak ke keluaran standar, taklukkan batas waktu yang ketat. Kodemu berjalan dalam kontainer terisolasi, seperti pada judge sungguhan.",
+  "Verdicts you can read": "Verdict yang bisa kamu baca",
+  "Each test case reports its runtime and memory, so you can tell a wrong answer from a slow one before you try again.":
+    "Setiap kasus tes melaporkan waktu jalan dan memorinya, sehingga kamu bisa membedakan jawaban salah dari yang lambat sebelum mencoba lagi.",
+  "Easy to hard": "Dari mudah ke sulit",
+  "Problems are tagged easy, medium and hard. Start with the warmups that open every CPE and move up when they pass on the first try.":
+    "Soal ditandai mudah, menengah, dan sulit. Mulailah dari soal pemanasan yang membuka setiap CPE dan naiklah ketika mereka lulus pada percobaan pertama.",
+  "UVa 10055 · Past CPE problem · Easy": "UVa 10055 · Soal CPE lama · Mudah",
+  "Each line of input holds two integers: the size of Hashmat's army and the size of the opposing army. Neither is larger than 2³². For every line, print the difference between the two.":
+    "Tiap baris masukan berisi dua bilangan bulat: ukuran pasukan Hashmat dan ukuran pasukan lawan. Tidak ada yang lebih besar dari 2³². Untuk setiap baris, cetak selisih keduanya.",
+  "Sample input": "Contoh masukan",
+  "Sample output": "Contoh keluaran",
+  "judging against 4 hidden tests": "menilai terhadap 4 tes tersembunyi",
+  "test {n}": "tes {n}",
+  "verdict": "verdict",
+
+  // Landing: how it works
+  "Three steps to your first verdict": "Tiga langkah menuju verdict pertamamu",
+  "Create an account": "Buat akun",
+  "A username, your email and a password. Under a minute, and every submission you make is saved.":
+    "Nama pengguna, email, dan kata sandi. Kurang dari semenit, dan setiap kirimanmu tersimpan.",
+  "Pick a past CPE problem": "Pilih soal CPE lama",
+  "Start with the easy ones. Read the statement, check the sample, write your solution.":
+    "Mulailah dari yang mudah. Baca pernyataan, cek contoh, tulis solusimu.",
+  "Submit and read the verdict": "Kirim dan baca verdict",
+  "The judge runs your code against hidden tests and tells you exactly where it passed and where it failed.":
+    "Judge menjalankan kodemu pada tes tersembunyi dan memberi tahu persis di mana ia lulus dan di mana ia gagal.",
+
+  // Landing: founder note
+  "Why this exists": "Kenapa ini ada",
+  "“I watched some of my seniors stay an extra year because exam day was the first time they saw the format. YZU Judge is the practice I wish they had from their first semester.”":
+    "“Saya menyaksikan beberapa mahasiswa senior bertahan setahun ekstra karena hari ujian adalah kali pertama mereka melihat formatnya. YZU Judge adalah latihan yang saya harapkan mereka punya sejak semester pertama.”",
+  "Yuan Ze University student, builder of YZU Judge": "Mahasiswa Universitas Yuan Ze, pembangun YZU Judge",
+
+  // Landing: FAQ
+  "Questions students ask": "Pertanyaan yang ditanyakan mahasiswa",
+  "What is the CPE?": "Apa itu CPE?",
+  "The Collegiate Programming Examination is a national programming test for university students in Taiwan. You get 3 hours and a set of problems in English, written in the style of the UVa Online Judge. A computer judges your code against hidden tests.":
+    "Collegiate Programming Examination adalah ujian pemrograman nasional bagi mahasiswa perguruan tinggi di Taiwan. Kamu mendapat 3 jam dan sekumpulan soal berbahasa Inggris, ditulis dalam gaya UVa Online Judge. Sebuah komputer menilai kodemu terhadap tes tersembunyi.",
+  "Do I need to pass it to graduate?": "Haruskah saya luluskannya untuk lulus?",
+  "Several YZU engineering departments require it. A common rule is 2 problems solved in one sitting, or 3 solved in total across separate sittings. Rules differ by department and enrollment year, so confirm yours with your department office.":
+    "Beberapa jurusan teknik YZU mensyaratkannya. Aturan umum adalah memecahkan 2 soal dalam satu gelombang, atau total 3 di beberapa gelombang terpisah. Aturan berbeda menurut jurusan dan tahun masuk, jadi konfirmasikan milikmu dengan kantor jurusan.",
+  "Are these real CPE problems?": "Apakah ini soal CPE sungguhan?",
+  "Yes. The problem set is built from past CPE exam problems, so you practice on the same kind of questions you will see on exam day, with test data to judge your code.":
+    "Ya. Kumpulan soal disusun dari soal-soal ujian CPE sebelumnya, jadi kamu berlatih pada jenis pertanyaan yang sama yang akan kamu lihat di hari ujian, dengan data tes untuk menilai kodemu.",
+  "When should I start practicing?": "Kapan saya harus mulai berlatih?",
+  "As early as your first year. The CPE runs about four times a year, and every sitting you take while still relaxed is a free attempt. Waiting until senior year leaves very few chances.":
+    "Seawal tahun pertamamu. CPE berlangsung sekitar empat kali setahun, dan setiap gelombang yang kamu ikuti sambil tetap santai adalah percobaan gratis. Menunggu sampai tahun akhir menyisakan sangat sedikit peluang.",
+  "Is YZU Judge free?": "Apakah YZU Judge gratis?",
+  "Yes. There is no payment, no ads and nothing to install. You only need an account so your submissions are saved.":
+    "Ya. Tidak ada pembayaran, tidak ada iklan, dan tidak ada yang perlu dipasang. Kamu hanya perlu akun agar kirimanmu tersimpan.",
+  "Which programming languages can I use?": "Bahasa pemrograman apa saja yang bisa saya pakai?",
+  "Python 3.9.6, C/C++ (MinGW GCC 6.3.0 and MSVC v140), and Java (AdoptOpenJDK 8 or 11) - the same languages the real CPE exam offers.":
+    "Python 3.9.6, C/C++ (MinGW GCC 6.3.0 dan MSVC v140), dan Java (AdoptOpenJDK 8 atau 11) - bahasa yang sama dengan yang ditawarkan ujian CPE sungguhan.",
+  "Is this the official CPE website?": "Apakah ini situs resmi CPE?",
+  "No. YZU Judge is a practice site made at Yuan Ze University. Registration for the real exam happens on the official CPE website, usually announced by your department.":
+    "Bukan. YZU Judge adalah situs latihan yang dibuat di Universitas Yuan Ze. Pendaftaran untuk ujian sungguhan terjadi di situs resmi CPE, biasanya diumumkan oleh jurusanmu.",
+  "Go to the official CPE website": "Buka situs resmi CPE",
+  "I am not a CS major. Is this still for me?": "Saya bukan anak ilmu komputer. Apakah ini tetap cocok untuk saya?",
+  "Yes. If your department requires the CPE, the easy problems are a good place to start even if programming is not your main subject.":
+    "Ya. Jika jurusanmu mensyaratkan CPE, soal-soal mudah adalah tempat mulai yang baik bahkan jika pemrograman bukan bidang utama kamu.",
+
+  // Landing: final call
+  "Your next CPE sitting": "Gelombang CPE-mu berikutnya",
+  "is closer than it looks": "lebih dekat daripada kelihatannya",
+  "Solve your first past CPE problem tonight.": "Pecahkan soal CPE lama pertamamu malam ini.",
+  "Free for every YZU student, nothing to install.": "Gratis untuk setiap mahasiswa YZU, tidak ada yang perlu dipasang.",
+
+  // Legal
+  "Last updated {date}": "Terakhir diperbarui {date}",
+
+  // Sign in, sign up, codes
+  "Enter your username.": "Masukkan nama pengguna.",
+  "Enter your password.": "Masukkan kata sandi.",
+  "Something went wrong. Please try again.": "Terjadi kesalahan. Silakan coba lagi.",
+  "Welcome back": "Selamat datang kembali",
+  "Sign in to keep practicing for the CPE.": "Masuk untuk terus berlatih untuk CPE.",
+  "Your session expired. Sign in again to continue where you left off.": "Sesi kamu kedaluwarsa. Masuk lagi untuk melanjutkan dari tempat kamu berhenti.",
+  "Username": "Nama pengguna",
+  "Password": "Kata sandi",
+  "Forgot password?": "Lupa kata sandi?",
+  "Signing in…": "Masuk…",
+  "New to YZU Judge?": "Baru di YZU Judge?",
+  "Create a free account": "Buat akun gratis",
+  "Choose a username.": "Pilih nama pengguna.",
+  "Use at least 3 characters.": "Gunakan minimal 3 karakter.",
+  "Use at most 32 characters.": "Gunakan maksimal 32 karakter.",
+  "Usernames cannot contain spaces.": "Nama pengguna tidak boleh mengandung spasi.",
+  "Enter your email address.": "Masukkan alamat email kamu.",
+  "That email address looks incomplete.": "Alamat email itu tampak belum lengkap.",
+  "Choose a password.": "Pilih kata sandi.",
+  "Use at least 8 characters.": "Gunakan minimal 8 karakter.",
+  "Use at most 128 characters.": "Gunakan maksimal 128 karakter.",
+  "Type your password again.": "Tulis kata sandimu lagi.",
+  "Passwords do not match.": "Kata sandi tidak cocok.",
+  "Create your account": "Buat akunmu",
+  "Free for every YZU student.": "Gratis untuk setiap mahasiswa YZU.",
+  "Email": "Email",
+  "At least 8 characters.": "Minimal 8 karakter.",
+  "Confirm password": "Konfirmasi kata sandi",
+  "Creating account…": "Membuat akun…",
+  "By creating an account, you agree to the <terms>Terms of use</terms> and <privacy>Privacy policy</privacy>.":
+    "Dengan membuat akun, kamu menyetujui <terms>Ketentuan penggunaan</terms> dan <privacy>Kebijakan privasi</privacy>.",
+  "Already have an account?": "Sudah punya akun?",
+  "Enter the 6-digit code from the email.": "Masukkan kode 6 digit dari email.",
+  "We sent a new code. The old one no longer works.": "Kami mengirim kode baru. Kode lama tidak berlaku lagi.",
+  "Check your email": "Periksa email kamu",
+  "We sent a 6-digit code to {email}.": "Kami mengirim kode 6 digit ke {email}.",
+  "Checking…": "Memeriksa…",
+  "Verify and sign in": "Verifikasi dan masuk",
+  "No email? Check your spam folder, or {resend}.": "Tidak ada email? Periksa folder spam kamu, atau {resend}.",
+  "send a new code": "kirim kode baru",
+  "send a new code in {seconds}s": "kirim kode baru dalam {seconds} dtk",
+  "Wrong email?": "Email salah?",
+  "Sign up again": "Daftar ulang",
+  "6-digit code": "Kode 6 digit",
+  "Look in your Junk Email folder": "Lihat di folder Email Sampah kamu",
+  "Outlook and YZU mail often put our code there. If you find it, mark it as <b>Not junk</b> so the next codes go straight to your inbox.":
+    "Outlook dan email YZU sering menaruh kode kami di sana. Jika kamu menemukannya, tandai sebagai <b>Bukan sampah</b> agar kode berikutnya langsung masuk ke kotak masukmu.",
+  "Hide password": "Sembunyikan kata sandi",
+  "Show password": "Tampilkan kata sandi",
+  "Enter the email you signed up with.": "Masukkan email yang kamu pakai untuk mendaftar.",
+  "Choose a new password.": "Pilih kata sandi baru.",
+  "Type your new password again.": "Tulis kata sandi barumu lagi.",
+  "If the email has an account, a new code is on its way.": "Jika email itu punya akun, kode baru sedang dikirim.",
+  "Reset your password": "Setel ulang kata sandimu",
+  "We will email you a code to choose a new one.": "Kami akan mengirimimu email berisi kode untuk memilih yang baru.",
+  "Sending…": "Mengirim…",
+  "Send code": "Kirim kode",
+  "Remembered it?": "Ingat lagi?",
+  "Choose a new password": "Pilih kata sandi baru",
+  "If {email} has an account, we sent it a 6-digit code.": "Jika {email} punya akun, kami telah mengiriminya kode 6 digit.",
+  "New password": "Kata sandi baru",
+  "Confirm new password": "Konfirmasi kata sandi baru",
+  "Saving…": "Menyimpan…",
+  "Save and sign in": "Simpan dan masuk",
+  "Use a different email": "Gunakan email lain",
+
+  // Not found
+  "Verdict: 404 Not Found": "Verdict: 404 Not Found",
+  "This page did not pass the tests": "Halaman ini tidak lulus tes",
+  "The link may be old or mistyped. Head back to the home page and try again from there.":
+    "Tautan mungkin sudah lama atau salah ketik. Kembali ke halaman beranda dan coba lagi dari sana.",
+
+  // Difficulty, topics, verdicts
+  "Easy": "Mudah",
+  "Medium": "Menengah",
+  "Hard": "Sulit",
+  "Implementation": "Implementasi",
+  "Math": "Matematika",
+  "Number theory": "Teori bilangan",
+  "Strings": "String",
+  "Sorting": "Pengurutan",
+  "Greedy": "Serakah",
+  "Brute force": "Kekasar",
+  "DP": "Pemrograman dinamis",
+  "Graphs": "Graf",
+  "Data structures": "Struktur data",
+  "Geometry": "Geometri",
+  "Simulation": "Simulasi",
+  "In queue": "Dalam antrean",
+  "Running": "Berjalan",
+  "Accepted": "Diterima",
+  "Wrong answer": "Jawaban salah",
+  "Presentation error": "Kesalahan penyajian",
+  "Time limit exceeded": "Melebihi batas waktu",
+  "Memory limit exceeded": "Melebihi batas memori",
+  "Output limit exceeded": "Melebihi batas keluaran",
+  "Runtime error": "Kesalahan saat berjalan",
+  "Compilation error": "Kesalahan kompilasi",
+  "Judge error": "Kesalahan judge",
+
+  // Problem list
+  "Solved": "Terpecahkan",
+  "Attempted": "Dicoba",
+  "Not tried": "Belum dicoba",
+  "Loading problems": "Memuat soal",
+  "The problem list could not be loaded.": "Daftar soal tidak dapat dimuat.",
+  "{total} problems, {cpe} of them from past CPE exams. Sorted from easy to hard.":
+    "Total {total} soal, {cpe} di antaranya dari ujian CPE sebelumnya. Disortir dari mudah ke sulit.",
+  "Past CPE problems, sorted from easy to hard.": "Soal CPE lama, disortir dari mudah ke sulit.",
+  "One star list: every CPE has one of these. <a>Why it matters</a>": "Daftar satu bintang: setiap CPE punya salah satunya. <a>Kenapa penting</a>",
+  "Difficulty": "Kesulitan",
+  "All": "Semua",
+  "Source": "Sumber",
+  "Past CPE": "CPE lama",
+  "Other": "Lainnya",
+  "Status": "Status",
+  "Search problems": "Cari soal",
+  "Search by title or UVa number": "Cari berdasarkan judul atau nomor UVa",
+  "Topics": "Topik",
+  "Problems could not be loaded": "Soal tidak dapat dimuat",
+  "Try again": "Coba lagi",
+  "The problem set is being prepared": "Kumpulan soal sedang disiapkan",
+  "Past CPE problems are being added right now. Check back soon.": "Soal-soal CPE lama sedang ditambahkan. Nantikan segera.",
+  "No problems match these filters": "Tidak ada soal yang cocok dengan filter ini",
+  "Try another difficulty or a shorter search.": "Coba kesulitan lain atau pencarian lebih pendek.",
+  "Clear filters": "Hapus filter",
+  "Title": "Judul",
+  "Time": "Waktu",
+  "Memory": "Memori",
+  "On the CPE one star list: every CPE has one of these": "Ada di daftar satu bintang CPE: setiap CPE punya salah satunya",
+  "One star list": "Daftar satu bintang",
+
+  // Problem page
+  "From {paper}": "Dari {paper}",
+  "No such problem": "Tidak ada soal itu",
+  "Back to problems": "Kembali ke soal",
+  "The problem could not be loaded.": "Soal tidak dapat dimuat.",
+  "Write some code before submitting.": "Tulis beberapa kode sebelum mengirim.",
+  "Time is up. This submission was not sent.": "Waktu habis. Kiriman ini tidak terkirim.",
+  "The judge is offline right now. Your code is saved here, try again in a minute.":
+    "Judge sedang luring. Kodemu tersimpan di sini, coba lagi dalam semenit.",
+  "Your code could not be sent. Try again.": "Kodemu tidak dapat dikirim. Coba lagi.",
+  "Problem could not be loaded": "Soal tidak dapat dimuat",
+  "It may have been removed, or the link is wrong.": "Mungkin telah dihapus, atau tautannya salah.",
+  "View": "Lihat",
+  "Problem": "Soal",
+  "Code": "Kode",
+  "Problem statement": "Pernyataan soal",
+  "Loading problem": "Memuat soal…",
+  "Show topics": "Tampilkan topik",
+  "Hide hints and solution": "Sembunyikan petunjuk dan solusi",
+  "Stuck? Hints and solution": "Mentok? Petunjuk dan solusi",
+  "Language": "Bahasa",
+  "Submit": "Kirim",
+  "Sign in to submit": "Masuk untuk mengirim",
+  "Code editor": "Editor kode",
+
+  // Judge panel
+  "sending your code…": "mengirim kodemu…",
+  "Submit your code to see the verdict here.": "Kirim kodemu untuk melihat verdict di sini.",
+  "Ctrl + Enter also works.": "Ctrl + Enter juga bisa.",
+  "loading submission…": "memuat kiriman…",
+  "Judge output": "Keluaran judge",
+  "Retrying…": "Mencoba ulang…",
+  "running against hidden tests…": "berjalan pada tes tersembunyi…",
+  "waiting in the judge queue…": "menunggu di antrean judge…",
+  "This is taking longer than usual. The judge may be offline. Your submission is saved and will be judged when it is back.":
+    "Ini membutuhkan waktu lebih lama dari biasanya. Judge mungkin luring. Kirimanmu tersimpan dan akan dinilai saat ia kembali.",
+  "Lost connection to the judge.": "Koneksi ke judge terputus.",
+
+  // Hints and solution
+  "Done": "Selesai",
+  "Not done": "Belum selesai",
+  "The hint could not be loaded. Try again.": "Petunjuk tidak dapat dimuat. Coba lagi.",
+  "Hints and solution": "Petunjuk dan solusi",
+  "Give it a real try first. Hints open one at a time, and each one gives away a bit more.":
+    "Coba sungguh-sungguh dulu. Petunjuk terbuka satu per satu, dan masing-masing mengungkap sedikit lebih banyak.",
+  "Give it a real try first. This one is simple enough that it has no hints, just a reference solution.":
+    "Coba sungguh-sungguh dulu. Yang ini cukup sederhana sehingga tidak punya petunjuk, hanya solusi acuan.",
+  "Hint {n}": "Petunjuk {n}",
+  "Opening…": "Membuka…",
+  "Show hint {n} of {total}": "Tampilkan petunjuk {n} dari {total}",
+  "Reference solution": "Solusi acuan",
+  "Unlocks when you have:": "Terbuka ketika kamu:",
+  "Opened every hint ({opened} of {total})": "Membuka semua petunjuk ({opened} dari {total})",
+  "Submitted at least one attempt": "Mengirim setidaknya satu percobaan",
+  "<a>Signed in</a> and submitted at least one attempt": "<a>Sudah masuk</a> dan mengirim setidaknya satu percobaan",
+  "Show solution": "Tampilkan solusi",
+  "Solution language": "Bahasa solusi",
+
+  // Samples and results
+  "Samples": "Contoh",
+  "Sample {n}": "Contoh {n}",
+  "Input": "Masukan",
+  "Output": "Keluaran",
+  "Your submissions": "Kirimanmu",
+  "Your last submissions": "Kirimanmu terakhir",
+  "Show this verdict and load its code": "Tampilkan verdict ini dan muat kodenya",
+  "Why UVa and the CPE may reject this": "Kenapa UVa dan CPE mungkin menolak ini",
+  "UVa and the CPE may reject this": "UVa dan CPE mungkin menolak ini",
+  "UVa and the CPE would mark this Wrong Answer": "UVa dan CPE akan menilai ini Wrong Answer",
+  "Your output does not end with a newline: the last line is printed without <code>\\n</code>. YZU Judge ignores whitespace at the very end of the output, but UVa and the CPE compare it byte for byte, so the missing newline alone fails the problem there.":
+    "Keluaranmu tidak diakhiri baris baru: baris terakhir dicetak tanpa <code>\\n</code>. YZU Judge mengabaikan spasi di paling akhir keluaran, tetapi UVa dan CPE membandingkannya byte per byte, sehingga baris baru yang hilang saja sudah membuat soal itu gagal di sana.",
+  "End every line with a newline, the last one too:": "Akhiri setiap baris dengan baris baru, yang terakhir juga:",
+  " (print adds the newline, avoid end=\"\")": " (print menambahkan baris baru, hindari end=\"\")",
+  "The numbers and words are right, but the whitespace is not: UVa and the CPE compare the output exactly. Check the newline after the last line, extra blank lines, and spaces at the end of a line.":
+    "Angka dan katanya benar, tapi spasi tidak: UVa dan CPE membandingkan keluaran secara persis. Periksa baris baru setelah baris terakhir, baris kosong tambahan, dan spasi di akhir baris.",
+  "Something went wrong on our side, not in your code. Try submitting again.":
+    "Terjadi kesalahan di pihak kami, bukan di kodemu. Coba kirim lagi.",
+
+  // Submissions
+  "Time limit": "Batas waktu",
+  "Loading submissions": "Memuat kiriman",
+  "Your submissions could not be loaded.": "Kirimanmu tidak dapat dimuat.",
+  "Everything you have sent to the judge, newest first.": "Semua yang telah kamu kirim ke judge, terbaru dulu.",
+  "{n} submissions": "{n} kiriman",
+  "{n} accepted": "{n} diterima",
+  "{n} problems solved": "{n} soal terpecahkan",
+  "Verdict": "Verdict",
+  "Search by problem": "Cari berdasarkan soal",
+  "Problem or UVa number": "Soal atau nomor UVa",
+  "Submissions could not be loaded": "Kiriman tidak dapat dimuat",
+  "No submissions yet": "Belum ada kiriman",
+  "Pick a problem, write a solution and submit it. Every attempt shows up here.":
+    "Pilih soal, tulis solusi, dan kirim. Setiap percobaan muncul di sini.",
+  "No submissions match these filters": "Tidak ada kiriman yang cocok dengan filter ini",
+  "Try another verdict or a shorter search.": "Coba verdict lain atau pencarian lebih pendek.",
+  "When": "Kapan",
+  "Show more": "Tampilkan lebih banyak",
+  "{shown} of {left}": "{shown} dari {left}",
+  "This submission is not yours": "Kiriman ini bukan milikmu",
+  "No such submission": "Tidak ada kiriman itu",
+  "You can only view your own submissions.": "Kamu hanya bisa melihat kirimanmu sendiri.",
+  "Back to submissions": "Kembali ke kiriman",
+  "Loading submission": "Memuat kiriman…",
+  "Copy code": "Salin kode",
+  "Open in editor": "Buka di editor",
+  "Submitted code": "Kode terkirim",
+
+  // Times and labels built in helpers
+  "just now": "baru saja",
+  "{n} min ago": "{n} mnt lalu",
+  "{n} h ago": "{n} jam lalu",
+  "yesterday": "kemarin",
+  "{n} days ago": "{n} hari lalu",
+  "Problem #{id}": "Soal #{id}",
+  "{h} h {m} min": "{h} j {m} mnt",
+  "{m} min": "{m} mnt",
+
+  // Mock CPE
+  "3 hours, one sitting. The clock runs on the server.": "3 jam, satu gelombang. Jam berjalan di server.",
+  "The exact problems of that CPE, in the same order.": "Soal-soal persis ujian CPE itu, dalam urutan yang sama.",
+  "Judging": "Penilaian",
+  "Hidden tests, strict limits, a verdict per submission.": "Tes tersembunyi, batas ketat, satu verdict per kiriman.",
+  "To pass": "Untuk lulus",
+  "{n} problems solved before time runs out.": "memecahkan {n} soal sebelum waktu habis.",
+  "Exam in progress": "Ujian sedang berlangsung",
+  "{clock} left": "{clock} tersisa",
+  "Resume": "Lanjutkan",
+  "Mock exams could not be loaded.": "Ujian simulasi tidak dapat dimuat.",
+  "The exam could not be started. Try again.": "Ujian tidak dapat dimulai. Coba lagi.",
+  "Take a real past CPE under exam conditions. Same problems, same order, same three hours.":
+    "Ikuti ujian CPE lama sungguhan dalam kondisi ujian. Soal yang sama, urutan yang sama, tiga jam yang sama.",
+  "Loading papers": "Memuat naskah",
+  "Mock exams could not be loaded": "Ujian simulasi tidak dapat dimuat",
+  "Past CPE papers": "Naskah CPE lama",
+  "No CPE papers yet": "Belum ada naskah CPE",
+  "Past CPE papers are being added. Until then, practice single problems.":
+    "Naskah CPE lama sedang ditambahkan. Sementara itu, berlatihlah pada soal satuan.",
+  "{n} problems": "{n} soal",
+  "Not taken yet": "Belum diikuti",
+  "Best {best} / {total}": "Terbaik {best} / {total}",
+  "Finish your current exam first": "Selesaikan ujianmu yang sekarang dulu",
+  "Start": "Mulai",
+  "Your mock exams": "Ujian simulasi kamu",
+  "Would pass": "Akan lulus",
+  "Not yet": "Belum",
+  "Start {title}?": "Mulai {title}?",
+  "Start the clock": "Mulai jam",
+  "You get {duration} for {n} problems. The clock starts now and does not pause, even if you close the tab.":
+    "Kamu mendapat {duration} untuk {n} soal. Jam dimulai sekarang dan tidak berhenti, bahkan jika kamu menutup tab.",
+  "You already solved {n} of these problems in practice, so this mock will feel easier than the real one.":
+    "Kamu sudah memecahkan {n} dari soal-soal ini saat berlatih, jadi simulasi ini akan terasa lebih mudah dari yang sungguhan.",
+  "Cancel": "Batal",
+  "One moment…": "Sebentar…",
+  "The exam could not be finished. Try again.": "Ujian tidak dapat diselesaikan. Coba lagi.",
+  "Finish": "Selesaikan",
+  "Problem {letter} of {total}": "Soal {letter} dari {total}",
+  "Finish the exam now?": "Selesaikan ujian sekarang?",
+  "Finish exam": "Selesaikan ujian",
+  "You still have {clock}. Submissions still in the queue will count. You cannot submit after finishing.":
+    "Kamu masih punya {clock}. Kiriman yang masih di antrean akan dihitung. Kamu tidak bisa mengirim setelah menyelesaikan.",
+  "{duration} used": "{duration} terpakai",
+  "Solved {solved} of {total}": "Terpecahkan {solved} dari {total}",
+  "You would pass this CPE": "Kamu akan lulus CPE ini",
+  "Not yet. {n} more problems needed to pass.": "Belum. Butuh {n} soal lagi untuk lulus.",
+  "Most departments ask for {n} problems in one sitting. Check the rule for your department and enrollment year.":
+    "Kebanyakan jurusan meminta {n} soal dalam satu gelombang. Periksa aturan untuk jurusan dan tahun masukmu.",
+  "Solved at {time}": "Terpecahkan pada {time}",
+  "Not attempted": "Tidak dicoba",
+  "Back to Mock CPE": "Kembali ke CPE simulasi",
+  "Review submissions": "Tinjau kiriman",
+  "The exam could not be loaded.": "Ujian tidak dapat dimuat.",
+  "This exam is not yours": "Ujian ini bukan milikmu",
+  "No such exam": "Tidak ada ujian itu",
+  "Exam could not be loaded": "Ujian tidak dapat dimuat",
+  "Loading exam": "Memuat ujian",
+
+  // Account
+  "Continue where you left off": "Lanjutkan dari tempat kamu berhenti",
+  "Last verdict: {verdict}": "Verdict terakhir: {verdict}",
+  "Start with an easy one": "Mulai dengan yang mudah",
+  "Next up": "Berikutnya",
+  "{difficulty} · not tried yet": "{difficulty} · belum dicoba",
+  "All done": "Semua selesai",
+  "You solved every problem in the set": "Kamu memecahkan setiap soal dalam kumpulan",
+  "New past CPE problems are added over time. Check back soon.": "Soal CPE lama baru ditambahkan seiring waktu. Nantikan segera.",
+  "Getting started": "Memulai",
+  "Next step": "Langkah berikutnya",
+  "Open problem": "Buka soal",
+  "Progress by difficulty": "Kemajuan menurut kesulitan",
+  "Progress": "Kemajuan",
+  "Activity": "Aktivitas",
+  "Activity, last {weeks} weeks": "Aktivitas, {weeks} minggu terakhir",
+  "Active on {days} days in the last {weeks} weeks": "Aktif pada {days} hari dalam {weeks} minggu terakhir",
+  "{n} submissions on {date}": "{n} kiriman pada {date}",
+  "Less": "Sedikit",
+  "More": "Banyak",
+  "Current streak": "Rentetan saat ini",
+  "Best streak": "Rentetan terbaik",
+  "{n} days": "{n} hari",
+  "Recent submissions": "Kiriman terbaru",
+  "View all": "Lihat semua",
+  "Loading your progress": "Memuat kemajuanmu",
+  "Loading your account": "Memuat akunmu",
+  "Your progress could not be loaded.": "Kemajuanmu tidak dapat dimuat.",
+  "Your progress could not be loaded": "Kemajuan tidak dapat dimuat",
+  "Member since {date}": "Anggota sejak {date}",
+  "Sign out": "Keluar",
+
+  // API client
+  "Cannot connect to the server. Is the backend running?": "Tidak dapat terhubung ke server. Apakah backend berjalan?",
+  "Request failed ({status})": "Permintaan gagal ({status})",
+};
+
+// Messages the server sends in English, by their exact text.
+export const apiMessages: Record<string, string> = {
+  "Invalid username or password": "Nama pengguna atau kata sandi tidak valid",
+  "Too many attempts. Wait a minute and try again.": "Terlalu banyak percobaan. Tunggu semenit dan coba lagi.",
+  "Too many emails from your network. Try again in an hour.": "Terlalu banyak email dari jaringanmu. Coba lagi dalam sejam.",
+  "The site has already sent its full quota of verification emails today. Please try again tomorrow, or sign in if you already have an account.":
+    "Situs sudah mengirim seluruh kuota email verifikasi hari ini. Coba lagi besok, atau masuk jika kamu sudah punya akun.",
+  "We could not send the email right now. Try again in a minute.": "Kami tidak dapat mengirim email sekarang. Coba lagi dalam semenit.",
+  "Username must be 3 to 32 characters.": "Nama pengguna harus 3 hingga 32 karakter.",
+  "Username cannot contain spaces or invisible characters.": "Nama pengguna tidak boleh mengandung spasi atau karakter tak terlihat.",
+  "Password must be 8 to 128 characters.": "Kata sandi harus 8 hingga 128 karakter.",
+  "Too many new accounts from this network. Try again later.": "Terlalu banyak akun baru dari jaringan ini. Coba lagi nanti.",
+  "An account with this email already exists. Sign in, or reset your password.":
+    "Akun dengan email ini sudah ada. Masuk, atau setel ulang kata sandimu.",
+  "That username is taken.": "Nama pengguna itu telah dipakai.",
+  "That username or email is already taken.": "Nama pengguna atau email itu telah dipakai.",
+  "No account is waiting for this email. Sign up again.": "Tidak ada akun yang menunggu email ini. Daftar ulang.",
+  "This email is already verified. Sign in instead.": "Email ini sudah terverifikasi. Masuk saja.",
+  "This code has expired. Ask for a new one.": "Kode ini kedaluwarsa. Minta yang baru.",
+  "Too many codes in the last hour. Try again later.": "Terlalu banyak kode dalam sejam terakhir. Coba lagi nanti.",
+  "Too many wrong tries. Ask for a new code.": "Terlalu banyak salah coba. Minta kode baru.",
+  "Invalid or expired token": "Token tidak valid atau kedaluwarsa",
+  "Your session ended. Sign in again.": "Sesi kamu berakhir. Masuk lagi.",
+  "Too many submissions at once. Wait for the verdicts, then try again.": "Terlalu banyak kiriman sekaligus. Tunggu verdict, lalu coba lagi.",
+  "Problem not found": "Soal tidak ditemukan",
+  "No such submission": "Tidak ada kiriman itu",
+  "You can only access your own submissions": "Kamu hanya bisa mengakses kirimanmu sendiri",
+  "No such mock exam": "Tidak ada ujian simulasi itu",
+  "This mock exam has ended": "Ujian simulasi ini telah berakhir",
+  "This problem is not part of the mock exam": "Soal ini bukan bagian dari ujian simulasi",
+  "You already have a mock exam in progress": "Kamu sudah punya ujian simulasi yang sedang berlangsung",
+  "You can only access your own mock exams": "Kamu hanya bisa mengakses ujian simulasi milikmu sendiri",
+  "No such CPE paper": "Tidak ada naskah CPE itu",
+  "This CPE paper has no problems yet": "Naskah CPE ini belum punya soal",
+  "Hints and solutions are hidden during a Mock CPE.": "Petunjuk dan solusi disembunyikan selama CPE simulasi.",
+};
+
+// Server messages with a number in them.
+export const apiPatterns: [RegExp, (match: RegExpMatchArray) => string][] = [
+  [/^Wait (\d+) seconds before asking for a new code\.$/, (match) => `Tunggu ${match[1]} detik sebelum meminta kode baru.`],
+  [/^That code is not right\. (\d+) (?:try|tries) left\.$/, (match) => `Kode itu tidak benar. Sisa percobaan: ${match[1]}.`],
+];

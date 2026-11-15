@@ -151,6 +151,98 @@ const content: Record<Lang, Record<LegalProps["kind"], Page>> = {
       ],
     },
   },
+  ru: {
+    privacy: {
+      title: "Политика конфиденциальности",
+      updated: "10 ноября 2026",
+      sections: [
+        {
+          heading: "Что мы храним",
+          body: "Твой логин, адрес email, хеш пароля, отправленный код и полученные вердикты. Ничего больше.",
+        },
+        {
+          heading: "Зачем мы это храним",
+          body: "Чтобы впускать тебя, запускать и проверять твой код и показывать историю твоих посылок. Отправленный код выполняется в изолированном контейнере и не передаётся другим пользователям.",
+        },
+        {
+          heading: "Письма, которые мы отправляем",
+          body: "Только коды: один для подтверждения email при регистрации и один при сбросе пароля. Их отправляет наш почтовый провайдер Resend, который получает email-адрес и содержание письма только для этого. Никаких рассылок и маркетинга.",
+        },
+        {
+          heading: "Чего мы никогда не делаем",
+          body: "Мы не продаём твои данные, не показываем рекламу и не делимся твоим email ни с кем, кроме отправки этих кодов. На сайте нет сторонних трекеров.",
+        },
+        {
+          heading: "Удаление твоих данных",
+          body: "Открой issue на GitHub-странице проекта или свяжись с сопровождающим — твой аккаунт и посылки будут удалены.",
+        },
+      ],
+    },
+    terms: {
+      title: "Условия использования",
+      updated: "31 октября 2026",
+      sections: [
+        {
+          heading: "Что это",
+          body: "YZU Judge — это сайт тренировки к Коллегиальному экзамену по программированию, созданный студентом университета Юань-Цзе. Он не связан с организаторами CPE.",
+        },
+        {
+          heading: "Честное использование",
+          body: "Отправляй собственные решения. Не пытайся сломать, перегрузить или обойти систему judge и не загружай код, предназначенный навредить серверу или другим пользователям.",
+        },
+        {
+          heading: "Без гарантий",
+          body: "Сайт предоставляется как есть. Тренировка здесь помогает, но не гарантирует результат на настоящем экзамене. Всегда уточняй требования к выпуску у своей кафедры.",
+        },
+      ],
+    },
+  },
+  id: {
+    privacy: {
+      title: "Kebijakan privasi",
+      updated: "10 November 2026",
+      sections: [
+        {
+          heading: "Apa yang kami simpan",
+          body: "Nama pengguna, alamat email, versi ter-hash kata sandimu, kode yang kamu kirim, dan verdict yang diperolehnya. Tidak ada yang lain.",
+        },
+        {
+          heading: "Kenapa kami menyimpannya",
+          body: "Untuk memasukanmu, menjalankan dan menilai kodemu, dan menampilkan riwayat kirimanmu sendiri. Kode terkirim dijalankan dalam kontainer terisolasi dan tidak dibagikan ke pengguna lain.",
+        },
+        {
+          heading: "Email yang kami kirim",
+          body: "Hanya kode: satu untuk mengonfirmasi email saat kamu mendaftar, dan satu saat menyetel ulang kata sandi. Dikirim oleh penyedia email kami, Resend, yang menerima alamat email dan isi pesanmu hanya untuk tujuan itu. Tidak ada buletin, tidak ada pemasaran.",
+        },
+        {
+          heading: "Yang tidak pernah kami lakukan",
+          body: "Kami tidak menjual datamu, tidak menampilkan iklan, dan tidak membagikan emailmu kepada siapa pun selain mengirim kode-kode itu. Tidak ada pelacak pihak ketiga di situs ini.",
+        },
+        {
+          heading: "Menghapus datamu",
+          body: "Buka sebuah issue di halaman GitHub proyek ini atau hubungi pengelola, lalu akun dan kirimanmu akan dihapus.",
+        },
+      ],
+    },
+    terms: {
+      title: "Ketentuan penggunaan",
+      updated: "31 Oktober 2026",
+      sections: [
+        {
+          heading: "Apa ini",
+          body: "YZU Judge adalah situs latihan untuk Collegiate Programming Exam, dibuat oleh seorang mahasiswa Universitas Yuan Ze. Situs ini tidak berafiliasi dengan penyelenggara CPE.",
+        },
+        {
+          heading: "Penggunaan yang wajar",
+          body: "Kirimkan solusimu sendiri. Jangan mencoba merusak, membanjiri, atau keluar dari sistem judge, dan jangan mengunggah kode untuk membahayakan server atau pengguna lain.",
+        },
+        {
+          heading: "Tanpa jaminan",
+          body: "Situs disediakan apa adanya. Berlatih di sini membantu, tetapi tidak menjamin hasil pada ujian sungguhan. Selalu konfirmasikan persyaratan kelulusan dengan jurusanmu.",
+        },
+      ],
+    },
+  },
 };
 
 export default function Legal({ kind }: LegalProps) {
