@@ -105,6 +105,52 @@ const content: Record<Lang, Record<LegalProps["kind"], Page>> = {
       ],
     },
   },
+  vi: {
+    privacy: {
+      title: "Chính sách bảo mật",
+      updated: "Ngày 10 tháng 11 năm 2026",
+      sections: [
+        {
+          heading: "Chúng tôi lưu những gì",
+          body: "Tên đăng nhập, địa chỉ email, một bản băm của mật khẩu, code bạn nộp và các kết quả chấm nó nhận được. Không có gì khác.",
+        },
+        {
+          heading: "Vì sao chúng tôi lưu",
+          body: "Để đăng nhập cho bạn, để chạy và chấm code của bạn, và để cho bạn xem lịch sử nộp của chính mình. Code đã nộp được chạy trong một container tách biệt và không được chia sẻ với người dùng khác.",
+        },
+        {
+          heading: "Những email chúng tôi gửi",
+          body: "Chỉ có mã: một mã để xác nhận email khi bạn đăng ký, và một mã khi bạn đặt lại mật khẩu. Chúng được gửi bởi nhà cung cấp email của chúng tôi, Resend, nơi nhận địa chỉ email và nội dung tin nhắn của bạn chỉ cho mục đích đó. Không có bản tin, không có tiếp thị.",
+        },
+        {
+          heading: "Những điều chúng tôi không bao giờ làm",
+          body: "Chúng tôi không bán dữ liệu của bạn, không hiển thị quảng cáo, và không chia sẻ email của bạn với bất kỳ ai ngoài việc gửi các mã đó. Không có công cụ theo dõi của bên thứ ba trên trang này.",
+        },
+        {
+          heading: "Xóa dữ liệu của bạn",
+          body: "Hãy mở một issue trên trang GitHub của dự án hoặc liên hệ người bảo trì, tài khoản và các lần nộp của bạn sẽ bị xóa.",
+        },
+      ],
+    },
+    terms: {
+      title: "Điều khoản sử dụng",
+      updated: "Ngày 31 tháng 10 năm 2026",
+      sections: [
+        {
+          heading: "Đây là gì",
+          body: "YZU Judge là một trang luyện tập cho Kỳ thi Lập trình Đại học, do một sinh viên Đại học Yuan Ze làm ra. Trang không liên kết với ban tổ chức CPE.",
+        },
+        {
+          heading: "Sử dụng công bằng",
+          body: "Hãy nộp lời giải của chính bạn. Đừng cố phá, làm quá tải hay thoát khỏi hệ thống chấm, và đừng upload code nhằm gây hại cho máy chủ hay cho người dùng khác.",
+        },
+        {
+          heading: "Không có bảo đảm",
+          body: "Trang được cung nguyên trạng. Luyện ở đây giúp ích, nhưng không bảo đảm kết quả trong kỳ thi thật. Luôn xác nhận yêu cầu tốt nghiệp với khoa của bạn.",
+        },
+      ],
+    },
+  },
 };
 
 export default function Legal({ kind }: LegalProps) {

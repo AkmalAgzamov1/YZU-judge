@@ -30,7 +30,7 @@ export default function I18nProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    document.documentElement.lang = lang === "zh" ? "zh-Hant-TW" : "en";
+    document.documentElement.lang = lang === "zh" ? "zh-Hant-TW" : lang === "vi" ? "vi" : "en";
     document.title = tr("YZU Judge · Practice the CPE before it counts");
   }, [lang]);
 

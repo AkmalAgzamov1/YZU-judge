@@ -1,6 +1,7 @@
-import { apiMessages, apiPatterns, zh } from "./zh";
+import { apiMessages as zhApi, apiPatterns as zhPatterns, zh } from "./zh";
+import { apiMessages as viApi, apiPatterns as viPatterns, vi } from "./vi";
 
-export type Lang = "en" | "zh";
+export type Lang = "en" | "zh" | "vi";
 
 // The English text is the key, so English needs no dictionary and a missing
 // Chinese line is a compile error instead of a blank on the page.
@@ -13,12 +14,14 @@ const STORAGE_KEY = "yzu-judge:lang";
 function detectLang(): Lang {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored === "en" || stored === "zh") return stored;
+    if (stored === "en" || stored === "zh" || stored === "vi") return stored;
   } catch {
     // Storage can be blocked; fall back to the browser's language.
   }
-  const preferred = navigator.languages?.[0] ?? navigator.language ?? "";
-  return preferred.toLowerCase().startsWith("zh") ? "zh" : "en";
+  const preferred = (navigator.languages?.[0] ?? navigator.language ?? "").toLowerCase();
+  if (preferred.startsWith("zh")) return "zh";
+  if (preferred.startsWith("vi")) return "vi";
+  return "en";
 }
 
 let current: Lang = detectLang();
@@ -36,9 +39,11 @@ export function storeLang(lang: Lang) {
   }
 }
 
-// For dates: Chinese gets Taiwan formats, English keeps the browser's own.
+// For dates: Chinese gets Taiwan formats, Vietnamese gets its own, English the browser's.
 export function dateLocale(): string | undefined {
-  return current === "zh" ? "zh-TW" : undefined;
+  if (current === "zh") return "zh-TW";
+  if (current === "vi") return "vi";
+  return undefined;
 }
 
 export function fill(text: string, vars?: Vars): string {
@@ -49,22 +54,28 @@ export function fill(text: string, vars?: Vars): string {
 // Usable outside React (formatters, the API client). Components use useI18n,
 // which also re-renders them when the language changes.
 export function tr(key: Key, vars?: Vars): string {
-  return fill(current === "zh" ? zh[key] : key, vars);
+  if (current === "zh") return fill(zh[key], vars);
+  if (current === "vi") return fill(vi[key] ?? key, vars);
+  return key;
 }
 
-// English has a singular; Chinese does not, so it only needs the plural line.
+// English has a singular; Chinese and Vietnamese do not, so they only use the plural line.
 export function trn(count: number, one: string, other: Key, vars?: Vars): string {
-  const text = current === "zh" ? zh[other] : count === 1 ? one : other;
-  return fill(text, { n: count, ...vars });
+  const merged = { n: count, ...vars };
+  if (current === "zh") return fill(zh[other], merged);
+  if (current === "vi") return fill(vi[other] ?? other, merged);
+  return fill(count === 1 ? one : other, merged);
 }
 
-// The server answers in English. Known messages get their Chinese line here;
+// The server answers in English. Known messages get their translated line here;
 // an unknown one is shown as it came.
 export function localizeApiMessage(message: string): string {
-  if (current !== "zh") return message;
-  const exact = apiMessages[message];
+  const map = current === "zh" ? zhApi : current === "vi" ? viApi : null;
+  if (!map) return message;
+  const exact = map[message];
   if (exact) return exact;
-  for (const [pattern, build] of apiPatterns) {
+  const patterns = current === "zh" ? zhPatterns : viPatterns;
+  for (const [pattern, build] of patterns) {
     const match = message.match(pattern);
     if (match) return build(match);
   }

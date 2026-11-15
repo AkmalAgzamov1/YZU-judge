@@ -1,21 +1,32 @@
-import { useI18n } from "../i18n";
-import { buttonGhostSmall } from "./ui";
+import { useI18n, type Lang } from "../i18n";
 
-// Shows the language you would switch to, in that language, so a student who
-// cannot read the current one still finds it.
+// Offered as words in each language, never flags, so a student who cannot read the
+// current language still recognizes their own. Adding a language is one line here.
+const OPTIONS: { code: Lang; label: string; htmlLang: string }[] = [
+  { code: "en", label: "EN", htmlLang: "en" },
+  { code: "zh", label: "中文", htmlLang: "zh-Hant-TW" },
+  { code: "vi", label: "Tiếng Việt", htmlLang: "vi" },
+];
+
 export default function LanguageSwitch({ className = "" }: { className?: string }) {
-  const { lang, setLang } = useI18n();
-  const toChinese = lang === "en";
+  const { lang, setLang, t } = useI18n();
 
   return (
-    <button
-      type="button"
-      lang={toChinese ? "zh-Hant-TW" : "en"}
-      aria-label={toChinese ? "切換為中文" : "Switch to English"}
-      onClick={() => setLang(toChinese ? "zh" : "en")}
-      className={`${buttonGhostSmall} whitespace-nowrap ${className}`}
-    >
-      {toChinese ? "中文" : "EN"}
-    </button>
+    <div role="group" aria-label={t("Language")} className={`flex flex-wrap items-center gap-1 ${className}`}>
+      {OPTIONS.map((option) => (
+        <button
+          key={option.code}
+          type="button"
+          lang={option.htmlLang}
+          aria-current={lang === option.code ? "true" : undefined}
+          onClick={() => setLang(option.code)}
+          className={`whitespace-nowrap rounded px-2 py-1 text-sm font-medium transition duration-300 ease-soft ${
+            lang === option.code ? "text-white" : "text-neutral-400 hover:text-white"
+          }`}
+        >
+          {option.label}
+        </button>
+      ))}
+    </div>
   );
 }
