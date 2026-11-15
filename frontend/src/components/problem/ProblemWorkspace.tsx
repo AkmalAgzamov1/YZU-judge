@@ -22,6 +22,7 @@ import {
 } from "../../lib/languages";
 import { formatTime } from "../../lib/format";
 import DifficultyLabel from "../DifficultyLabel";
+import LanguageSelect from "../LanguageSelect";
 import TopicChips from "../TopicChips";
 import { buttonPrimary, buttonSecondary, focusRing } from "../ui";
 import CodeEditor from "./CodeEditor";
@@ -340,22 +341,13 @@ export default function ProblemWorkspace({
         className={`${tab === "code" ? "flex" : "hidden"} flex-col gap-4 py-8 lg:flex lg:overflow-y-auto lg:pl-8`}
       >
         <div className="flex items-center justify-between gap-3">
-          <div role="group" aria-label={t("Language")} className="flex min-w-0 flex-wrap gap-1 rounded-lg border border-white/10 bg-ink-1 p-1">
-            {LANGUAGES.map((option) => (
-              <button
-                key={option.id}
-                type="button"
-                aria-pressed={language === option.id}
-                onClick={() => switchLanguage(option.id)}
-                className={`whitespace-nowrap rounded px-3 py-1 text-sm font-medium transition duration-300 ease-soft ${focusRing} ${
-                  language === option.id ? "bg-ink-3 text-white" : "text-neutral-400 hover:text-white"
-                }`}
-              >
-                {option.label}
-                <span className="text-neutral-500"> {option.version}</span>
-              </button>
-            ))}
-          </div>
+          <LanguageSelect
+            value={language}
+            onChange={(id) => switchLanguage(id as Language)}
+            options={LANGUAGES.map((option) => ({ id: option.id, label: option.label, note: option.version }))}
+            label={t("Language")}
+            className="min-w-0 max-w-xs flex-1 lg:flex-none lg:w-64"
+          />
 
           <button type="button" onClick={submit} disabled={submitting} className={buttonPrimary}>
             {user ? (submitting ? t("Sending…") : t("Submit")) : t("Sign in to submit")}
