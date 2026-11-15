@@ -108,6 +108,7 @@ def compile_in_docker(language_name, code):
     container = client.containers.create(
         language.image,
         ["sleep", str(COMPILE_TIME_LIMIT_SECONDS + 5)],
+        entrypoint = [],
         mem_limit = f"{COMPILE_MEMORY_LIMIT_MB}m",
         memswap_limit = f"{COMPILE_MEMORY_LIMIT_MB}m",
         nano_cpus = CPU_LIMIT_NANO_CPUS,
@@ -162,6 +163,22 @@ def compile_in_docker(language_name, code):
                 output = f"{BINARY_TOO_LARGE}\n\n{output}"
             return {"ok": False, "output": output, "binary": None}
 
+        if language.kind == "java":
+            # javac emits one .class per class (and inner classes), not one binary.
+            # Keep just the class files and hand them to the run step as a tar.
+            chunks, _ = container.get_archive(WORK_DIR)
+            classes = _collect_class_files(chunks)
+            if not classes:
+                return {
+                    "ok": False,
+                    "output": output + "\nThe program needs a class named 'Main' (public class Main) in Main.java.",
+                    "binary": None,
+                }
+            if sum(len(content) for content in classes.values()) > MAX_BINARY_BYTES:
+                return {"ok": False, "output": BINARY_TOO_LARGE, "binary": None}
+            files = {name: (content, 0o644) for name, content in classes.items()}
+            return {"ok": True, "output": output, "binary": _tar_bytes(files, owner = 0)}
+
         chunks, stat = container.get_archive(f"{WORK_DIR}/{language.binary_name}")
         # Checked before reading, so an oversized binary never reaches the worker's memory.
         if stat["size"] > MAX_BINARY_BYTES:
@@ -169,6 +186,17 @@ def compile_in_docker(language_name, code):
         return {"ok": True, "output": output, "binary": _untar_single_file(chunks)}
     finally:
         container.remove(force = True)
+
+
+def _collect_class_files(chunks) -> dict[str, bytes]:
+    """Pull every .class file out of a get_archive() directory tar, flattened by name."""
+    archive = tarfile.open(fileobj = io.BytesIO(b"".join(chunks)))
+    classes = {}
+    for member in archive.getmembers():
+        if member.isfile() and member.name.endswith(".class"):
+            content = archive.extractfile(member).read()
+            classes[member.name.rsplit("/", 1)[-1]] = content
+    return classes
 
 
 def _read_memory_peak_bytes(container):
@@ -190,18 +218,45 @@ def _read_memory_peak_bytes(container):
 def run_code_in_docker(code, input_data, time_limit_ms, memory_limit_mb, language = "python", binary = None):
     lang = get_language(language)
 
-    if lang.compile_command is not None:
-        if binary is None:
-            raise ValueError(f"{language} needs a compiled binary to run")
-        # Wait for the judge's handshake line, then hand the rest of stdin to
-        # the program, the same contract as the Python bootstrap below.
-        command = ["sh", "-c", f"read _ && exec {RUN_DIR}/{lang.binary_name}"]
-        files = {lang.binary_name: (binary, 0o755)}
-    else:
+    if lang.kind == "interpreted":
         command = ["python", "-c", PYTHON_BOOTSTRAP, code]
-        files = None
+        return _run_container(lang.image, command, None, input_data, time_limit_ms, memory_limit_mb)
 
+    if binary is None:
+        raise ValueError(f"{language} needs a compiled binary to run")
+
+    if lang.kind == "java":
+        # binary is the tar of .class files built by compile_in_docker above.
+        command = ["sh", "-c", _java_command(lang, memory_limit_mb)]
+        return _run_container(lang.image, command, None, input_data, time_limit_ms, memory_limit_mb,
+                              archive = binary, environment = JAVA_ENV)
+
+    # Wait for the judge's handshake line, then hand the rest of stdin to
+    # the program, the same contract as the Python bootstrap below.
+    command = ["sh", "-c", f"read _ && exec {RUN_DIR}/{lang.binary_name}"]
+    files = {lang.binary_name: (binary, 0o755)}
     return _run_container(lang.image, command, files, input_data, time_limit_ms, memory_limit_mb)
+
+
+# The JVM keeps its own memory beyond the heap, so cap everything to stay inside
+# the problem's limit rather than trusting the default sizes a full desktop gets.
+JAVA_HEAP_OVERHEAD_MB = 128
+JAVA_MIN_HEAP_MB = 16
+JAVA_FLAGS = (
+    "-Xss8m",                  # room for recursion; thread stacks are mostly virtual
+    "-XX:+UseSerialGC",        # one GC thread: a smaller, steadier footprint
+    "-XX:MaxMetaspaceSize=48m",
+    "-XX:ReservedCodeCacheSize=32m",
+    "-XX:+ExitOnOutOfMemoryError",  # a heap overflow exits, and the judge reads it as MLE
+)
+# HOME and the temp dir point at the tmpfs the sandbox is allowed to write.
+JAVA_ENV = {"HOME": "/tmp", "TMPDIR": "/tmp", "LANG": "C.UTF-8"}
+
+
+def _java_command(lang, memory_limit_mb) -> str:
+    heap_mb = max(JAVA_MIN_HEAP_MB, memory_limit_mb - JAVA_HEAP_OVERHEAD_MB)
+    flags = " ".join((f"-Xms{JAVA_MIN_HEAP_MB}m", f"-Xmx{heap_mb}m", *JAVA_FLAGS))
+    return f"read _ && exec java {flags} -cp {RUN_DIR} {lang.main_class}"
 
 
 # Keep the interpreter alive until the memory monitor is ready. Reading one
@@ -219,10 +274,13 @@ PYTHON_BOOTSTRAP = (
 )
 
 
-def _run_container(image, command, files, input_data, time_limit_ms, memory_limit_mb):
+def _run_container(image, command, files, input_data, time_limit_ms, memory_limit_mb, archive = None, environment = None):
     container = client.containers.create(
         image,
         command,
+        # AdoptOpenJDK images ship a `java` entrypoint; clearing it keeps our command
+        # the whole process instead of being appended to it.
+        entrypoint=[],
         stdin_open=True,
         mem_limit=f"{memory_limit_mb}m",
         # Equal to mem_limit, so there is no swap: a program over the limit is
@@ -233,12 +291,16 @@ def _run_container(image, command, files, input_data, time_limit_ms, memory_limi
         tmpfs=SANDBOX_TMPFS,
         # Output is read live below, so Docker does not need to keep a copy on disk.
         log_config=LogConfig(type=LogConfig.types.NONE),
+        environment=environment,
         **SANDBOX_OPTIONS,
     )
 
     peak_memory_bytes = 0
     try:
-        if files:
+        if archive is not None:
+            # Java hands over its classes as a ready tar; compiled binaries use files.
+            container.put_archive(RUN_DIR, archive)
+        elif files:
             container.put_archive(RUN_DIR, _tar_bytes(files, owner=0))
 
         container.start()

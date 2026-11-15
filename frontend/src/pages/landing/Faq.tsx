@@ -28,7 +28,7 @@ const faqs: { q: Key; a: Key; link?: { href: string; label: Key } }[] = [
   },
   {
     q: "Which programming languages can I use?",
-    a: "Python 3.11 and C++17, the two most common choices on the CPE. Java is planned next.",
+    a: "Python 3.9.6, C/C++ (MinGW GCC 6.3.0 and MSVC v140), and Java (AdoptOpenJDK 8 or 11) - the same languages the real CPE exam offers.",
   },
   {
     q: "Is this the official CPE website?",

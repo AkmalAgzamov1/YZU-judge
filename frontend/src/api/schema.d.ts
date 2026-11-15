@@ -626,7 +626,7 @@ export interface components {
              * Language
              * @enum {string}
              */
-            language: "python" | "java" | "cpp";
+            language: "python" | "c_gcc" | "c_msvc" | "java8" | "java11" | "java" | "cpp";
             /**
              * Status
              * @enum {string}
@@ -995,7 +995,7 @@ export interface components {
              * Language
              * @enum {string}
              */
-            language: "python" | "cpp";
+            language: "python" | "c_gcc" | "c_msvc" | "java8" | "java11";
             /** Mock Exam Id */
             mock_exam_id?: number | null;
             /** Code */
@@ -1013,7 +1013,7 @@ export interface components {
              * Language
              * @enum {string}
              */
-            language: "python" | "java" | "cpp";
+            language: "python" | "c_gcc" | "c_msvc" | "java8" | "java11" | "java" | "cpp";
             /** Code */
             code: string;
             /** Mock Exam Id */

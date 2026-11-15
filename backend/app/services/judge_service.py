@@ -3,6 +3,8 @@ from sqlalchemy.orm import Session
 from app.models.testcase import TestCase
 from app.storage import read_file
 
+from .languages import needs_compilation
+
 
 def load_testcases(db: Session, problem_id: int):
 
@@ -85,6 +87,11 @@ def judge_code(
     elif result.get("is_oom", False):
         verdict = "memory_limit_exceeded"
 
+    elif _is_heap_out_of_memory(result.get("stderr", "")):
+        # The JVM caps its heap and exits on an OutOfMemoryError before the
+        # container itself is OOM-killed; report that as MLE, not a runtime error.
+        verdict = "memory_limit_exceeded"
+
     elif result["exit_code"] != 0:
         verdict = "runtime_error"
 
@@ -115,7 +122,7 @@ def judge_submission(
 
     # Compiled languages build once, then every test runs the same binary.
     run_options = {}
-    if language != "python":
+    if needs_compilation(language):
         if compile_code is None:
             raise ValueError(f"{language} needs compile_code")
 
@@ -164,3 +171,7 @@ def judge_submission(
 
 def missing_final_newline(output):
     return output.strip() != "" and not output.endswith("\n")
+
+
+def _is_heap_out_of_memory(stderr):
+    return "OutOfMemoryError" in stderr

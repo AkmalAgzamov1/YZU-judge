@@ -45,6 +45,10 @@ export function problemLabel(problem: Problem | undefined, problemId: number) {
 
 export const languageLabel: Record<Submission["language"], string> = {
   python: "Python",
-  cpp: "C++",
+  c_gcc: "C/C++ (MinGW)",
+  c_msvc: "C/C++ (MSVC)",
+  java8: "Java 8",
+  java11: "Java 11",
   java: "Java",
+  cpp: "C++",
 };

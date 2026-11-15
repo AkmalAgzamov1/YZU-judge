@@ -11,7 +11,7 @@ class Submission(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable = False)
     problem_id = Column(Integer, ForeignKey("problems.id"), nullable = False)
 
-    language = Column(Enum("python", "java", "cpp", name = "submission_language"), nullable = False)
+    language = Column(Enum("python", "c_gcc", "c_msvc", "java8", "java11", "java", "cpp", name = "submission_language"), nullable = False)
     code = Column(Text, nullable = False)
 
     # Compiler messages, trimmed, when the verdict is compilation_error.

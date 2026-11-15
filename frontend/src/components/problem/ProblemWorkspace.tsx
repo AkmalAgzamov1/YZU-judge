@@ -340,7 +340,7 @@ export default function ProblemWorkspace({
         className={`${tab === "code" ? "flex" : "hidden"} flex-col gap-4 py-8 lg:flex lg:overflow-y-auto lg:pl-8`}
       >
         <div className="flex items-center justify-between gap-3">
-          <div role="group" aria-label={t("Language")} className="flex rounded-lg border border-white/10 bg-ink-1 p-1">
+          <div role="group" aria-label={t("Language")} className="flex min-w-0 flex-wrap gap-1 rounded-lg border border-white/10 bg-ink-1 p-1">
             {LANGUAGES.map((option) => (
               <button
                 key={option.id}
@@ -352,7 +352,7 @@ export default function ProblemWorkspace({
                 }`}
               >
                 {option.label}
-                <span className="hidden text-neutral-500 sm:inline"> {option.version}</span>
+                <span className="text-neutral-500"> {option.version}</span>
               </button>
             ))}
           </div>

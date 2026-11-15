@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import { ApiError, problemsApi, type ProblemHelp as Help } from "../../api/client";
 import { useAuth } from "../../auth/AuthContext";
 import { useI18n } from "../../i18n";
-import { LANGUAGES, loadPreferredLanguage, type Language } from "../../lib/languages";
+import { SOLUTION_LANGUAGES, type SolutionLanguage } from "../../lib/languages";
 import { buttonSecondary, focusRing } from "../ui";
 import CodeEditor from "./CodeEditor";
 import Statement from "./Statement";
@@ -67,7 +67,7 @@ export default function ProblemHelp({ problemId, open, refreshKey, onAvailableCh
   const [opening, setOpening] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [solutionShown, setSolutionShown] = useState(false);
-  const [solutionLanguage, setSolutionLanguage] = useState<Language>(() => loadPreferredLanguage());
+  const [solutionLanguage, setSolutionLanguage] = useState<SolutionLanguage>("python");
 
   useEffect(() => {
     if (authLoading) return;
@@ -208,7 +208,7 @@ export default function ProblemHelp({ problemId, open, refreshKey, onAvailableCh
           <div className="mt-4">
             <Statement markdown={solution.explanation} />
             <div role="group" aria-label={t("Solution language")} className="mt-4 inline-flex rounded-lg border border-white/10 bg-ink-2 p-1">
-              {LANGUAGES.map((option) => (
+              {SOLUTION_LANGUAGES.map((option) => (
                 <button
                   key={option.id}
                   type="button"

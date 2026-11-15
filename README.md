@@ -2,7 +2,7 @@
 
 An online judge for practicing the **CPE** (Collegiate Programming Examination), made for students at Yuan Ze University and anyone else in Taiwan who has to pass it.
 
-You get 299 real problems from past CPE exams, a judge that runs your Python or C++ code against real test data, and timed mock exams that feel like the real thing.
+You get 299 real problems from past CPE exams, a judge that runs your Python, C/C++ or Java code against real test data, and timed mock exams that feel like the real thing.
 
 **Live at [yzujudge.com](https://yzujudge.com).**
 
@@ -37,7 +37,7 @@ I started on September 19, 2026, and I wanted to really understand every layer, 
 - **Know what's coming.** The home page counts down to the next CPE and shows the official "one star" list. Every one of the last 52 exams had exactly one problem from that list, so we group them by how likely they are to show up next time.
 - **Practice problems.** 299 problems from past CPE exams, sorted from easy to hard. You can filter by difficulty and by topic (math, strings, dp, graphs, and so on).
 - **Read the statement your way.** Every problem has a short summary written for this site, plus a button that opens the official CPE PDF.
-- **Submit in Python or C++.** You see the verdict for each test: Accepted, Wrong Answer, Time Limit, Memory Limit, Runtime Error or Compilation Error.
+- **Submit in the same languages as the real CPE exam:** Python 3.9.6, C/C++ (MinGW GCC 6.3.0 or MSVC v140), and Java (AdoptOpenJDK 8 or 11). You see the verdict for each test: Accepted, Wrong Answer, Time Limit, Memory Limit, Runtime Error or Compilation Error.
 - **Take a Mock CPE.** 38 real past exams, 3 hours each, with a timer and your results at the end. Topics and tags are hidden during the exam, so you have to figure out the approach yourself, just like in the real one.
 - **Track your progress.** Your account page shows what you solved and your recent activity.
 - **Avoid spoilers.** Topics are hidden behind a "Show topics" button, because sometimes knowing it's a DP problem is half the answer.
@@ -57,7 +57,7 @@ flowchart LR
 ```
 
 1. You press Submit. The API saves the submission as *pending* and puts a job in the queue right away, so the page doesn't wait.
-2. A Celery worker picks up the job. For C++ it first compiles your code in a `gcc:13` container. Python runs in `python:3.11-slim`.
+2. A Celery worker picks up the job. Interpreted code runs directly (Python in `python:3.9.6-slim`). Compiled languages build first in their own container: C/C++ (MinGW 6.3.0) in `gcc:6` (the same GCC 6 line the exam ships), C/C++ (MSVC v140) in a `clang` container in MSVC-compatibility mode, and Java with the real `adoptopenjdk` 8 / 11 images. Reference solutions still build with `gcc:13`.
 3. Each test runs in a fresh, locked down container: no network, all Linux capabilities dropped, a non-root user, no swap, and limits on memory, processes, output and writable disk space. If your code runs too long, it gets stopped.
 4. Your output is compared with the expected output, and the verdict for every test is saved. The page polls until the result is ready.
 
@@ -133,7 +133,7 @@ After that, every push to `main` is live within about a minute: the server check
 
 ## What's next
 
-- Java support, since some students take the CPE in Java
+- A real MSVC build for the MSVC option, if we ever add a Windows judge runner (today that option compiles with clang).
 - Our own non-CPE problems, for people who want to warm up first
 
 ## Tech stack
