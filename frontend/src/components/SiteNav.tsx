@@ -140,7 +140,7 @@ export default function SiteNav() {
       </div>
     ),
     <div key="language" className="px-3 pt-6">
-      <LanguageSwitch className="border border-white/10 py-3 text-base" />
+      <LanguageSwitch className="w-full" />
     </div>,
   ].filter(Boolean);
 
@@ -171,7 +171,7 @@ export default function SiteNav() {
           <div className="hidden items-center gap-2 xl:flex">
             <span aria-hidden="true" className="mx-2 h-6 w-px bg-white/10" />
             {accountLinks}
-            <LanguageSwitch />
+            <LanguageSwitch className="w-44" />
           </div>
 
           <button

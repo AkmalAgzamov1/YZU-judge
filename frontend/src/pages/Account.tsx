@@ -310,7 +310,7 @@ export default function Account() {
           </div>
           <div className="flex items-center gap-3 self-start sm:self-auto">
             {/* Phones only: the top bar has no room for it there. */}
-            <LanguageSwitch className="border border-white/10 sm:hidden" />
+            <LanguageSwitch className="w-full sm:hidden" />
             <button type="button" onClick={handleLogout} className={buttonSecondary}>
               {t("Sign out")}
             </button>

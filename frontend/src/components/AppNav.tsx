@@ -43,7 +43,7 @@ export default function AppNav() {
 
         <div className="ml-auto flex items-center gap-2">
           {/* The phone bar is already full; there the switch lives on the account page and the home menu. */}
-          <LanguageSwitch className="max-sm:hidden" />
+          <LanguageSwitch className="w-44 max-sm:hidden" />
           {user ? (
             <NavLink to="/account" className={linkClass} aria-label={t("Your account")}>
               <span className="flex items-center gap-2">
