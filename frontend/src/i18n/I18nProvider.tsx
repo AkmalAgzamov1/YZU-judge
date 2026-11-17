@@ -1,4 +1,5 @@
 import { Fragment, useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
+import { setDefaultTitle } from "../lib/documentTitle";
 import { I18nContext, type I18n, type RichParts } from "./context";
 import { currentLang, dateLocale, storeLang, tr, trn, type Lang } from "./translate";
 
@@ -31,7 +32,9 @@ export default function I18nProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     document.documentElement.lang = lang === "zh" ? "zh-Hant-TW" : lang === "vi" ? "vi" : lang === "ru" ? "ru" : lang === "id" ? "id" : "en";
-    document.title = tr("YZU Judge · Practice the CPE before it counts");
+    // Only the site default: a page that shows one problem or exam sets its own
+    // title and keeps it (see lib/documentTitle.ts).
+    setDefaultTitle(tr("YZU Judge · Practice the CPE before it counts"));
   }, [lang]);
 
   const value = useMemo<I18n>(

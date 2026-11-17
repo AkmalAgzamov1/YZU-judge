@@ -10,8 +10,21 @@ Run after a production build (npm run build), from backend/:
     python -m scripts.seo_prerender
 
 It rewrites frontend/dist/index.html in place and adds dist/problems/.../index.html files. Caddy
-already serves these as real files (its catch-all only falls back to index.html when a file is
-missing), so no Caddy change is needed.
+serves these as real files; the one line that makes that work is the catch-all
+`try_files {path}/index.html {path} /index.html` in deploy/Caddyfile (see below).
+
+Two details that are easy to get wrong and are handled here on purpose:
+
+- The pages are written as directories (dist/problems/1/index.html) and served with a Caddyfile
+  whose catch-all is `try_files {path}/index.html {path} /index.html`. The first candidate is what
+  makes them reachable: `try_files {path}` alone only matches a directory when the candidate ends
+  in a slash, so `/problems/1` would skip the prerendered file and fall back to the app shell,
+  hiding every page from crawlers. With both candidates, `/problems/1` and `/problems/1/` both
+  return the page and the canonical picks one.
+- The shells are Traditional Chinese and nothing else. There is no hreflang block: the app can
+  switch language in the browser (?lang=), but a static file cannot answer a query string, so all
+  five "language versions" would have served identical Chinese HTML. Declaring them as alternates
+  would have been a lie Google discards, so the page is simply one zh-Hant document.
 
 Absolute URLs come from SITE_ADDRESS (or SEO_BASE to override, e.g. https://yzujudge.com).
 """
@@ -31,12 +44,21 @@ FRONTEND = Path(__file__).resolve().parent.parent.parent / "frontend"
 DIST = FRONTEND / "dist"
 TEMPLATE = DIST / "index.html"
 
-# Our language codes and the BCP-47 tag used in hreflang / og:locale.
-LANGS = [("en", "en"), ("zh", "zh-Hant"), ("vi", "vi"), ("ru", "ru"), ("id", "id")]
+# The prerendered shells are Traditional Chinese, which is where the search traffic is.
+PAGE_LANG = "zh-Hant-TW"
+OG_LOCALE = "zh_TW"
+OG_IMAGE = "/og-cover.jpg"
+OG_IMAGE_WIDTH = 1200
+OG_IMAGE_HEIGHT = 630
 
 
 def site_base() -> str:
-    base = os.getenv("SEO_BASE") or f"https://{os.getenv('SITE_ADDRESS', 'localhost')}"
+    base = os.getenv("SEO_BASE") or os.getenv("SITE_ADDRESS")
+    if not base:
+        # A silent https://localhost here would poison every canonical and the sitemap.
+        raise SystemExit("Set SITE_ADDRESS (or SEO_BASE) to the public origin, e.g. yzujudge.com.")
+    if "://" not in base:
+        base = "https://" + base
     return base.rstrip("/")
 
 
@@ -44,28 +66,32 @@ def esc(text: str) -> str:
     return htmlmod.escape(str(text), quote=True)
 
 
-def plain(text: str, limit: int) -> str:
-    """Statement markdown to a short crawlable sentence: drop fences and links, keep the words."""
+def plain(text: str, limit: int | None = None) -> str:
+    """Statement markdown to crawlable prose: drop fences and links, keep the words."""
     stripped = re.sub(r"```.*?```", " ", text, flags=re.S)
     stripped = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", stripped)
     stripped = re.sub(r"[#>*_`]", " ", stripped)
     stripped = re.sub(r"\s+", " ", stripped).strip()
-    if len(stripped) > limit:
+    if limit is not None and len(stripped) > limit:
         stripped = stripped[: limit - 1].rstrip() + "…"
     return stripped
 
 
+def without_none(value):
+    """schema.org validators dislike nulls, so drop empty properties instead of emitting them."""
+    if isinstance(value, dict):
+        return {key: without_none(item) for key, item in value.items() if item is not None}
+    if isinstance(value, list):
+        return [without_none(item) for item in value]
+    return value
+
+
 # --- head block builders -------------------------------------------------------------
 
-def hreflang_links(base: str, path: str) -> str:
-    lines = [f'    <link rel="alternate" hreflang="{tag}" href="{base}{path}?lang={code}" />' for code, tag in LANGS]
-    lines.append(f'    <link rel="alternate" hreflang="x-default" href="{base}{path}" />')
-    return "\n".join(lines)
-
-
 def ld_graph(*nodes: dict) -> str:
-    body = nodes[0] if len(nodes) == 1 else {"@context": "https://schema.org", "@graph": list(nodes)}
-    if len(nodes) == 1:
+    cleaned = [without_none(node) for node in nodes]
+    body = cleaned[0] if len(cleaned) == 1 else {"@context": "https://schema.org", "@graph": cleaned}
+    if len(cleaned) == 1:
         body.setdefault("@context", "https://schema.org")
     return "    <script type=\"application/ld+json\">" + json.dumps(body, ensure_ascii=False) + "</script>"
 
@@ -80,6 +106,8 @@ def build_head(template: str, *, path: str, title: str, description: str, og_typ
     url = base + path
     page = template
 
+    # The template is English; every shell this script writes is Chinese. Google reads this.
+    page = set_tag(page, r"<html[^>]*>", f'<html lang="{PAGE_LANG}">')
     page = set_tag(page, r"<title>.*?</title>", f"<title>{esc(title)}</title>")
     page = set_tag(page, r'(<meta name="description" content=")[^"]*(")', lambda m: m.group(1) + esc(description) + m.group(2))
     page = set_tag(page, r'(<link rel="canonical" href=")[^"]*(")', lambda m: m.group(1) + url + m.group(2))
@@ -87,16 +115,17 @@ def build_head(template: str, *, path: str, title: str, description: str, og_typ
     page = set_tag(page, r'(<meta property="og:title" content=")[^"]*(")', lambda m: m.group(1) + esc(title) + m.group(2))
     page = set_tag(page, r'(<meta property="og:description" content=")[^"]*(")', lambda m: m.group(1) + esc(description) + m.group(2))
     page = set_tag(page, r'(<meta property="og:type" content=")[^"]*(")', lambda m: m.group(1) + og_type + m.group(2))
-    page = set_tag(page, r'(<meta property="og:image" content=")[^"]*(")', lambda m: m.group(1) + base + "/yzu-campus.jpg" + m.group(2))
+    page = set_tag(page, r'(<meta property="og:image" content=")[^"]*(")', lambda m: m.group(1) + base + OG_IMAGE + m.group(2))
 
     inject = "\n".join(
         [
-            hreflang_links(base, path),
-            '    <meta property="og:image:width" content="1200" />',
-            '    <meta property="og:image:height" content="630" />',
+            '    <meta property="og:locale" content="%s" />' % OG_LOCALE,
+            '    <meta property="og:image:width" content="%d" />' % OG_IMAGE_WIDTH,
+            '    <meta property="og:image:height" content="%d" />' % OG_IMAGE_HEIGHT,
+            '    <meta property="og:image:alt" content="%s" />' % esc("元智大學校門與 YZU Judge 標誌"),
             '    <meta name="twitter:title" content="%s" />' % esc(title),
             '    <meta name="twitter:description" content="%s" />' % esc(description),
-            '    <meta name="twitter:image" content="%s/yzu-campus.jpg" />' % base,
+            '    <meta name="twitter:image" content="%s%s" />' % (base, OG_IMAGE),
             jsonld,
         ]
     )
@@ -127,40 +156,51 @@ def sample_blocks(problem_id: int, db) -> str:
         except OSError:
             continue
         out.append(
-            "<h3>Sample {n} input</h3><pre>{inp}</pre><h3>Sample {n} output</h3><pre>{outp}</pre>".format(
+            "<h3>範例 {n} 輸入</h3><pre>{inp}</pre><h3>範例 {n} 輸出</h3><pre>{outp}</pre>".format(
                 n=index, inp=esc(data[:2000]), outp=esc(expected[:2000])
             )
         )
     return "\n".join(out)
 
 
-def problem_page_html(problem: Problem, db) -> tuple[str, str]:
+def problem_page_html(problem: Problem, db, template: str) -> tuple[str, str]:
     base = site_base()
+    # Trailing slash: this is the URL Caddy serves without a redirect, so it is the canonical.
     path = f"/problems/{problem.id}"
     uva = f"UVa {problem.uva_id}" if problem.uva_id else "YZU Judge"
     title = f"{problem.title} - {uva} · CPE 考古題練習 | YZU Judge"
-    statement = plain(problem.description, 320)
-    description = (
-        f"{problem.title} ({uva}) 是 CPE 考古題。難度 {problem.difficulty}，"
-        f"時間 {problem.time_limit_ms} ms、記憶體 {problem.memory_limit_mb} MB。"
-        f"{statement}"
+
+    prefix = (
+        f"{problem.title}（{uva}）CPE 考古題。難度 {problem.difficulty}，"
+        f"時間 {problem.time_limit_ms} ms，記憶體 {problem.memory_limit_mb} MB。"
     )
+    # Google shows roughly 155 characters of a description; longer is cut, not shown.
+    description = plain(prefix + plain(problem.description), 160)
+    statement = plain(problem.description)
+
     jsonld = ld_graph(
         {
             "@type": "TechArticle",
             "name": f"{problem.title} ({uva})",
-            "description": statement,
+            "description": plain(problem.description, 200),
             "url": base + path,
-            "inLanguage": "zh-Hant",
+            "inLanguage": PAGE_LANG,
             "isPartOf": {"@id": base + "/#website"},
-            "about": [
-                {
-                    "@type": "DefinedTerm",
-                    "name": problem.difficulty,
-                }
+            "about": [{"@type": "DefinedTerm", "name": problem.difficulty}],
+            "identifier": (
+                {"@type": "PropertyValue", "propertyID": "UVa", "value": str(problem.uva_id)}
+                if problem.uva_id
+                else None
+            ),
+        },
+        {
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "YZU Judge", "item": base + "/"},
+                {"@type": "ListItem", "position": 2, "name": "CPE 題目", "item": base + "/problems/"},
+                {"@type": "ListItem", "position": 3, "name": problem.title, "item": base + path},
             ],
-            "identifier": ({"@type": "PropertyValue", "propertyID": "UVa", "value": str(problem.uva_id)} if problem.uva_id else None),
-        }
+        },
     )
 
     topics = "".join(f"<li>{esc(t)}</li>" for t in (problem.topics or []))
@@ -171,15 +211,15 @@ def problem_page_html(problem: Problem, db) -> tuple[str, str]:
         f"<h1>{esc(problem.title)}</h1>"
         f"<p>{esc(uva)} · 難度 {esc(problem.difficulty)} · 時間 {problem.time_limit_ms} ms · "
         f"記憶體 {problem.memory_limit_mb} MB · CPE 考古題 · 一顆星練習</p>"
-        f"<article><h2>題目敘述</h2><div style='white-space:pre-wrap'>{esc(problem.description)}</div></article>"
+        f"<article><h2>題目敘述</h2><p>{esc(statement)}</p></article>"
         + (f"<section><h2>主題</h2><ul>{topics}</ul></section>" if topics else "")
         + f"<section><h2>輸入 / 輸出 範例</h2>{sample_blocks(problem.id, db)}</section>"
-        f"<p><a href='{base}/problems/{problem.id}'>在 YZU Judge 練習這題，取得即時判定</a></p>"
+        f"<p><a href='{base}{path}'>在 YZU Judge 練習這題，取得即時判定</a></p>"
         "</main>"
     )
 
     head = build_head(
-        TEMPLATE_TEXT, path=path, title=title, description=description,
+        template, path=path, title=title, description=description,
         og_type="article", jsonld=jsonld,
     )
     return with_body(head, body), path
@@ -187,28 +227,25 @@ def problem_page_html(problem: Problem, db) -> tuple[str, str]:
 
 # --- sitemap / robots ----------------------------------------------------------------
 
-def build_sitemap(paths: list[tuple[str, str, str]]) -> str:
+def build_sitemap(paths: list[tuple[str, str]]) -> str:
+    """paths is (path, priority). Element order matters: the sitemap XSD wants loc, lastmod,
+    changefreq, priority, and any xhtml:link after them, so this stays in that order.
+
+    lastmod is left out on purpose: problems do not track an update time, and a build-date
+    lastmod that changes on every deploy teaches Google to ignore the field."""
     base = site_base()
     items = []
-    for path, lastmod, priority in paths:
-        alternates = "\n".join(
-            f'      <xhtml:link rel="alternate" hreflang="{tag}" href="{base}{path}?lang={code}" />'
-            for code, tag in LANGS
-        )
+    for path, priority in paths:
         items.append(
             "  <url>\n"
             f"    <loc>{base}{path}</loc>\n"
-            f"    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"{base}{path}\" />\n"
-            f"{alternates}\n"
-            f"    <changefreq>weekly</changefreq>\n"
+            "    <changefreq>weekly</changefreq>\n"
             f"    <priority>{priority}</priority>\n"
-            + (f"    <lastmod>{lastmod}</lastmod>\n" if lastmod else "")
-            + "  </url>"
+            "  </url>"
         )
     return (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
-        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
-        'xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         + "\n".join(items)
         + "\n</urlset>\n"
     )
@@ -216,48 +253,43 @@ def build_sitemap(paths: list[tuple[str, str, str]]) -> str:
 
 def build_robots() -> str:
     base = site_base()
+    # No blanket Disallow, so every public page is crawlable by default and only the
+    # signed-in surfaces and the API are closed.
     return (
         "User-agent: *\n"
-        "Allow: /$\n"
-        "Allow: /problems\n"
-        "Allow: /mock\n"
-        "Allow: /privacy\n"
-        "Allow: /terms\n"
         "Disallow: /admin\n"
         "Disallow: /account\n"
         "Disallow: /submissions\n"
+        "Disallow: /login\n"
+        "Disallow: /register\n"
+        "Disallow: /forgot-password\n"
+        "Disallow: /verify-email\n"
         "Disallow: /api/\n"
-        "Disallow: /mock/\n"
         f"Sitemap: {base}/sitemap.xml\n"
     )
-
-
-TEMPLATE_TEXT = ""
 
 
 def main() -> None:
     if not TEMPLATE.exists():
         raise SystemExit("frontend/dist/index.html not found. Run `npm run build` in frontend/ first.")
 
-    global TEMPLATE_TEXT
-    TEMPLATE_TEXT = TEMPLATE.read_text(encoding="utf-8")
+    template = TEMPLATE.read_text(encoding="utf-8")
 
     db = SessionLocal()
     base = site_base()
-    today = "2026-11-16"
 
     published = db.query(Problem).filter(Problem.is_published == True).order_by(Problem.sort_order.desc(), Problem.id).all()
     print(f"Prerendering {len(published)} published problems into {DIST}")
 
-    written = []
+    written: list[tuple[str, str]] = []
 
     # Each public problem page.
     for problem in published:
-        page_html, path = problem_page_html(problem, db)
+        page_html, path = problem_page_html(problem, db, template)
         target = DIST / f"problems/{problem.id}/index.html"
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(page_html, encoding="utf-8")
-        written.append((path, today, "0.7"))
+        written.append((path, "0.7"))
 
     # The problems list, with every problem linked so a crawler can reach them all.
     list_links = "".join(
@@ -284,10 +316,10 @@ def main() -> None:
         }
     )
     (DIST / "problems/index.html").write_text(
-        with_body(build_head(TEMPLATE_TEXT, path="/problems", title=list_title, description=list_desc, og_type="website", jsonld=list_jsonld), list_body),
+        with_body(build_head(template, path="/problems", title=list_title, description=list_desc, og_type="website", jsonld=list_jsonld), list_body),
         encoding="utf-8",
     )
-    written.append(("/problems", today, "0.8"))
+    written.append(("/problems", "0.8"))
 
     # Landing page: give crawlers the same key sentences the browser renders.
     landing_body = (
@@ -304,7 +336,7 @@ def main() -> None:
             "@id": base + "/#website",
             "name": "YZU Judge",
             "url": base + "/",
-            "inLanguage": [tag for _code, tag in LANGS],
+            "inLanguage": PAGE_LANG,
             "potentialAction": {
                 "@type": "SearchAction",
                 "target": base + "/problems?q={search_term_string}",
@@ -322,7 +354,7 @@ def main() -> None:
     (DIST / "index.html").write_text(
         with_body(
             build_head(
-                TEMPLATE_TEXT, path="/",
+                template, path="/",
                 title="YZU Judge · 練習 CPE，趁它還沒有影響畢業",
                 description="元智大學免費 CPE 練習 judge。用過去 CPE 考古題練習，幾秒取得判定，按時通過 Collegiate Programming Exam。",
                 og_type="website", jsonld=landing_jsonld,
@@ -331,7 +363,7 @@ def main() -> None:
         ),
         encoding="utf-8",
     )
-    written.append(("/", today, "1.0"))
+    written.append(("/", "1.0"))
 
     # Simple crawlable shells for the other static pages so they are not empty either.
     for path, title, desc, body_text in [
@@ -340,14 +372,14 @@ def main() -> None:
         ("/terms", "使用條款 | YZU Judge", "YZU Judge 的使用條款：請提交自己的解答，不要攻擊系統。", "使用條款"),
     ]:
         page = build_head(
-            TEMPLATE_TEXT, path=path, title=title, description=desc, og_type="webpage",
+            template, path=path, title=title, description=desc, og_type="webpage",
             jsonld=ld_graph({"@type": "WebPage", "name": title, "url": base + path}),
         )
-        (DIST / path.lstrip("/")).mkdir(parents=True, exist_ok=True)
-        (DIST / path.lstrip("/") / "index.html").write_text(
+        (DIST / path.strip("/")).mkdir(parents=True, exist_ok=True)
+        (DIST / path.strip("/") / "index.html").write_text(
             with_body(page, f"<main><h1>{esc(title)}</h1><p>{esc(body_text)}</p></main>"), encoding="utf-8",
         )
-        written.append((path, today, "0.4"))
+        written.append((path, "0.4"))
 
     # Real robots.txt and sitemap.xml as actual files, so Caddy serves them instead of the app shell.
     (DIST / "robots.txt").write_text(build_robots(), encoding="utf-8")
