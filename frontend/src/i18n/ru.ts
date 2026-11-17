@@ -59,7 +59,7 @@ export const ru = {
   // Landing: tagline
   "Our promise": "Наше обещание",
   "Practice the format": "Привыкните к формату,",
-  "until it feels familiar,": "чтобы он стал родным,",
+  "until it feels familiar,": "чтобы он стал привычным,",
   "so the CPE costs you": "и тогда CPE отнимет",
   "an afternoon, not a year.": "полдня, а не год.",
 
@@ -87,7 +87,7 @@ export const ru = {
   // Landing: how to register
   "How to register for the CPE": "Как зарегистрироваться на CPE",
   "With a Taiwanese national ID card you sign up on the <a>official CPE website</a> yourself. The site cannot check an ARC, so international students need the CPE office to open the account for them.":
-    "С тайваньской национальной картой (ID) Вы регистрируетесь самостоятельно — на <a>официальном сайте CPE</a>. Сайт не проверяет ARC (ARC/вид на жительство), поэтому иностранным студентам аккаунт открывает офис CPE.",
+    "С тайваньской национальной картой (ID) вы регистрируетесь самостоятельно — на <a>официальном сайте CPE</a>. Сайт не проверяет ARC (ARC/вид на жительство), поэтому иностранным студентам аккаунт открывает офис CPE.",
   "The whole process takes one to two weeks. Start well before registration opens.":
     "Весь процесс занимает одну-две недели. Начинайте задолго до открытия регистрации.",
   "Download and fill in the account form": "Скачайте и заполните анкету на аккаунт",
@@ -101,7 +101,7 @@ export const ru = {
   "For IBPI students, the office is room R70201.": "Студентам IBPI — сдавать в кабинете R70201.",
   "Email the signed form to the CPE office": "Отправьте подписанную анкету на email офиса CPE",
   "Scan the signed form into one PDF and send it to {email}, from the same email you wrote on the form. Send it at least one week before registration closes.":
-    "Отсканируйте подписанную анкету в один PDF и отправьте на {email} — с того же email, что Вы указали в анкете. Отправьте минимум за неделю до закрытия регистрации.",
+    "Отсканируйте подписанную анкету в один PDF и отправьте на {email} — с того же email, что вы указали в анкете. Отправьте минимум за неделю до закрытия регистрации.",
   "The form itself still lists an old address, cpe@cse.nsysu.edu.tw. Do not use it, send to {email}. A short message is enough:":
     "В самой анкете указан старый адрес, cpe@cse.nsysu.edu.tw. Не пишите на него — отправляйте на {email}. Короткого письма достаточно:",
   "To": "Кому",
@@ -111,14 +111,14 @@ export const ru = {
   "Copied": "Скопировано",
   "Log in and change your password": "Войдите и смените пароль",
   "The CPE office usually answers within a few days. Your username and your password are both your ARC number, so change the password right after the first login and check that your name and details are correct. No reply three days before registration closes? Email them again.":
-    "Офис CPE обычно отвечает за несколько дней. Логин и пароль — это номер Вашего ARC, поэтому сразу после первого входа смените пароль и проверьте, что имя и данные указаны верно. За три дня до закрытия регистрации ответа нет? Напишите ещё раз.",
+    "Офис CPE обычно отвечает за несколько дней. Логин и пароль — это номер вашего ARC, поэтому сразу после первого входа смените пароль и проверьте, что имя и данные указаны верно. За три дня до закрытия регистрации ответа нет? Напишите ещё раз.",
   "Sign up for the exam itself": "Зарегистрируйтесь на сам экзамен",
   "Having an account does not mean you are registered. Every sitting has its own registration window: log in on the <a>official CPE website</a> and sign up for the exam each time, choosing the school where you will take it.":
     "Аккаунт ещё не означает регистрацию. У каждой даты экзамена своё окно: входите на <a>официальном сайте CPE</a> и каждый раз подавайтесь на экзамен, выбирая вуз, где будете сдавать.",
   "Seats at Yuan Ze fill up within 30 minutes to an hour after registration opens. To take the exam on campus instead of travelling to another school, sign up the moment it opens.":
     "Места в Юань-Цзе разбирают за 30 минут — час после открытия регистрации. Хотите сдавать у себя в кампусе, а не ехать в другой вуз, — подавайтесь в первую же минуту.",
   "If you sign up and miss the exam without a valid reason, you lose your place at the next one.":
-    "Если подадитесь и пропустите экзамен без уважительной причины, Вы потеряете место на следующем.",
+    "Если подадитесь и пропустите экзамен без уважительной причины, вы потеряете место на следующем.",
 
   // Landing: next CPE
   "Next CPE": "Ближайший CPE",
@@ -138,14 +138,14 @@ export const ru = {
   "Time until the exam": "Времени до экзамена",
   "Which star problem will it be?": "Какая задача по звезде попадёт?",
   "The CPE keeps an official list of {n} \"one star\" problems, the easiest level it has. Here is the trick: every CPE takes exactly one of its seven problems from this list. We checked all {count} past exams, and not a single one broke this rule.":
-    "У CPE есть официальный список из {n} задач «одна звезда» — самый лёгкий уровень. Суть вот в чём: каждый экзамен CPE берёт ровно одну из семи задач именно из этого списка. Мы проверили все {count} прошлых экзаменов — ни один этот порядок не нарушил.",
+    "У CPE есть официальный список из {n} задач «одна звезда» — самый лёгкий уровень. Суть вот в чём: каждый экзамен CPE берёт ровно одну из семи задач именно из этого списка. Мы проверили все {count} прошлых экзаменов — ни один не нарушил этого правила.",
   "So the list is your free point. Practice all {n} and you walk into the exam already knowing one of the problems. You still need a second one to pass in a single sitting, but you start from 1, not from 0.":
-    "Значит, этот список — Ваше бесплатное очко. Прорешайте все {n} — и придёте на экзамен, уже зная одну из задач. Чтобы сдать за одну дату, нужна ещё вторая, но начнёте Вы с 1, а не с 0.",
+    "Значит, этот список — ваш бесплатный балл. Прорешайте все {n} — и придёте на экзамен, уже зная одну из задач. Чтобы сдать за одну дату, нужна ещё вторая, но начнёте вы с 1, а не с 0.",
   "We can't know which one comes next, but the past exams show a pattern: a problem from the list has never come back within {years} years. Below is the whole list, grouped by when each problem was last asked. Start from the top. Dashed ones are not on YZU Judge, because the CPE never published test data for them, so they open the UVa statement instead.":
     "Какую задачу дадут следующей — неизвестно, но прошлые экзамены показывают закономерность: задача из списка не повторялась минимум {years} лет. Ниже весь список, сгруппированный по тому, когда задачу давали в последний раз. Начинайте сверху. Пунктиром помечены задачи, которых на YZU Judge нет: CPE никогда не публиковал к ним тесты, поэтому такие задачи открывают условие на UVa.",
   "Never asked yet": "Ещё ни разу не давали",
   "On the list since the start, never picked.": "В списке с самого начала, но ни разу не попадала.",
-  "Due again": "Давно созрела",
+  "Due again": "Пора снова",
   "Last asked more than {years} years before this exam.": "Последний раз давали больше чем за {years} лет до этого экзамена.",
   "Asked recently": "Недавно давали",
   "None of the list has come back within {years} years, so these are unlikely.":
@@ -160,7 +160,7 @@ export const ru = {
     "Вы читаете из стандартного ввода, пишете в стандартный вывод и укладываетесь в жёсткий лимит времени. Ваш код выполняется в изолированном контейнере — как на настоящей проверяющей системе.",
   "Verdicts you can read": "Понятные вердикты",
   "Each test case reports its runtime and memory, so you can tell a wrong answer from a slow one before you try again.":
-    "Каждый тест показывает время работы и память, так что ещё до повторной отправки Вы различите неверный ответ и просто медленный.",
+    "Каждый тест показывает время работы и память, так что ещё до повторной отправки вы различите неверный ответ и просто медленный.",
   "Easy to hard": "От лёгких к сложным",
   "Problems are tagged easy, medium and hard. Start with the warmups that open every CPE and move up when they pass on the first try.":
     "Задачи помечены как лёгкие, средние и сложные. Начинайте с разогревочных задач, с которых начинается каждый CPE, и поднимайтесь выше, когда решаете их с первой попытки.",
@@ -177,13 +177,13 @@ export const ru = {
   "Three steps to your first verdict": "Три шага до первого вердикта",
   "Create an account": "Создайте аккаунт",
   "A username, your email and a password. Under a minute, and every submission you make is saved.":
-    "Логин, Ваш email и пароль — меньше минуты, и каждое Ваше отправление сохраняется.",
+    "Логин, ваш email и пароль — меньше минуты, и каждое ваше отправление сохраняется.",
   "Pick a past CPE problem": "Выберите задачу из прошлых CPE",
   "Start with the easy ones. Read the statement, check the sample, write your solution.":
     "Начните с лёгких. Прочитайте условие, посмотрите пример, напишите решение.",
   "Submit and read the verdict": "Отправьте и прочитайте вердикт",
   "The judge runs your code against hidden tests and tells you exactly where it passed and where it failed.":
-    "Проверяющая система прогоняет Ваш код по скрытым тестам и точно показывает, где он прошёл, а где провалился.",
+    "Проверяющая система прогоняет ваш код по скрытым тестам и точно показывает, где он прошёл, а где провалился.",
 
   // Landing: founder note
   "Why this exists": "Зачем это всё",
@@ -195,19 +195,19 @@ export const ru = {
   "Questions students ask": "Что спрашивают студенты",
   "What is the CPE?": "Что такое CPE?",
   "The Collegiate Programming Examination is a national programming test for university students in Taiwan. You get 3 hours and a set of problems in English, written in the style of the UVa Online Judge. A computer judges your code against hidden tests.":
-    "Collegiate Programming Examination — национальный экзамен по программированию для студентов вузов Тайваня. Вам дают 3 часа и набор задач на английском в стиле UVa Online Judge. Компьютер проверяет Ваш код по скрытым тестам.",
+    "Collegiate Programming Examination — национальный экзамен по программированию для студентов вузов Тайваня. Вам дают 3 часа и набор задач на английском в стиле UVa Online Judge. Компьютер проверяет ваш код по скрытым тестам.",
   "Do I need to pass it to graduate?": "Без него не выпуститься?",
   "Several YZU engineering departments require it. A common rule is 2 problems solved in one sitting, or 3 solved in total across separate sittings. Rules differ by department and enrollment year, so confirm yours with your department office.":
     "Несколько инженерных кафедр YZU его требуют. Частое правило: решить 2 задачи за одну дату экзамена или 3 в сумме за несколько дат. Правила различаются по кафедре и году поступления, так что уточняйте свои в деканате.",
   "Are these real CPE problems?": "Это настоящие задачи CPE?",
   "Yes. The problem set is built from past CPE exam problems, so you practice on the same kind of questions you will see on exam day, with test data to judge your code.":
-    "Да. Набор собран из задач реальных экзаменов CPE, поэтому Вы тренируетесь на тех же типах задач, что увидите в день экзамена, с тестами для проверки кода.",
+    "Да. Набор собран из задач реальных экзаменов CPE, поэтому вы тренируетесь на тех же типах задач, что увидите в день экзамена, с тестами для проверки кода.",
   "When should I start practicing?": "Когда начинать готовиться?",
   "As early as your first year. The CPE runs about four times a year, and every sitting you take while still relaxed is a free attempt. Waiting until senior year leaves very few chances.":
-    "Как можно раньше, с первого курса. CPE проводится около четырёх раз в год, и каждая дата, на которую Вы приходите спокойным, — это бесплатная попытка. Дотянете до старших курсов — шансов почти не останется.",
+    "Как можно раньше, с первого курса. CPE проводится около четырёх раз в год, и каждая дата, на которую вы приходите спокойным, — это бесплатная попытка. Дотянете до старших курсов — шансов почти не останется.",
   "Is YZU Judge free?": "YZU Judge бесплатен?",
   "Yes. There is no payment, no ads and nothing to install. You only need an account so your submissions are saved.":
-    "Да. Никакой оплаты, никакой рекламы и ничего для установки. Нужен только аккаунт, чтобы Ваши отправления сохранялись.",
+    "Да. Никакой оплаты, никакой рекламы и ничего для установки. Нужен только аккаунт, чтобы ваши отправления сохранялись.",
   "Which programming languages can I use?": "На каких языках можно сдавать?",
   "Python 3.9.6, C/C++ (MinGW GCC 6.3.0 and MSVC v140), and Java (AdoptOpenJDK 8 or 11) - the same languages the real CPE exam offers.":
     "Python 3.9.6, C/C++ (MinGW GCC 6.3.0 и MSVC v140) и Java (AdoptOpenJDK 8 или 11) — те же языки, что даёт настоящий экзамен CPE.",
@@ -217,7 +217,7 @@ export const ru = {
   "Go to the official CPE website": "Открыть официальный сайт CPE",
   "I am not a CS major. Is this still for me?": "Я не из компьютерного факультета. Мне это подойдёт?",
   "Yes. If your department requires the CPE, the easy problems are a good place to start even if programming is not your main subject.":
-    "Да. Если Ваша кафедра требует CPE, начните с лёгких задач — даже если программирование не Ваша основная специальность.",
+    "Да. Если ваша кафедра требует CPE, начните с лёгких задач — даже если программирование не ваша основная специальность.",
 
   // Landing: final call
   "Your next CPE sitting": "Ваша ближайшая дата CPE",
@@ -259,7 +259,7 @@ export const ru = {
   "Confirm password": "Повторите пароль",
   "Creating account…": "Создаём аккаунт…",
   "By creating an account, you agree to the <terms>Terms of use</terms> and <privacy>Privacy policy</privacy>.":
-    "Создавая аккаунт, Вы принимаете <terms>Условия использования</terms> и <privacy>Политику конфиденциальности</privacy>.",
+    "Создавая аккаунт, вы принимаете <terms>Условия использования</terms> и <privacy>Политику конфиденциальности</privacy>.",
   "Already have an account?": "Уже есть аккаунт?",
   "Enter the 6-digit code from the email.": "Введите 6-значный код из письма.",
   "We sent a new code. The old one no longer works.": "Мы отправили новый код. Старый уже недействителен.",
@@ -278,7 +278,7 @@ export const ru = {
     "Outlook и почта YZU часто кладут наше письмо в спам. Если найдёте, отметьте его <b>Не спам</b> — тогда следующие коды попадут прямо во входящие.",
   "Hide password": "Скрыть пароль",
   "Show password": "Показать пароль",
-  "Enter the email you signed up with.": "Введите email, на который Вы регистрировались.",
+  "Enter the email you signed up with.": "Введите email, на который вы регистрировались.",
   "Choose a new password.": "Придумайте новый пароль.",
   "Type your new password again.": "Повторите новый пароль.",
   "If the email has an account, a new code is on its way.": "Если на этом email есть аккаунт, новое письмо уже в пути.",
@@ -387,7 +387,7 @@ export const ru = {
   "Code editor": "Редактор кода",
 
   // Judge panel
-  "sending your code…": "отправляем Ваш код…",
+  "sending your code…": "отправляем ваш код…",
   "Submit your code to see the verdict here.": "Отправьте код — здесь появится вердикт.",
   "Ctrl + Enter also works.": "Ctrl + Enter тоже работает.",
   "loading submission…": "загружаем отправление…",
@@ -415,7 +415,7 @@ export const ru = {
   "Unlocks when you have:": "Станет доступно, когда:",
   "Opened every hint ({opened} of {total})": "Открыты все подсказки ({opened} из {total})",
   "Submitted at least one attempt": "Отправлена хотя бы одна попытка",
-  "<a>Signed in</a> and submitted at least one attempt": "<a>Вы вошли</a> и отправили хотя бы одну попытку",
+  "<a>Signed in</a> and submitted at least one attempt": "<a>вы вошли</a> и отправили хотя бы одну попытку",
   "Show solution": "Показать решение",
   "Solution language": "Язык решения",
 
@@ -437,13 +437,13 @@ export const ru = {
   "The numbers and words are right, but the whitespace is not: UVa and the CPE compare the output exactly. Check the newline after the last line, extra blank lines, and spaces at the end of a line.":
     "Числа и слова верны, а вот пробелы — нет: UVa и CPE сверяют вывод точно. Проверьте перевод строки после последней строки, лишние пустые строки и пробелы в конце строки.",
   "Something went wrong on our side, not in your code. Try submitting again.":
-    "Сбой на нашей стороне, не в Вашем коде. Попробуйте отправить ещё раз.",
+    "Сбой на нашей стороне, не в вашем коде. Попробуйте отправить ещё раз.",
 
   // Submissions
   "Time limit": "Ограничение времени",
   "Loading submissions": "Загружаем отправления",
-  "Your submissions could not be loaded.": "Ваши отправления загрузить не удалось.",
-  "Everything you have sent to the judge, newest first.": "Всё, что Вы отправляли на проверку, начиная со свежего.",
+  "Your submissions could not be loaded.": "Не удалось загрузить ваши отправления.",
+  "Everything you have sent to the judge, newest first.": "Всё, что вы отправляли на проверку, от новых к старым.",
   "{n} submissions": "{n} отправлений",
   "{n} accepted": "{n} зачтено",
   "{n} problems solved": "{n} задач решено",
@@ -459,7 +459,7 @@ export const ru = {
   "When": "Когда",
   "Show more": "Показать ещё",
   "{shown} of {left}": "{shown} из {left}",
-  "This submission is not yours": "Это отправление не Ваше",
+  "This submission is not yours": "Это отправление не ваше",
   "No such submission": "Такого отправления нет",
   "You can only view your own submissions.": "Вы можете просматривать только свои отправления.",
   "Back to submissions": "К отправлениям",
@@ -509,9 +509,9 @@ export const ru = {
   "Start {title}?": "Начать «{title}»?",
   "Start the clock": "Запустить таймер",
   "You get {duration} for {n} problems. The clock starts now and does not pause, even if you close the tab.":
-    "На {n} задач у Вас {duration}. Таймер запускается сейчас и не ставится на паузу — даже если Вы закроете вкладку.",
+    "На {n} задач у вас {duration}. Таймер запускается сейчас и не ставится на паузу — даже если вы закроете вкладку.",
   "You already solved {n} of these problems in practice, so this mock will feel easier than the real one.":
-    "Вы уже {n} из этих задач решили на тренировке, поэтому пробник покажется Вам легче настоящего.",
+    "Вы уже {n} из этих задач решили на тренировке, поэтому пробник покажется вам легче настоящего.",
   "Cancel": "Отмена",
   "One moment…": "Секунду…",
   "The exam could not be finished. Try again.": "Завершить экзамен не удалось. Попробуйте снова.",
@@ -520,7 +520,7 @@ export const ru = {
   "Finish the exam now?": "Завершить экзамен сейчас?",
   "Finish exam": "Завершить экзамен",
   "You still have {clock}. Submissions still in the queue will count. You cannot submit after finishing.":
-    "У Вас ещё {clock}. Отправления, что ещё в очереди, будут учтены. После завершения отправлять нельзя.",
+    "У вас ещё {clock}. Отправления, что ещё в очереди, будут учтены. После завершения отправлять нельзя.",
   "{duration} used": "затрачено {duration}",
   "Solved {solved} of {total}": "Решено {solved} из {total}",
   "You would pass this CPE": "Вы бы сдали этот CPE",
@@ -532,7 +532,7 @@ export const ru = {
   "Back to Mock CPE": "К пробному CPE",
   "Review submissions": "Посмотреть отправления",
   "The exam could not be loaded.": "Экзамен загрузить не удалось.",
-  "This exam is not yours": "Этот экзамен не Ваш",
+  "This exam is not yours": "Этот экзамен не ваш",
   "No such exam": "Такого экзамена нет",
   "Exam could not be loaded": "Экзамен не загрузился",
   "Loading exam": "Загружаем экзамен",
@@ -562,8 +562,8 @@ export const ru = {
   "{n} days": "{n} дней",
   "Recent submissions": "Свежие отправления",
   "View all": "Смотреть все",
-  "Loading your progress": "Загружаем Ваш прогресс",
-  "Loading your account": "Загружаем Ваш аккаунт",
+  "Loading your progress": "Загружаем ваш прогресс",
+  "Loading your account": "Загружаем ваш аккаунт",
   "Your progress could not be loaded.": "Ваш прогресс загрузить не удалось.",
   "Your progress could not be loaded": "Прогресс не загрузился",
   "Member since {date}": "С нами с {date}",
@@ -578,9 +578,9 @@ export const ru = {
 export const apiMessages: Record<string, string> = {
   "Invalid username or password": "Неверный логин или пароль",
   "Too many attempts. Wait a minute and try again.": "Слишком много попыток. Подождите минуту и попробуйте снова.",
-  "Too many emails from your network. Try again in an hour.": "С Вашей сети отправлено слишком много писем. Попробуйте через час.",
+  "Too many emails from your network. Try again in an hour.": "С вашей сети отправлено слишком много писем. Попробуйте через час.",
   "The site has already sent its full quota of verification emails today. Please try again tomorrow, or sign in if you already have an account.":
-    "На сегодня исчерпана дневная квота писем с кодами. Попробуйте завтра либо войдите, если аккаунт у Вас уже есть.",
+    "На сегодня исчерпана дневная квота писем с кодами. Попробуйте завтра либо войдите, если аккаунт у вас уже есть.",
   "We could not send the email right now. Try again in a minute.": "Письмо сейчас отправить не удалось. Попробуйте через минуту.",
   "Username must be 3 to 32 characters.": "Логин должен быть длиной от 3 до 32 символов.",
   "Username cannot contain spaces or invisible characters.": "В логине не должно быть пробелов и невидимых символов.",
@@ -604,7 +604,7 @@ export const apiMessages: Record<string, string> = {
   "No such mock exam": "Такого пробного экзамена нет",
   "This mock exam has ended": "Этот пробный экзамен завершён",
   "This problem is not part of the mock exam": "Эта задача не входит в пробный экзамен",
-  "You already have a mock exam in progress": "У Вас уже идёт пробный экзамен",
+  "You already have a mock exam in progress": "У вас уже идёт пробный экзамен",
   "You can only access your own mock exams": "Вы можете просматривать только свои пробные экзамены",
   "No such CPE paper": "Такого варианта CPE нет",
   "This CPE paper has no problems yet": "В этом варианте CPE пока нет задач",

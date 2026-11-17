@@ -136,11 +136,11 @@ export const id = {
   "Time until the exam": "Waktu menuju ujian",
   "Which star problem will it be?": "Soal bintang berapa yang akan keluar?",
   "The CPE keeps an official list of {n} \"one star\" problems, the easiest level it has. Here is the trick: every CPE takes exactly one of its seven problems from this list. We checked all {count} past exams, and not a single one broke this rule.":
-    "CPE menyimpan daftar resmi berisi {n} soal \"satu bintang\", level termudah yang dimilikinya. Ini kuncinya: setiap CPE mengambil tepat satu dari tujuh soalnya dari daftar ini. Kami memeriksa semua {count} ujian sebelumnya, dan tidak satu pun melanggar aturan ini.",
+    "CPE punya daftar resmi berisi {n} soal \"satu bintang\", tingkat termudah yang ada. Ini kuncinya: setiap CPE mengambil tepat satu dari tujuh soalnya dari daftar ini. Kami memeriksa semua {count} ujian sebelumnya, dan tidak satu pun melanggar aturan ini.",
   "So the list is your free point. Practice all {n} and you walk into the exam already knowing one of the problems. You still need a second one to pass in a single sitting, but you start from 1, not from 0.":
     "Jadi daftar itu adalah poin gratis bagimu. Latih semua {n} dan kamu masuk ke ujian dengan sudah mengetahui salah satu soalnya. Kamu tetap butuh satu lagi untuk lulus dalam satu gelombang, tapi kamu mulai dari 1, bukan dari 0.",
   "We can't know which one comes next, but the past exams show a pattern: a problem from the list has never come back within {years} years. Below is the whole list, grouped by when each problem was last asked. Start from the top. Dashed ones are not on YZU Judge, because the CPE never published test data for them, so they open the UVa statement instead.":
-    "Kita tidak tahu mana yang keluar berikutnya, tapi ujian sebelumnya menunjukkan pola: sebuah soal dari daftar itu tidak pernah muncul kembali dalam {years} tahun. Di bawah ini seluruh daftar, dikelompokkan berdasarkan kapan soal itu terakhir diujikan. Mulai dari atas. Yang bergaris putus-putus tidak ada di YZU Judge, karena CPE tidak pernah merilis data tes untuknya, jadi soal itu membuka pernyataan di UVa sebagai gantinya.",
+    "Kami tidak tahu mana yang keluar berikutnya, tapi ujian sebelumnya menunjukkan pola: sebuah soal dari daftar itu tidak pernah muncul kembali dalam {years} tahun. Di bawah ini seluruh daftar, dikelompokkan berdasarkan kapan soal itu terakhir diujikan. Mulai dari atas. Yang bergaris putus-putus tidak ada di YZU Judge, karena CPE tidak pernah merilis data tes untuknya, jadi tautannya membuka halaman soal di UVa.",
   "Never asked yet": "Belum pernah keluar",
   "On the list since the start, never picked.": "Ada dalam daftar sejak awal, belum pernah dipilih.",
   "Due again": "Waktunya muncul lagi",
@@ -319,7 +319,7 @@ export const id = {
   "Running": "Berjalan",
   "Accepted": "Diterima",
   "Wrong answer": "Jawaban salah",
-  "Presentation error": "Kesalahan penyajian",
+  "Presentation error": "Kesalahan format",
   "Time limit exceeded": "Melebihi batas waktu",
   "Memory limit exceeded": "Melebihi batas memori",
   "Output limit exceeded": "Melebihi batas keluaran",

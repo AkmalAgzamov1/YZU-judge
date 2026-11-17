@@ -136,11 +136,11 @@ export const vi = {
   "Time until the exam": "Thời gian còn lại tới kỳ thi",
   "Which star problem will it be?": "Sẽ là bài sao nào?",
   "The CPE keeps an official list of {n} \"one star\" problems, the easiest level it has. Here is the trick: every CPE takes exactly one of its seven problems from this list. We checked all {count} past exams, and not a single one broke this rule.":
-    "CPE giữ một danh sách chính thức gồm {n} bài \"một sao\", cấp dễ nhất mà nó có. Mấu chốt là thế này: mỗi kỳ CPE lấy đúng một trong bảy bài từ danh sách này. Chúng tôi đã kiểm tra toàn bộ {count} kỳ thi trước, và không có kỳ nào phá vỡ quy luật này.",
+    "CPE có một danh sách chính thức gồm {n} bài \"một sao\", mức dễ nhất. Mấu chốt là thế này: mỗi kỳ CPE lấy đúng một trong bảy bài từ danh sách này. Chúng tôi đã kiểm tra toàn bộ {count} kỳ thi trước, và không có kỳ nào phá vỡ quy luật này.",
   "So the list is your free point. Practice all {n} and you walk into the exam already knowing one of the problems. You still need a second one to pass in a single sitting, but you start from 1, not from 0.":
     "Vậy danh sách đó là điểm cho không của bạn. Luyện đủ {n} bài và bạn bước vào phòng thi với một bài đã biết cách làm. Bạn vẫn cần một bài thứ hai để đỗ trong một kỳ, nhưng bạn bắt đầu từ 1, không phải từ 0.",
   "We can't know which one comes next, but the past exams show a pattern: a problem from the list has never come back within {years} years. Below is the whole list, grouped by when each problem was last asked. Start from the top. Dashed ones are not on YZU Judge, because the CPE never published test data for them, so they open the UVa statement instead.":
-    "Ta không biết bài nào sẽ ra kế tiếp, nhưng các kỳ thi trước cho thấy một quy luật: một bài trong danh sách chưa bao giờ quay lại trong vòng {years} năm. Bên dưới là toàn bộ danh sách, nhóm theo lần gần nhất bài đó được ra. Hãy bắt đầu từ trên cùng. Những bài viền nét đứt không có trên YZU Judge, vì CPE chưa bao giờ công bố bộ test cho chúng, nên chúng mở đề trên UVa.",
+    "Chúng tôi không biết bài nào sẽ ra kế tiếp, nhưng các kỳ thi trước cho thấy một quy luật: một bài trong danh sách chưa bao giờ quay lại trong vòng {years} năm. Bên dưới là toàn bộ danh sách, nhóm theo lần gần nhất bài đó được ra. Hãy bắt đầu từ trên cùng. Những bài in nét đứt không có trên YZU Judge, vì CPE chưa bao giờ công bố bộ test cho chúng, nên chúng mở đề trên UVa.",
   "Never asked yet": "Chưa từng ra",
   "On the list since the start, never picked.": "Có trong danh sách từ đầu, nhưng chưa từng được chọn.",
   "Due again": "Đến lượt quay lại",
