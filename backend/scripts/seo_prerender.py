@@ -9,18 +9,23 @@ Run after a production build (npm run build), from backend/:
 
     python -m scripts.seo_prerender
 
-It rewrites frontend/dist/index.html in place and adds dist/problems/.../index.html files. Caddy
-serves these as real files; the one line that makes that work is the catch-all
-`try_files {path}/index.html {path} /index.html` in deploy/Caddyfile (see below).
+It first saves the untouched build output as frontend/dist/app.html, then rewrites
+dist/index.html as the landing page and adds dist/problems/.../index.html files. Caddy serves
+these as real files; the one line that makes that work is the catch-all
+`try_files {path}/index.html {path} /app.html /index.html` in deploy/Caddyfile (see below).
 
 Two details that are easy to get wrong and are handled here on purpose:
 
 - The pages are written as directories (dist/problems/1/index.html) and served with a Caddyfile
-  whose catch-all is `try_files {path}/index.html {path} /index.html`. The first candidate is what
+  whose catch-all is `try_files {path}/index.html {path} /app.html /index.html`. The first candidate is what
   makes them reachable: `try_files {path}` alone only matches a directory when the candidate ends
   in a slash, so `/problems/1` would skip the prerendered file and fall back to the app shell,
   hiding every page from crawlers. With both candidates, `/problems/1` and `/problems/1/` both
   return the page and the canonical picks one.
+- Every other path (/register, /submissions/5, unknown ones) must get the plain app shell, not the
+  landing page. dist/index.html becomes the landing page, so the pristine shell is kept as
+  dist/app.html and the catch-all falls back to it. /index.html stays last so a build that never
+  ran this script still works. Rerunning the script reads app.html, so it is safe to repeat.
 - The shells are Traditional Chinese and nothing else. There is no hreflang block: the app can
   switch language in the browser (?lang=), but a static file cannot answer a query string, so all
   five "language versions" would have served identical Chinese HTML. Declaring them as alternates
@@ -43,6 +48,8 @@ from app.storage import read_file
 FRONTEND = Path(__file__).resolve().parent.parent.parent / "frontend"
 DIST = FRONTEND / "dist"
 TEMPLATE = DIST / "index.html"
+# The untouched SPA shell. Caddy falls back to it for every path without its own page.
+APP_SHELL = DIST / "app.html"
 
 # The prerendered shells are Traditional Chinese, which is where the search traffic is.
 PAGE_LANG = "zh-Hant-TW"
@@ -93,7 +100,9 @@ def ld_graph(*nodes: dict) -> str:
     body = cleaned[0] if len(cleaned) == 1 else {"@context": "https://schema.org", "@graph": cleaned}
     if len(cleaned) == 1:
         body.setdefault("@context", "https://schema.org")
-    return "    <script type=\"application/ld+json\">" + json.dumps(body, ensure_ascii=False) + "</script>"
+    # Escape "<" so text from a problem (e.g. "</script>") cannot close the tag early.
+    payload = json.dumps(body, ensure_ascii=False).replace("<", "\\u003c")
+    return "    <script type=\"application/ld+json\">" + payload + "</script>"
 
 
 def set_tag(html: str, pattern: str, replacement: str) -> str:
@@ -273,7 +282,11 @@ def main() -> None:
     if not TEMPLATE.exists():
         raise SystemExit("frontend/dist/index.html not found. Run `npm run build` in frontend/ first.")
 
-    template = TEMPLATE.read_text(encoding="utf-8")
+    # Keep the build's own shell before index.html is rewritten as the landing page. On a rerun
+    # app.html already holds it, and index.html is the previous landing page, so read app.html.
+    if not APP_SHELL.exists():
+        APP_SHELL.write_text(TEMPLATE.read_text(encoding="utf-8"), encoding="utf-8")
+    template = APP_SHELL.read_text(encoding="utf-8")
 
     db = SessionLocal()
     base = site_base()

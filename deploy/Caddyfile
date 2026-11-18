@@ -39,7 +39,9 @@
 		# like /problems/1 is a directory, and try_files only matches a directory
 		# when the candidate ends in a slash, so {path} alone would skip it and fall
 		# back to the app shell, hiding every prerendered page from crawlers.
-		try_files {path}/index.html {path} /index.html
+		# /app.html is the plain app shell (seo_prerender turns index.html into the
+		# landing page); /index.html is the fallback for a build without prerendering.
+		try_files {path}/index.html {path} /app.html /index.html
 		file_server
 	}
 

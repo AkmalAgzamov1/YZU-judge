@@ -61,7 +61,7 @@ Added by `backend/scripts/seo_prerender.py`, run after `npm run build`:
 `deploy/Caddyfile` changes the catch-all from `try_files {path} /index.html` to:
 
 ```
-try_files {path}/index.html {path} /index.html
+try_files {path}/index.html {path} /app.html /index.html
 ```
 
 This is not cosmetic. Caddy's `try_files` only matches a directory when the candidate **ends in a
