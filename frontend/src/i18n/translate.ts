@@ -82,7 +82,8 @@ export function fill(text: string, vars?: Vars): string {
 // Usable outside React (formatters, the API client). Components use useI18n,
 // which also re-renders them when the language changes.
 export function tr(key: Key, vars?: Vars): string {
-  if (current === "en") return key;
+  // English still fills placeholders: "test {n}" has to become "test 1".
+  if (current === "en") return fill(key, vars);
   return fill(DICTS[current][key] ?? key, vars);
 }
 
