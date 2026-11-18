@@ -30,6 +30,13 @@ const API_PATTERNS: Record<TranslatedLang, [RegExp, (match: RegExpMatchArray) =>
 const NAVIGATOR_LANGS: [string, TranslatedLang][] = [["zh", "zh"], ["vi", "vi"], ["ru", "ru"], ["id", "id"]];
 
 function detectLang(): Lang {
+  // An explicit ?lang= in the address wins, so language links and hreflang alternates work.
+  try {
+    const fromUrl = new URLSearchParams(window.location.search).get("lang");
+    if (fromUrl === "en" || fromUrl === "zh" || fromUrl === "vi" || fromUrl === "ru" || fromUrl === "id") return fromUrl;
+  } catch {
+    // No URL to read (should not happen in a browser); fall through.
+  }
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored === "en" || stored === "zh" || stored === "vi" || stored === "ru" || stored === "id") return stored;

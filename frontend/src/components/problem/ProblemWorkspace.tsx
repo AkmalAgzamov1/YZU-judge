@@ -20,7 +20,8 @@ import {
   savePreferredLanguage,
   type Language,
 } from "../../lib/languages";
-import { formatTime } from "../../lib/format";
+import { formatTime, problemLabel } from "../../lib/format";
+import { useDocumentTitle } from "../../lib/documentTitle";
 import DifficultyLabel from "../DifficultyLabel";
 import LanguageSelect from "../LanguageSelect";
 import TopicChips from "../TopicChips";
@@ -85,6 +86,9 @@ export default function ProblemWorkspace({
   const draftScope = mockExamId != null ? `mock:${mockExamId}` : undefined;
 
   const [state, setState] = useState<LoadState>({ kind: "loading" });
+  // Keep the prerendered per-problem title while loading, then replace it with the
+  // problem's own title in the reader's language.
+  useDocumentTitle(state.kind === "ready" ? `${problemLabel(state.problem, problemId)} · YZU Judge` : null);
   const [attempt, setAttempt] = useState(0);
   const [language, setLanguage] = useState<Language>(() => loadPreferredLanguage());
   const [code, setCode] = useState(() => loadDraft(problemId, draftScope, language));

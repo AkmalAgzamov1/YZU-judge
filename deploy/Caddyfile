@@ -35,7 +35,13 @@
 		# store it; they only ask first, and an unchanged page costs a tiny 304.
 		header Cache-Control "no-cache"
 		# React Router owns the paths, so unknown ones fall back to the app.
-		try_files {path} /index.html
+		# The first candidate is what makes the prerendered pages reachable: a path
+		# like /problems/1 is a directory, and try_files only matches a directory
+		# when the candidate ends in a slash, so {path} alone would skip it and fall
+		# back to the app shell, hiding every prerendered page from crawlers.
+		# /app.html is the plain app shell (seo_prerender turns index.html into the
+		# landing page); /index.html is the fallback for a build without prerendering.
+		try_files {path}/index.html {path} /app.html /index.html
 		file_server
 	}
 
