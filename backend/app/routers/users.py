@@ -18,6 +18,13 @@ from ..schemas.user import (
     VerifyEmail,
 )
 from ..security import hash_password, verify_password_or_dummy, create_access_token
+from ..config import (
+    REGISTER_LIMIT_PER_HOUR,
+    LOGIN_LIMIT_PER_IP_PER_MINUTE,
+    LOGIN_LIMIT_PER_USERNAME_PER_MINUTE,
+    EMAILS_PER_IP_PER_HOUR,
+    EMAILS_PER_DAY_GLOBAL,
+)
 from ..rate_limit import client_ip, hit
 from ..dependencies import get_current_user, get_token_payload
 from ..services import mailer
@@ -35,14 +42,14 @@ router = APIRouter(
 USERNAME_MIN, USERNAME_MAX = 3, 32
 PASSWORD_MIN, PASSWORD_MAX = 8, 128
 
-# Generous, because a whole class can sign up from one campus address.
-REGISTER_LIMIT_PER_HOUR = 30
-LOGIN_LIMIT_PER_IP_PER_MINUTE = 30
-LOGIN_LIMIT_PER_USERNAME_PER_MINUTE = 10
-# Every code is an email, and the provider's free plan sends 100 a day.
-EMAILS_PER_IP_PER_HOUR = 50
+# The numbers themselves live in config.py so a school can raise them in .env.
+# These are only the messages shown when a limit is reached.
 TOO_MANY = "Too many attempts. Wait a minute and try again."
 TOO_MANY_EMAILS = "Too many emails from your network. Try again in an hour."
+EMAILS_DAY_FULL = (
+    "The site has already sent its full quota of verification emails today. "
+    "Please try again tomorrow, or sign in if you already have an account."
+)
 
 EMAIL_FAILED = "We could not send the email right now. Try again in a minute."
 
@@ -73,7 +80,10 @@ def _token_response(user: User, auth_time: int | None = None) -> dict:
 
 
 def _count_email(request: Request) -> None:
+    # Per network first, so a whole lab can ask for codes at once; then the daily
+    # provider quota, which is the real ceiling because every code is one email.
     hit(f"email-codes:{client_ip(request)}", EMAILS_PER_IP_PER_HOUR, 3600, TOO_MANY_EMAILS)
+    hit("email-codes:day", EMAILS_PER_DAY_GLOBAL, 86400, EMAILS_DAY_FULL)
 
 
 def _send_code(db, user: User, purpose: str) -> None:

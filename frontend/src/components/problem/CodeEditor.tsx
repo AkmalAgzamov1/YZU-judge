@@ -1,4 +1,5 @@
 import { cpp } from "@codemirror/lang-cpp";
+import { java } from "@codemirror/lang-java";
 import { python } from "@codemirror/lang-python";
 import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { EditorView } from "@codemirror/view";
@@ -7,7 +8,7 @@ import CodeMirror from "@uiw/react-codemirror";
 import { type KeyboardEvent } from "react";
 import type { Extension } from "@codemirror/state";
 import { useI18n } from "../../i18n";
-import type { Language } from "../../lib/languages";
+import type { EditorLanguage } from "../../lib/languages";
 
 const editorTheme = EditorView.theme(
   {
@@ -43,11 +44,15 @@ interface CodeEditorProps {
   onChange?: (value: string) => void;
   onSubmit?: () => void;
   readOnly?: boolean;
-  language?: Language;
+  language?: EditorLanguage;
 }
 
-const extensionsFor: Record<Language, Extension[]> = {
+const extensionsFor: Record<EditorLanguage, Extension[]> = {
   python: [python(), syntaxHighlighting(highlight)],
+  c_gcc: [cpp(), syntaxHighlighting(highlight)],
+  c_msvc: [cpp(), syntaxHighlighting(highlight)],
+  java8: [java(), syntaxHighlighting(highlight)],
+  java11: [java(), syntaxHighlighting(highlight)],
   cpp: [cpp(), syntaxHighlighting(highlight)],
 };
 

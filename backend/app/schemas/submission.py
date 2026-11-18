@@ -6,7 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 class SubmissionCreate(BaseModel):
     problem_id: int
-    language: Literal["python", "cpp"]
+    language: Literal["python", "c_gcc", "c_msvc", "java8", "java11"]
     mock_exam_id: int | None = None
     code: Annotated[str, Field(max_length=65_536)]
 
@@ -24,7 +24,7 @@ class SubmissionOut(BaseModel):
     id: int
     user_id: int
     problem_id: int
-    language: Literal["python", "java", "cpp"]
+    language: Literal["python", "c_gcc", "c_msvc", "java8", "java11", "java", "cpp"]
     code: str
     mock_exam_id: int | None = None
     # Compiler messages when the verdict is compilation_error.

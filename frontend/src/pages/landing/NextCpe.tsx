@@ -68,7 +68,7 @@ function useNow(intervalMs: number) {
 }
 
 function formatExamDay(lang: Lang) {
-  return new Intl.DateTimeFormat(lang === "zh" ? "zh-TW" : "en-US", {
+  return new Intl.DateTimeFormat(lang === "zh" ? "zh-TW" : lang === "vi" ? "vi" : lang === "ru" ? "ru" : lang === "id" ? "id" : "en-US", {
     timeZone: "Asia/Taipei",
     weekday: "short",
     month: "short",
@@ -77,7 +77,7 @@ function formatExamDay(lang: Lang) {
 }
 
 function registrationText(now: number, lang: Lang, t: (key: Key, vars?: Record<string, string>) => string) {
-  const format = new Intl.DateTimeFormat(lang === "zh" ? "zh-TW" : "en-US", {
+  const format = new Intl.DateTimeFormat(lang === "zh" ? "zh-TW" : lang === "vi" ? "vi" : lang === "ru" ? "ru" : lang === "id" ? "id" : "en-US", {
     timeZone: "Asia/Taipei",
     month: "short",
     day: "numeric",

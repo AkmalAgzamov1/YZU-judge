@@ -24,7 +24,7 @@ export default function AuthLayout({ title, subtitle, children }: AuthLayoutProp
           <Logo />
         </Link>
         <div className="flex items-center gap-1">
-          <LanguageSwitch />
+          <LanguageSwitch className="w-44" />
           <Link
             to="/"
             className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-neutral-400 transition duration-300 ease-soft hover:text-white ${focusRing}`}

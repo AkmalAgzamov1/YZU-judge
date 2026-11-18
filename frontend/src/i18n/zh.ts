@@ -207,8 +207,8 @@ export const zh = {
   "Yes. There is no payment, no ads and nothing to install. You only need an account so your submissions are saved.":
     "是的。不收費、沒有廣告，也不需要安裝任何東西。只需要一個帳號來保存你的提交紀錄。",
   "Which programming languages can I use?": "可以用哪些程式語言？",
-  "Python 3.11 and C++17, the two most common choices on the CPE. Java is planned next.":
-    "Python 3.11 和 C++17，這是 CPE 最常用的兩種語言。接下來計畫支援 Java。",
+  "Python 3.9.6, C/C++ (MinGW GCC 6.3.0 and MSVC v140), and Java (AdoptOpenJDK 8 or 11) - the same languages the real CPE exam offers.":
+    "Python 3.9.6、C/C++（MinGW GCC 6.3.0 與 MSVC v140）以及 Java（AdoptOpenJDK 8 或 11），與正式 CPE 考試提供的語言相同。",
   "Is this the official CPE website?": "這是 CPE 官方網站嗎？",
   "No. YZU Judge is a practice site made at Yuan Ze University. Registration for the real exam happens on the official CPE website, usually announced by your department.":
     "不是。YZU Judge 是元智大學學生製作的練習網站。正式考試的報名在 CPE 官方網站進行，通常會由系上公告。",
@@ -577,6 +577,8 @@ export const apiMessages: Record<string, string> = {
   "Invalid username or password": "使用者名稱或密碼錯誤",
   "Too many attempts. Wait a minute and try again.": "嘗試次數過多，請一分鐘後再試。",
   "Too many emails from your network. Try again in an hour.": "你所在的網路寄出太多信件，請一小時後再試。",
+  "The site has already sent its full quota of verification emails today. Please try again tomorrow, or sign in if you already have an account.":
+    "本網站今日的驗證信額度已用完。請明天再試；若你已有帳號，請直接登入。",
   "We could not send the email right now. Try again in a minute.": "目前無法寄出信件，請一分鐘後再試。",
   "Username must be 3 to 32 characters.": "使用者名稱長度需為 3 到 32 個字元。",
   "Username cannot contain spaces or invisible characters.": "使用者名稱不能包含空白或不可見字元。",
