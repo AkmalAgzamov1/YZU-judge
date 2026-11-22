@@ -69,9 +69,6 @@ export default function SiteFooter() {
           <Link to="/terms" className={linkClass}>
             {t("Terms of use")}
           </Link>
-          <Link to="/tips" className={linkClass}>
-            {t("Common mistakes")}
-          </Link>
           <a
             href="https://github.com/AkmalAgzamov1/YZU-judge"
             target="_blank"
