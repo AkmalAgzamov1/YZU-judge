@@ -10,6 +10,7 @@ export const vi = {
   "Submissions": "Bài đã nộp",
   "Mock CPE": "CPE thử",
   "Mock": "Thử",
+  "Tips": "Mẹo",
   "Admin": "Quản trị",
   "Sign in": "Đăng nhập",
   "Create account": "Tạo tài khoản",
@@ -28,6 +29,7 @@ export const vi = {
   "A CPE practice site made at Yuan Ze University. Not affiliated with the CPE organizers.":
     "Một trang luyện CPE do sinh viên Đại học Yuan Ze làm ra. Không liên kết với ban tổ chức CPE.",
   "Privacy policy": "Chính sách bảo mật",
+  "Common mistakes": "Lỗi thường gặp",
   "Terms of use": "Điều khoản sử dụng",
   "Source on GitHub": "Mã nguồn trên GitHub",
   "Official CPE website": "Trang CPE chính thức",
@@ -436,6 +438,9 @@ export const vi = {
     "Số và chữ đều đúng, nhưng khoảng trắng thì không: UVa và CPE so khớp đầu ra một cách tuyệt đối. Hãy kiểm tra ký tự xuống dòng sau dòng cuối, các dòng trắng thừa, và khoảng trắng ở cuối dòng.",
   "Something went wrong on our side, not in your code. Try submitting again.":
     "Đã có lỗi ở phía chúng tôi, không phải trong code của bạn. Hãy nộp lại.",
+  "This code includes <code>bits/stdc++.h</code>. It compiled here because our MSVC option runs on a different compiler, but the real MSVC on the CPE does not have this header, so the same code would not compile there. <a>Include the headers you need</a>, or pick MinGW GCC.":
+    "Code này dùng <code>bits/stdc++.h</code>. Ở đây nó biên dịch được vì tùy chọn MSVC của chúng tôi chạy trên một trình biên dịch khác, nhưng MSVC thật trong kỳ thi CPE không có header này, nên cùng đoạn code đó sẽ không biên dịch được. <a>Hãy include đúng các header bạn cần</a>, hoặc chọn MinGW GCC.",
+  "Common mistakes behind this verdict": "Lỗi thường gặp dẫn đến kết quả này",
 
   // Submissions
   "Time limit": "Giới hạn thời gian",

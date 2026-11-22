@@ -9,23 +9,27 @@ import type { TipAnchor } from "../../pages/Tips";
 import { focusRing } from "../ui";
 
 // Where on the tips page each failed verdict is most often explained.
+// The page has no Java section yet, so Java goes to the top of the page.
 function tipFor(submission: Submission): TipAnchor | "" | null {
-  const python = submission.language === "python";
+  const { language } = submission;
+  const python = language === "python";
+  const cpp = language === "c_gcc" || language === "c_msvc" || language === "cpp";
   switch (submission.status) {
     case "presentation_error":
       return "final-newline";
     case "wrong_answer":
       return "";
     case "time_limit_exceeded":
-      return python ? "fast-io-python" : "fast-io-cpp";
+      return python ? "fast-io-python" : cpp ? "fast-io-cpp" : "";
     case "runtime_error":
-      return python ? "python-eof" : "cpp";
+      return python ? "python-eof" : cpp ? "cpp" : "";
     default:
       return null;
   }
 }
 
-// The judge compiles it, the CPE does not, so a pass here would fail on exam day.
+// Our MSVC option is clang, which has this header; the real MSVC on the CPE does not,
+// so a pass here would be a compilation error on exam day.
 const BITS_HEADER = /#\s*include\s*<\s*bits\/stdc\+\+\.h\s*>/;
 
 const tipLinkClass = `rounded-sm text-neutral-300 underline underline-offset-2 hover:text-white ${focusRing}`;
@@ -44,7 +48,7 @@ export default function TestResults({ submission, results }: TestResultsProps) {
   const [showNewlineHelp, setShowNewlineHelp] = useState(false);
   const tip = tipFor(submission);
   const usesBitsHeader =
-    submission.language === "cpp" && isFinished(submission.status) && BITS_HEADER.test(submission.code);
+    submission.language === "c_msvc" && isFinished(submission.status) && BITS_HEADER.test(submission.code);
 
   return (
     <>
@@ -134,7 +138,7 @@ export default function TestResults({ submission, results }: TestResultsProps) {
       {usesBitsHeader && (
         <p className="mt-3 rounded-md border border-amber-400/30 bg-amber-400/5 p-3 font-sans text-sm leading-relaxed text-neutral-300">
           {tx(
-            "This code includes <code>bits/stdc++.h</code>. It compiles here, but the CPE does not accept it, so the same code would not compile on exam day. <a>Include the headers you need</a> instead.",
+            "This code includes <code>bits/stdc++.h</code>. It compiled here because our MSVC option runs on a different compiler, but the real MSVC on the CPE does not have this header, so the same code would not compile there. <a>Include the headers you need</a>, or pick MinGW GCC.",
             {
               code: (text) => <code className="font-mono text-amber-200">{text}</code>,
               a: (text) => (

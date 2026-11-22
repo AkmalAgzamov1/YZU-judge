@@ -218,8 +218,8 @@ const content: Record<Lang, Page> = {
         tips: [
           {
             id: "bits-stdc",
-            title: "No bits/stdc++.h on the exam",
-            body: "YZU Judge compiles `#include <bits/stdc++.h>`, but the CPE does not accept it, so the same code fails to compile on exam day. Get used to including the headers you need: `iostream`, `string`, `vector`, `algorithm`, `cmath`, `map`, `set`.",
+            title: "bits/stdc++.h only works with MinGW GCC",
+            body: "The CPE offers two C/C++ compilers. `#include <bits/stdc++.h>` compiles with MinGW GCC, but MSVC does not have it, so the same code fails to compile there. Include the headers you need (`iostream`, `string`, `vector`, `algorithm`, `cmath`, `map`, `set`) and your code compiles with both.",
           },
           {
             id: "overflow",
@@ -326,8 +326,8 @@ const content: Record<Lang, Page> = {
         tips: [
           {
             id: "bits-stdc",
-            title: "考試不能用 bits/stdc++.h",
-            body: "YZU Judge 可以編譯 `#include <bits/stdc++.h>`，但 CPE 不接受，同樣的程式在考試當天會編譯失敗。養成只引入需要的標頭檔的習慣：`iostream`、`string`、`vector`、`algorithm`、`cmath`、`map`、`set`。",
+            title: "bits/stdc++.h 只有 MinGW GCC 能用",
+            body: "CPE 提供兩種 C/C++ 編譯器。`#include <bits/stdc++.h>` 在 MinGW GCC 可以編譯，但 MSVC 沒有這個標頭檔，同樣的程式在那裡會編譯失敗。只引入需要的標頭檔（`iostream`、`string`、`vector`、`algorithm`、`cmath`、`map`、`set`），兩種編譯器就都能編譯。",
           },
           {
             id: "overflow",
@@ -364,6 +364,330 @@ const content: Record<Lang, Page> = {
             id: "division",
             title: "/ 一定會得到浮點數",
             body: "`7 / 2` 是 `3.5`。整數除法要用 `//`。題目要求印出兩位小數時，用 `f\"{x:.2f}\"`，不要用 `round(x, 2)`：`round` 不會補零，`2.5` 會印成 `2.5` 而不是 `2.50`。",
+          },
+        ],
+      },
+    ],
+  },
+  vi: {
+    title: "Lỗi thường gặp",
+    intro:
+      "Phần lớn bài nộp bị sai không phải vì ý tưởng sai. Lý do thường chỉ là thiếu một dấu xuống dòng, đọc một dòng sai cách, hoặc dùng một header mà môi trường thi không có. Hãy xem danh sách này trước khi nộp, và xem lại khi gặp một kết quả bạn không hiểu.",
+    wrong: "Sai",
+    right: "Đúng",
+    sections: [
+      {
+        id: "output",
+        title: "Định dạng output",
+        tips: [
+          {
+            id: "final-newline",
+            title: "Dòng cuối cũng phải xuống dòng",
+            body: "UVa và CPE so sánh output của bạn từng byte. Nếu dòng cuối không có `\\n`, bài sẽ bị từ chối dù mọi con số đều đúng. Trong Python, `print` tự thêm dấu xuống dòng, nên đừng truyền `end=\"\"` ở dòng cuối.",
+          },
+          {
+            id: "exact-text",
+            title: "Chép đúng y nguyên chữ trong output",
+            body: "`Case #1: 5` không phải `Case 1: 5` và cũng không phải `case #1:5`. Hãy chép từ, chữ hoa, khoảng trắng và dấu câu từ output mẫu, đừng gõ theo trí nhớ.",
+          },
+          {
+            id: "blank-lines",
+            title: "Dòng trống giữa các test, hay sau mỗi test?",
+            body: "\"In một dòng trống giữa các test\" nghĩa là không có dòng trống sau test cuối cùng. Thừa hoặc thiếu dòng trống, hay có khoảng trắng ở cuối dòng, đều cho kết quả Lỗi trình bày.",
+          },
+          {
+            id: "no-prompts",
+            title: "Chỉ in ra đáp án",
+            body: "Không in lời nhắc kiểu `Enter n:` và không để lại dòng in để debug. Hệ thống chấm coi mọi thứ bạn in ra là đáp án. Hãy xóa hoặc comment các dòng debug trước khi nộp.",
+          },
+        ],
+      },
+      {
+        id: "input",
+        title: "Đọc input",
+        tips: [
+          {
+            id: "until-eof",
+            title: "Đọc cho đến khi hết input",
+            body: "Nhiều bài UVa không cho biết có bao nhiêu test: bạn phải đọc cho đến hết file. Nếu chỉ đọc một test, các test còn lại sẽ không có đáp án.",
+          },
+          {
+            id: "getline",
+            title: "Dùng getline khi dòng có khoảng trắng",
+            body: "`cin >> s` dừng ở khoảng trắng đầu tiên. Với tên, câu, hay bất kỳ dòng nào có thể chứa khoảng trắng, hãy đọc cả dòng bằng `getline(cin, s)`.",
+          },
+          {
+            id: "cin-then-getline",
+            title: "cin >> rồi getline sẽ đọc ra dòng rỗng",
+            body: "Sau `cin >> n`, ký tự xuống dòng vẫn còn trong input, nên `getline` tiếp theo trả về chuỗi rỗng. Hãy bỏ qua phần còn lại của dòng bằng `cin.ignore(...)` trước, hoặc đọc mọi dòng bằng `getline` rồi tự tách số.",
+          },
+          {
+            id: "python-eof",
+            title: "input() bị lỗi khi hết input",
+            body: "Khi không còn gì để đọc, `input()` ném ra `EOFError`, và bạn nhận Lỗi lúc chạy. Hãy lặp qua `sys.stdin`: vòng lặp sẽ tự dừng khi hết input.",
+          },
+        ],
+      },
+      {
+        id: "cpp",
+        title: "C++",
+        tips: [
+          {
+            id: "bits-stdc",
+            title: "bits/stdc++.h chỉ dùng được với MinGW GCC",
+            body: "CPE có hai trình biên dịch C/C++. `#include <bits/stdc++.h>` biên dịch được với MinGW GCC, nhưng MSVC không có header này, nên cùng đoạn code đó sẽ không biên dịch được ở đó. Hãy include đúng các header bạn cần (`iostream`, `string`, `vector`, `algorithm`, `cmath`, `map`, `set`) và code sẽ chạy được với cả hai.",
+          },
+          {
+            id: "overflow",
+            title: "int bị tràn khi vượt quá khoảng 2,1 tỷ",
+            body: "`int` chứa tối đa 2,147,483,647. Tổng, tích và giai thừa vượt qua con số đó rất nhanh. Hãy dùng `long long`, và nhớ tính toán bằng `long long`: `a * b` với hai biến `int` đã tràn trước khi được gán.",
+          },
+          {
+            id: "reset",
+            title: "Đặt lại biến cho mỗi test",
+            body: "Biến đếm, mảng và vector khai báo ngoài vòng lặp vẫn giữ giá trị của test trước. Kết quả là test mẫu đầu tiên đúng còn test thứ hai sai. Hãy khai báo chúng bên trong vòng lặp hoặc xóa chúng ở đầu vòng lặp.",
+          },
+          {
+            id: "fast-io-cpp",
+            title: "Nhập xuất chậm gây Vượt quá giới hạn thời gian",
+            body: "Khi input lớn, `cin` thông thường và `endl` có thể quá chậm: `endl` đẩy output ra sau mỗi dòng. Hãy tắt đồng bộ với C I/O ở đầu `main` và in `\"\\n\"`. Sau đó đừng trộn `cin`/`cout` với `scanf`/`printf`.",
+          },
+        ],
+      },
+      {
+        id: "python",
+        title: "Python",
+        tips: [
+          {
+            id: "fast-io-python",
+            title: "input() chậm khi input lớn",
+            body: "Gọi `input()` hàng trăm nghìn lần có thể tự nó đã vượt giới hạn thời gian. Hãy đọc tất cả một lần bằng `sys.stdin.read().split()` rồi duyệt qua danh sách.",
+          },
+          {
+            id: "recursion-limit",
+            title: "Đệ quy sâu dừng ở khoảng 1000 lần gọi",
+            body: "Python ném ra `RecursionError` sau khoảng 1000 lần gọi lồng nhau, và bạn nhận Lỗi lúc chạy. Hãy tăng giới hạn ở đầu file, hoặc viết lại đệ quy thành vòng lặp.",
+          },
+          {
+            id: "division",
+            title: "/ luôn cho ra số thực",
+            body: "`7 / 2` là `3.5`. Dùng `//` để chia lấy phần nguyên. Khi đề yêu cầu hai chữ số thập phân, hãy in bằng `f\"{x:.2f}\"`, đừng dùng `round(x, 2)`: `round` bỏ các số 0 ở cuối, nên `2.5` in ra là `2.5` thay vì `2.50`.",
+          },
+        ],
+      },
+    ],
+  },
+  ru: {
+    title: "Частые ошибки",
+    intro:
+      "Чаще всего решение не проходит не из-за неверной идеи. Обычно дело в одном пропущенном переводе строки, неправильном чтении строки или заголовке, которого нет на экзамене. Пройдитесь по этому списку перед отправкой и ещё раз, если получили непонятный вердикт.",
+    wrong: "Неправильно",
+    right: "Правильно",
+    sections: [
+      {
+        id: "output",
+        title: "Формат вывода",
+        tips: [
+          {
+            id: "final-newline",
+            title: "Последняя строка тоже заканчивается переводом строки",
+            body: "UVa и CPE сравнивают вывод байт в байт. Если последняя строка выведена без `\\n`, ответ не засчитают, даже если все числа верны. В Python `print` сам добавляет перевод строки, поэтому не передавайте `end=\"\"` в последней строке.",
+          },
+          {
+            id: "exact-text",
+            title: "Выводите текст ровно как в условии",
+            body: "`Case #1: 5` это не `Case 1: 5` и не `case #1:5`. Копируйте слова, заглавные буквы, пробелы и знаки препинания из примера вывода, а не пишите по памяти.",
+          },
+          {
+            id: "blank-lines",
+            title: "Пустая строка между тестами или после каждого?",
+            body: "«Выводите пустую строку между тестами» значит, что после последнего теста пустой строки нет. Лишние или пропущенные пустые строки и пробелы в конце строки дают Ошибку формата.",
+          },
+          {
+            id: "no-prompts",
+            title: "Выводите только ответ",
+            body: "Никаких подсказок вроде `Enter n:` и отладочного вывода. Проверяющая система считает ответом всё, что вы вывели. Удалите или закомментируйте отладку перед отправкой.",
+          },
+        ],
+      },
+      {
+        id: "input",
+        title: "Чтение ввода",
+        tips: [
+          {
+            id: "until-eof",
+            title: "Читайте до конца ввода",
+            body: "Во многих задачах UVa не сказано, сколько будет тестов: читать нужно до конца файла. Если прочитать только один тест, остальные останутся без ответа.",
+          },
+          {
+            id: "getline",
+            title: "getline, если в строке есть пробелы",
+            body: "`cin >> s` останавливается на первом пробеле. Имена, предложения и любые строки, где могут быть пробелы, читайте целиком через `getline(cin, s)`.",
+          },
+          {
+            id: "cin-then-getline",
+            title: "После cin >> getline читает пустую строку",
+            body: "После `cin >> n` перевод строки остаётся во вводе, и следующий `getline` возвращает пустую строку. Сначала пропустите остаток строки через `cin.ignore(...)` или читайте все строки через `getline` и разбирайте числа сами.",
+          },
+          {
+            id: "python-eof",
+            title: "input() падает в конце ввода",
+            body: "Когда читать больше нечего, `input()` бросает `EOFError`, и вы получаете Ошибку выполнения. Вместо этого перебирайте `sys.stdin` в цикле: он сам закончится в конце ввода.",
+          },
+        ],
+      },
+      {
+        id: "cpp",
+        title: "C++",
+        tips: [
+          {
+            id: "bits-stdc",
+            title: "bits/stdc++.h работает только с MinGW GCC",
+            body: "На CPE два компилятора C/C++. `#include <bits/stdc++.h>` компилируется в MinGW GCC, но в MSVC этого заголовка нет, и там тот же код не скомпилируется. Подключайте нужные заголовки сами (`iostream`, `string`, `vector`, `algorithm`, `cmath`, `map`, `set`), тогда код соберётся в обоих.",
+          },
+          {
+            id: "overflow",
+            title: "int переполняется после примерно 2,1 миллиарда",
+            body: "`int` вмещает до 2 147 483 647. Суммы, произведения и факториалы быстро выходят за этот предел. Используйте `long long`, причём и в самих вычислениях: `a * b` для двух `int` переполняется ещё до присваивания.",
+          },
+          {
+            id: "reset",
+            title: "Сбрасывайте переменные для каждого теста",
+            body: "Счётчики, массивы и векторы, объявленные вне цикла, хранят значения прошлого теста. Первый пример проходит, второй уже нет. Объявляйте их внутри цикла или очищайте в его начале.",
+          },
+          {
+            id: "fast-io-cpp",
+            title: "Медленный ввод-вывод даёт превышение времени",
+            body: "На большом вводе обычные `cin` и `endl` могут не успеть: `endl` сбрасывает буфер на каждой строке. Отключите синхронизацию с C I/O в начале `main` и выводите `\"\\n\"`. После этого не смешивайте `cin`/`cout` со `scanf`/`printf`.",
+          },
+        ],
+      },
+      {
+        id: "python",
+        title: "Python",
+        tips: [
+          {
+            id: "fast-io-python",
+            title: "input() медленный на большом вводе",
+            body: "Сотни тысяч вызовов `input()` сами по себе могут не уложиться в лимит времени. Прочитайте всё сразу через `sys.stdin.read().split()` и идите по списку.",
+          },
+          {
+            id: "recursion-limit",
+            title: "Глубокая рекурсия обрывается на 1000 вызовов",
+            body: "Python бросает `RecursionError` примерно после 1000 вложенных вызовов, и вы получаете Ошибку выполнения. Поднимите лимит в начале файла или перепишите рекурсию циклом.",
+          },
+          {
+            id: "division",
+            title: "/ всегда даёт дробное число",
+            body: "`7 / 2` это `3.5`. Для целочисленного деления используйте `//`. Если нужно вывести два знака после запятой, пишите `f\"{x:.2f}\"`, а не `round(x, 2)`: `round` отбрасывает нули в конце, и `2.5` выводится как `2.5`, а не `2.50`.",
+          },
+        ],
+      },
+    ],
+  },
+  id: {
+    title: "Kesalahan umum",
+    intro:
+      "Kebanyakan kiriman yang gagal bukan karena idenya salah. Biasanya hanya kurang satu baris baru, cara membaca satu baris yang keliru, atau header yang tidak ada di ujian. Cek daftar ini sebelum mengirim, dan baca lagi saat mendapat hasil yang tidak kamu pahami.",
+    wrong: "Salah",
+    right: "Benar",
+    sections: [
+      {
+        id: "output",
+        title: "Format output",
+        tips: [
+          {
+            id: "final-newline",
+            title: "Baris terakhir juga harus diakhiri baris baru",
+            body: "UVa dan CPE membandingkan output-mu byte demi byte. Kalau baris terakhir dicetak tanpa `\\n`, jawabanmu ditolak meskipun semua angkanya benar. Di Python, `print` sudah menambahkan baris baru, jadi jangan pakai `end=\"\"` di baris terakhir.",
+          },
+          {
+            id: "exact-text",
+            title: "Salin teks output persis sama",
+            body: "`Case #1: 5` tidak sama dengan `Case 1: 5` atau `case #1:5`. Salin kata, huruf kapital, spasi, dan tanda baca dari contoh output, jangan dari ingatan.",
+          },
+          {
+            id: "blank-lines",
+            title: "Baris kosong di antara kasus, atau setelah tiap kasus?",
+            body: "\"Cetak baris kosong di antara kasus uji\" berarti tidak ada baris kosong setelah kasus terakhir. Baris kosong yang berlebih atau kurang, dan spasi di akhir baris, menghasilkan Kesalahan format.",
+          },
+          {
+            id: "no-prompts",
+            title: "Cetak jawabannya saja",
+            body: "Jangan cetak `Enter n:` atau output debug. Sistem penilai menganggap semua yang kamu cetak sebagai jawaban. Hapus atau jadikan komentar baris debug sebelum mengirim.",
+          },
+        ],
+      },
+      {
+        id: "input",
+        title: "Membaca input",
+        tips: [
+          {
+            id: "until-eof",
+            title: "Baca sampai input habis",
+            body: "Banyak soal UVa tidak menyebut ada berapa kasus uji: kamu harus terus membaca sampai akhir file. Kalau hanya membaca satu kasus, kasus lainnya tidak mendapat jawaban.",
+          },
+          {
+            id: "getline",
+            title: "Pakai getline kalau barisnya berisi spasi",
+            body: "`cin >> s` berhenti di spasi pertama. Untuk nama, kalimat, atau baris apa pun yang bisa berisi spasi, baca seluruh baris dengan `getline(cin, s)`.",
+          },
+          {
+            id: "cin-then-getline",
+            title: "cin >> lalu getline membaca baris kosong",
+            body: "Setelah `cin >> n`, karakter baris baru masih tersisa di input, jadi `getline` berikutnya mengembalikan string kosong. Lewati dulu sisa baris itu dengan `cin.ignore(...)`, atau baca semua baris dengan `getline` lalu urai angkanya sendiri.",
+          },
+          {
+            id: "python-eof",
+            title: "input() error di akhir input",
+            body: "Saat tidak ada lagi yang bisa dibaca, `input()` melempar `EOFError`, dan hasilnya Kesalahan saat berjalan. Gunakan perulangan atas `sys.stdin`: perulangan berhenti sendiri di akhir input.",
+          },
+        ],
+      },
+      {
+        id: "cpp",
+        title: "C++",
+        tips: [
+          {
+            id: "bits-stdc",
+            title: "bits/stdc++.h hanya bisa dipakai dengan MinGW GCC",
+            body: "CPE menyediakan dua kompiler C/C++. `#include <bits/stdc++.h>` bisa dikompilasi dengan MinGW GCC, tetapi MSVC tidak punya header ini, jadi kode yang sama gagal dikompilasi di sana. Include header yang kamu butuhkan (`iostream`, `string`, `vector`, `algorithm`, `cmath`, `map`, `set`) dan kodemu bisa dikompilasi di keduanya.",
+          },
+          {
+            id: "overflow",
+            title: "int overflow setelah sekitar 2,1 miliar",
+            body: "`int` hanya menampung sampai 2.147.483.647. Jumlah, hasil kali, dan faktorial cepat melewati batas itu. Pakai `long long`, dan pastikan perhitungannya juga memakai `long long`: `a * b` dengan dua `int` sudah overflow sebelum disimpan.",
+          },
+          {
+            id: "reset",
+            title: "Reset variabel untuk setiap kasus uji",
+            body: "Counter, array, dan vector yang dideklarasikan di luar perulangan masih menyimpan nilai dari kasus sebelumnya. Contoh pertama lolos, contoh kedua salah. Deklarasikan di dalam perulangan atau kosongkan di awalnya.",
+          },
+          {
+            id: "fast-io-cpp",
+            title: "Input dan output yang lambat menyebabkan Melebihi batas waktu",
+            body: "Dengan input besar, `cin` biasa dan `endl` bisa terlalu lambat: `endl` mengosongkan buffer output di setiap baris. Matikan sinkronisasi dengan C I/O di awal `main` dan cetak `\"\\n\"`. Setelah itu, jangan campur `cin`/`cout` dengan `scanf`/`printf`.",
+          },
+        ],
+      },
+      {
+        id: "python",
+        title: "Python",
+        tips: [
+          {
+            id: "fast-io-python",
+            title: "input() lambat untuk input besar",
+            body: "Memanggil `input()` ratusan ribu kali saja bisa melewati batas waktu. Baca semuanya sekaligus dengan `sys.stdin.read().split()` lalu telusuri list-nya.",
+          },
+          {
+            id: "recursion-limit",
+            title: "Rekursi dalam berhenti di sekitar 1000 panggilan",
+            body: "Python melempar `RecursionError` setelah sekitar 1000 panggilan bersarang, dan hasilnya Kesalahan saat berjalan. Naikkan batasnya di awal file, atau ubah rekursi menjadi perulangan.",
+          },
+          {
+            id: "division",
+            title: "/ selalu menghasilkan float",
+            body: "`7 / 2` hasilnya `3.5`. Pakai `//` untuk pembagian bilangan bulat. Kalau soal meminta dua angka desimal, cetak dengan `f\"{x:.2f}\"`, bukan `round(x, 2)`: `round` membuang nol di belakang, jadi `2.5` tercetak `2.5`, bukan `2.50`.",
           },
         ],
       },

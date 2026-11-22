@@ -12,6 +12,7 @@ export const ru = {
   "Submissions": "Отправления",
   "Mock CPE": "Пробный CPE",
   "Mock": "Пробник",
+  "Tips": "Советы",
   "Admin": "Админ-панель",
   "Sign in": "Войти",
   "Create account": "Создать аккаунт",
@@ -30,6 +31,7 @@ export const ru = {
   "A CPE practice site made at Yuan Ze University. Not affiliated with the CPE organizers.":
     "Сайт подготовки к CPE, сделанный студентами университета Юань-Цзе. К организаторам CPE отношения не имеет.",
   "Privacy policy": "Политика конфиденциальности",
+  "Common mistakes": "Частые ошибки",
   "Terms of use": "Условия использования",
   "Source on GitHub": "Исходники на GitHub",
   "Official CPE website": "Официальный сайт CPE",
@@ -438,6 +440,9 @@ export const ru = {
     "Числа и слова верны, а вот пробелы — нет: UVa и CPE сверяют вывод точно. Проверьте перевод строки после последней строки, лишние пустые строки и пробелы в конце строки.",
   "Something went wrong on our side, not in your code. Try submitting again.":
     "Сбой на нашей стороне, не в вашем коде. Попробуйте отправить ещё раз.",
+  "This code includes <code>bits/stdc++.h</code>. It compiled here because our MSVC option runs on a different compiler, but the real MSVC on the CPE does not have this header, so the same code would not compile there. <a>Include the headers you need</a>, or pick MinGW GCC.":
+    "Этот код подключает <code>bits/stdc++.h</code>. Здесь он скомпилировался, потому что наш вариант MSVC работает на другом компиляторе, но в настоящем MSVC на CPE этого заголовка нет, и там тот же код не скомпилируется. <a>Подключите нужные заголовки</a> или выберите MinGW GCC.",
+  "Common mistakes behind this verdict": "Частые причины такого вердикта",
 
   // Submissions
   "Time limit": "Ограничение времени",
