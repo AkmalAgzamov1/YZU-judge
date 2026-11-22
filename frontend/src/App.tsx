@@ -7,6 +7,7 @@ import Account from "./pages/Account";
 import ForgotPassword from "./pages/ForgotPassword";
 import VerifyEmail from "./pages/VerifyEmail";
 import Landing from "./pages/Landing";
+import Learn from "./pages/Learn";
 import Legal from "./pages/Legal";
 import Login from "./pages/Login";
 import MockHome from "./pages/MockHome";
@@ -17,6 +18,7 @@ import Submissions from "./pages/Submissions";
 
 // The editor and Markdown renderer are heavy, so load them only here.
 const ProblemPage = lazy(() => import("./pages/ProblemPage"));
+const Lesson = lazy(() => import("./pages/Lesson"));
 const SubmissionDetail = lazy(() => import("./pages/SubmissionDetail"));
 const MockExamPage = lazy(() => import("./pages/MockExamPage"));
 const AdminProblems = lazy(() => import("./pages/admin/AdminProblems"));
@@ -44,6 +46,15 @@ export default function App() {
             element={
               <Suspense fallback={<div className="min-h-svh bg-ink-0" />}>
                 <ProblemPage />
+              </Suspense>
+            }
+          />
+          <Route path="/learn" element={<Learn />} />
+          <Route
+            path="/learn/:slug"
+            element={
+              <Suspense fallback={pageFallback}>
+                <Lesson />
               </Suspense>
             }
           />

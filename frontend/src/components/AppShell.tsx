@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { useI18n } from "../i18n";
-import AppNav from "./AppNav";
+import Navbar from "./Navbar";
 
 export default function AppShell({ children }: { children: ReactNode }) {
   const { t } = useI18n();
@@ -13,7 +13,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
       >
         {t("Skip to content")}
       </a>
-      <AppNav />
+      <Navbar />
       <main id="main" className="min-h-[calc(100svh-4rem)] px-4">
         {children}
       </main>

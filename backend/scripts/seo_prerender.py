@@ -381,6 +381,7 @@ def main() -> None:
     # Simple crawlable shells for the other static pages so they are not empty either.
     for path, title, desc, body_text in [
         ("/mock", "模擬 CPE · 完整過去考試 | YZU Judge", "在完全相同的 3 小時、相同題序下做過去 CPE 考古題。", "模擬 CPE"),
+        ("/learn", "學習 CPE 需要的 Python 與 C++ | YZU Judge", "輸入輸出、迴圈、陣列、字串、排序、map 與遞迴的短課程，每一課都有 Python 和 C++ 範例與練習題。", "學習"),
         ("/privacy", "隱私權政策 | YZU Judge", "YZU Judge 儲存哪些資料、為什麼，以及如何刪除你的帳號。", "隱私權政策"),
         ("/terms", "使用條款 | YZU Judge", "YZU Judge 的使用條款：請提交自己的解答，不要攻擊系統。", "使用條款"),
     ]:
