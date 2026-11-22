@@ -10,6 +10,7 @@ export const zh = {
   "Submissions": "提交紀錄",
   "Mock CPE": "模擬 CPE",
   "Mock": "模擬考",
+  "Tips": "解題技巧",
   "Admin": "管理",
   "Sign in": "登入",
   "Create account": "註冊帳號",
@@ -28,6 +29,7 @@ export const zh = {
   "A CPE practice site made at Yuan Ze University. Not affiliated with the CPE organizers.":
     "元智大學學生製作的 CPE 練習網站，與 CPE 主辦單位無關。",
   "Privacy policy": "隱私權政策",
+  "Common mistakes": "常見錯誤",
   "Terms of use": "使用條款",
   "Source on GitHub": "GitHub 原始碼",
   "Official CPE website": "CPE 官方網站",
@@ -436,6 +438,9 @@ export const zh = {
     "數字和文字都對，但空白字元不對：UVa 和 CPE 會完全比對輸出。請檢查最後一行後面的換行、多餘的空行，以及行尾的空格。",
   "Something went wrong on our side, not in your code. Try submitting again.":
     "這是我們系統的問題，不是你的程式有錯。請再提交一次。",
+  "This code includes <code>bits/stdc++.h</code>. It compiled here because our MSVC option runs on a different compiler, but the real MSVC on the CPE does not have this header, so the same code would not compile there. <a>Include the headers you need</a>, or pick MinGW GCC.":
+    "這份程式引入了 <code>bits/stdc++.h</code>。在這裡能編譯，是因為我們的 MSVC 選項使用另一個編譯器；CPE 上真正的 MSVC 沒有這個標頭檔，同樣的程式在那裡會編譯失敗。請<a>只引入需要的標頭檔</a>，或改選 MinGW GCC。",
+  "Common mistakes behind this verdict": "這個結果的常見原因",
 
   // Submissions
   "Time limit": "超時",

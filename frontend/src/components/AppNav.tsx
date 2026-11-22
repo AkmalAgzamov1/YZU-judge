@@ -34,6 +34,10 @@ export default function AppNav() {
           <span className="sm:hidden">{t("Mock")}</span>
           <span className="hidden sm:inline">{t("Mock CPE")}</span>
         </NavLink>
+        {/* Below xl the bar is full in the longer languages (Russian); the verdict panel and the footer link here too. */}
+        <NavLink to="/tips" className={(state) => `${linkClass(state)} hidden xl:inline-flex`}>
+          {t("Tips")}
+        </NavLink>
         {user?.is_admin && (
           // Admin work happens on a laptop; the phone nav has no room for it.
           <NavLink to="/admin" className={(state) => `${linkClass(state)} hidden sm:inline-flex`}>

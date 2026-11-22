@@ -10,6 +10,7 @@ export const id = {
   "Submissions": "Kiriman",
   "Mock CPE": "CPE simulasi",
   "Mock": "Simulasi",
+  "Tips": "Tips",
   "Admin": "Admin",
   "Sign in": "Masuk",
   "Create account": "Buat akun",
@@ -28,6 +29,7 @@ export const id = {
   "A CPE practice site made at Yuan Ze University. Not affiliated with the CPE organizers.":
     "Situs latihan CPE yang dibuat mahasiswa Universitas Yuan Ze. Tidak berafiliasi dengan penyelenggara CPE.",
   "Privacy policy": "Kebijakan privasi",
+  "Common mistakes": "Kesalahan umum",
   "Terms of use": "Ketentuan penggunaan",
   "Source on GitHub": "Sumber di GitHub",
   "Official CPE website": "Situs resmi CPE",
@@ -436,6 +438,9 @@ export const id = {
     "Angka dan katanya benar, tapi spasi tidak: UVa dan CPE membandingkan keluaran secara persis. Periksa baris baru setelah baris terakhir, baris kosong tambahan, dan spasi di akhir baris.",
   "Something went wrong on our side, not in your code. Try submitting again.":
     "Terjadi kesalahan di pihak kami, bukan di kodemu. Coba kirim lagi.",
+  "This code includes <code>bits/stdc++.h</code>. It compiled here because our MSVC option runs on a different compiler, but the real MSVC on the CPE does not have this header, so the same code would not compile there. <a>Include the headers you need</a>, or pick MinGW GCC.":
+    "Kode ini memakai <code>bits/stdc++.h</code>. Di sini kodenya berhasil dikompilasi karena opsi MSVC kami berjalan di kompiler lain, tetapi MSVC asli di CPE tidak punya header ini, jadi kode yang sama tidak akan bisa dikompilasi di sana. <a>Include header yang kamu butuhkan</a>, atau pilih MinGW GCC.",
+  "Common mistakes behind this verdict": "Kesalahan umum di balik hasil ini",
 
   // Submissions
   "Time limit": "Batas waktu",

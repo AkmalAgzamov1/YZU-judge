@@ -14,6 +14,7 @@ import NotFound from "./pages/NotFound";
 import Problems from "./pages/Problems";
 import Register from "./pages/Register";
 import Submissions from "./pages/Submissions";
+import Tips from "./pages/Tips";
 
 // The editor and Markdown renderer are heavy, so load them only here.
 const ProblemPage = lazy(() => import("./pages/ProblemPage"));
@@ -47,6 +48,7 @@ export default function App() {
               </Suspense>
             }
           />
+          <Route path="/tips" element={<Tips />} />
           <Route path="/privacy" element={<Legal kind="privacy" />} />
           <Route path="/terms" element={<Legal kind="terms" />} />
           <Route element={<RequireAuth />}>
