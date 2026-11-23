@@ -429,6 +429,21 @@ export const vi = {
   "Close": "Đóng",
   "{passed} of {total} samples passed": "Đã vượt qua {passed}/{total} test mẫu",
 
+  // Exam simulation
+  "Simulation mode": "Chế độ mô phỏng",
+  "Exit simulation": "Thoát mô phỏng",
+  "Open the full-screen exam simulation": "Mở bài thi mô phỏng toàn màn hình",
+  "Fullscreen": "Toàn màn hình",
+  "Exit fullscreen": "Thoát toàn màn hình",
+  "The code changed since this result.": "Mã đã thay đổi kể từ kết quả này.",
+  "Standard input": "Dữ liệu nhập chuẩn",
+  "Run with this input": "Chạy với dữ liệu này",
+  "Result comparison": "So sánh kết quả",
+  "Press Esc or the red close button to return to the normal interface.": "Nhấn Esc hoặc nút đóng màu đỏ để quay lại giao diện thường.",
+  "Use 編譯測試 to test with samples or your own input, and 批改交卷 to submit.": "Dùng 編譯測試 để thử với test mẫu hoặc dữ liệu nhập của bạn, và 批改交卷 để nộp.",
+  "Started at {start} · {n} problems · ends at {end}": "Bắt đầu {start} · {n} bài · kết thúc {end}",
+  "The clock runs on the server. Press Esc to return to the normal interface; the exam keeps running.": "Đồng hồ chạy trên máy chủ. Nhấn Esc để quay lại giao diện thường; bài thi vẫn tiếp tục.",
+
   // Test runs
   "Hidden test data is not shown.": "Không hiển thị dữ liệu test ẩn.",
 

@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { cpePapersApi, type CpePaper } from "../api/client";
 import AppShell from "../components/AppShell";
+import SimulationMode from "../components/simulation/SimulationMode";
 import ProblemWorkspace from "../components/problem/ProblemWorkspace";
 import { buttonPrimary, focusRing } from "../components/ui";
 import { useI18n } from "../i18n";
+import { loadSimulationMode, saveSimulationMode } from "../lib/simulationSession";
 
 // Tags a problem with the past CPE papers it appeared in.
 function PaperTags({ problemId }: { problemId: number }) {
@@ -44,13 +46,36 @@ export default function ProblemPage() {
   const { id } = useParams();
   const { t } = useI18n();
   const problemId = Number(id);
+  const validProblem = Number.isInteger(problemId) && problemId > 0;
+  const [simulation, setSimulation] = useState(() => validProblem && loadSimulationMode("problem", problemId));
+
+  function enterSimulation() {
+    saveSimulationMode("problem", problemId, true);
+    setSimulation(true);
+  }
+
+  function exitSimulation() {
+    saveSimulationMode("problem", problemId, false);
+    setSimulation(false);
+  }
+
+  if (simulation && validProblem) {
+    return (
+      <SimulationMode
+        problems={[{ position: 1, problem_id: problemId, title: "" }]}
+        initialPosition={1}
+        onExit={exitSimulation}
+      />
+    );
+  }
 
   return (
     <AppShell>
-      {Number.isInteger(problemId) && problemId > 0 ? (
+      {validProblem ? (
         <ProblemWorkspace
           key={problemId}
           problemId={problemId}
+          onEnterSimulation={enterSimulation}
           topSlot={
             <Link
               to="/problems"

@@ -429,6 +429,21 @@ export const zh = {
   "Close": "關閉",
   "{passed} of {total} samples passed": "範例通過 {passed} / {total}",
 
+  // Exam simulation
+  "Simulation mode": "模擬模式",
+  "Exit simulation": "離開模擬",
+  "Open the full-screen exam simulation": "開啟全螢幕模擬考試",
+  "Fullscreen": "全螢幕",
+  "Exit fullscreen": "離開全螢幕",
+  "The code changed since this result.": "程式碼已變更，這不是最新的結果。",
+  "Standard input": "標準輸入",
+  "Run with this input": "以此輸入執行",
+  "Result comparison": "結果比對",
+  "Press Esc or the red close button to return to the normal interface.": "按 Esc 或右上角紅色關閉鈕回到一般介面。",
+  "Use 編譯測試 to test with samples or your own input, and 批改交卷 to submit.": "用「編譯測試」以範例或自訂輸入測試，用「批改交卷」提交。",
+  "Started at {start} · {n} problems · ends at {end}": "{start} 開始 · {n} 題 · {end} 結束",
+  "The clock runs on the server. Press Esc to return to the normal interface; the exam keeps running.": "計時以伺服器為準。按 Esc 回到一般介面，考試仍會繼續。",
+
   // Test runs
   "Hidden test data is not shown.": "不顯示隱藏測資。",
 

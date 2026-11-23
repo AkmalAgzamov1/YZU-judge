@@ -1,16 +1,24 @@
-import { CheckCircle, Circle, CircleHalf } from "@phosphor-icons/react";
+import { CheckCircle, Circle, CircleHalf, Monitor } from "@phosphor-icons/react";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ApiError, mockExamsApi, type MockExam } from "../api/client";
+import { useAuth } from "../auth/AuthContext";
 import AppShell from "../components/AppShell";
 import ConfirmDialog from "../components/ConfirmDialog";
 import { difficultyColor, difficultyLabel } from "../components/DifficultyLabel";
+import SimulationMode from "../components/simulation/SimulationMode";
 import ProblemWorkspace from "../components/problem/ProblemWorkspace";
 import { buttonPrimary, buttonSecondary, focusRing } from "../components/ui";
 import { useI18n } from "../i18n";
 import { tr } from "../i18n/translate";
 import { formatClock, formatDuration, letter, PASS_BAR, useCountdown } from "../lib/mock";
 import { serverDate } from "../lib/progress";
+import {
+  loadExamPosition,
+  loadSimulationMode,
+  saveExamPosition,
+  saveSimulationMode,
+} from "../lib/simulationSession";
 
 type ExamProblem = MockExam["problems"][number];
 
@@ -30,18 +38,40 @@ function clockColor(ms: number) {
 
 function ExamView({ exam, onRefresh }: { exam: MockExam; onRefresh: () => void }) {
   const { t, tx } = useI18n();
+  const { user } = useAuth();
   const left = useCountdown(exam.ends_at, exam.server_time);
   const firstOpen = exam.problems.find((problem) => problem.status !== "solved") ?? exam.problems[0];
-  const [position, setPosition] = useState(firstOpen.position);
+  const [position, setPosition] = useState(() => {
+    const saved = loadExamPosition(exam.id);
+    return saved != null && exam.problems.some((problem) => problem.position === saved)
+      ? saved
+      : firstOpen.position;
+  });
   const [confirming, setConfirming] = useState(false);
   const [finishing, setFinishing] = useState(false);
   const [finishError, setFinishError] = useState<string | null>(null);
+  const [simulation, setSimulation] = useState(() => loadSimulationMode("mock", exam.id));
 
   const current = exam.problems.find((problem) => problem.position === position) ?? exam.problems[0];
 
   // At zero the server has closed the exam; keep asking until it says so,
   // in case this computer's clock runs a little ahead.
   const timeUp = left === 0;
+
+  function selectPosition(next: number) {
+    setPosition(next);
+    saveExamPosition(exam.id, next);
+  }
+
+  function openSimulation() {
+    saveSimulationMode("mock", exam.id, true);
+    setSimulation(true);
+  }
+
+  function closeSimulation() {
+    saveSimulationMode("mock", exam.id, false);
+    setSimulation(false);
+  }
 
   useEffect(() => {
     if (!timeUp) return;
@@ -62,6 +92,35 @@ function ExamView({ exam, onRefresh }: { exam: MockExam; onRefresh: () => void }
     }
   }
 
+  if (simulation) {
+    return (
+      <SimulationMode
+        problems={exam.problems.map((problem) => ({
+          position: problem.position,
+          problem_id: problem.problem_id,
+          title: problem.title,
+          status: problem.status,
+          uva_id: problem.uva_id,
+        }))}
+        initialPosition={position}
+        exam={{
+          id: exam.id,
+          paperTitle: exam.paper_title,
+          startedAt: exam.started_at,
+          endsAt: exam.ends_at,
+          serverTime: exam.server_time,
+          problemCount: exam.problem_count,
+          username: user?.username ?? "",
+        }}
+        scope={`mock:${exam.id}`}
+        onExit={closeSimulation}
+        onSelectProblem={selectPosition}
+        onSubmissionFinished={onRefresh}
+        onExamFinished={onRefresh}
+      />
+    );
+  }
+
   return (
     <>
       <div className="sticky top-16 z-20 -mx-4 border-b border-white/10 bg-ink-0/90 px-4 backdrop-blur-xl">
@@ -78,7 +137,7 @@ function ExamView({ exam, onRefresh }: { exam: MockExam; onRefresh: () => void }
                 role="tab"
                 aria-selected={problem.position === position}
                 title={problem.title}
-                onClick={() => setPosition(problem.position)}
+                onClick={() => selectPosition(problem.position)}
                 className={`flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 font-mono text-sm transition duration-300 ease-soft ${focusRing} ${
                   problem.position === position ? "bg-white/10 text-white" : "text-neutral-400 hover:text-white"
                 }`}
@@ -97,6 +156,15 @@ function ExamView({ exam, onRefresh }: { exam: MockExam; onRefresh: () => void }
             >
               {formatClock(left)}
             </p>
+            <button
+              type="button"
+              className={buttonSecondary}
+              title={t("Open the full-screen exam simulation")}
+              onClick={openSimulation}
+            >
+              <Monitor size={16} aria-hidden="true" />
+              {t("Simulation")}
+            </button>
             <button
               type="button"
               className={buttonSecondary}
@@ -228,7 +296,9 @@ function MockExamView({ examId }: { examId: number }) {
 
     mockExamsApi.get(examId).then(
       (loaded) => {
-        if (!cancelled) setExam(loaded);
+        if (cancelled) return;
+        if (!loaded.is_active) saveSimulationMode("mock", loaded.id, false);
+        setExam(loaded);
       },
       (err: unknown) => {
         if (!cancelled) setError(err instanceof ApiError ? err : new ApiError(0, tr("The exam could not be loaded.")));

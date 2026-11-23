@@ -429,6 +429,21 @@ export const id = {
   "Close": "Tutup",
   "{passed} of {total} samples passed": "{passed} dari {total} tes contoh lulus",
 
+  // Exam simulation
+  "Simulation mode": "Mode simulasi",
+  "Exit simulation": "Keluar dari simulasi",
+  "Open the full-screen exam simulation": "Buka simulasi ujian layar penuh",
+  "Fullscreen": "Layar penuh",
+  "Exit fullscreen": "Keluar dari layar penuh",
+  "The code changed since this result.": "Kode berubah sejak hasil ini.",
+  "Standard input": "Input standar",
+  "Run with this input": "Jalankan dengan input ini",
+  "Result comparison": "Perbandingan hasil",
+  "Press Esc or the red close button to return to the normal interface.": "Tekan Esc atau tombol tutup merah untuk kembali ke antarmuka biasa.",
+  "Use 編譯測試 to test with samples or your own input, and 批改交卷 to submit.": "Gunakan 編譯測試 untuk menguji dengan contoh atau input sendiri, dan 批改交卷 untuk mengirim.",
+  "Started at {start} · {n} problems · ends at {end}": "Mulai {start} · {n} soal · berakhir {end}",
+  "The clock runs on the server. Press Esc to return to the normal interface; the exam keeps running.": "Waktu berjalan di server. Tekan Esc untuk kembali ke antarmuka biasa; ujian tetap berjalan.",
+
   // Test runs
   "Hidden test data is not shown.": "Data tes tersembunyi tidak ditampilkan.",
 
