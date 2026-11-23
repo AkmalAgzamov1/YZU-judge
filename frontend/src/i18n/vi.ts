@@ -383,6 +383,21 @@ export const vi = {
   "Submit": "Nộp",
   "Sign in to submit": "Đăng nhập để nộp",
   "Code editor": "Trình soạn code",
+  "Resize panels": "Thay đổi kích thước bảng",
+  "Drag to resize": "Kéo để thay đổi kích thước",
+
+  // Editor options
+  "Editor options": "Tùy chọn trình soạn thảo",
+  "Font size": "Cỡ chữ",
+  "Smaller font": "Giảm cỡ chữ",
+  "Larger font": "Tăng cỡ chữ",
+  "Reset font size": "Đặt lại cỡ chữ",
+  "Load code…": "Tải mã…",
+  "Save code": "Lưu mã",
+  "Print code": "In mã",
+  "The file is too large.": "Tệp quá lớn.",
+  "The file could not be read.": "Không thể đọc tệp.",
+  "The browser blocked the print window.": "Trình duyệt đã chặn cửa sổ in.",
 
   // Run panel
   "Run": "Chạy",
@@ -390,6 +405,13 @@ export const vi = {
   "Sign in to run": "Đăng nhập để chạy",
   "Test your code": "Kiểm tra mã của bạn",
   "Sample tests": "Test mẫu",
+  "Random": "Ngẫu nhiên",
+  "Custom": "Tùy chỉnh",
+  "Random tests": "Test ngẫu nhiên",
+  "Tests": "Test",
+  "Runs hidden tests at random. Inputs and expected outputs are not shown.":
+    "Chạy ngẫu nhiên các test ẩn. Không hiển thị dữ liệu nhập và kết quả mong đợi.",
+  "{passed} of {total} hidden tests passed": "Đã vượt qua {passed}/{total} test ẩn",
   "Custom input": "Nhập tùy chỉnh",
   "Running…": "Đang chạy…",
   "Finished": "Đã chạy xong",
@@ -406,6 +428,9 @@ export const vi = {
   "Type or paste the input your program should read.": "Nhập hoặc dán dữ liệu mà chương trình của bạn sẽ đọc.",
   "Close": "Đóng",
   "{passed} of {total} samples passed": "Đã vượt qua {passed}/{total} test mẫu",
+
+  // Test runs
+  "Hidden test data is not shown.": "Không hiển thị dữ liệu test ẩn.",
 
   // Judge panel
   "sending your code…": "đang gửi code của bạn…",
@@ -597,6 +622,7 @@ export const vi = {
 
 // Messages the server sends in English, by their exact text.
 export const apiMessages: Record<string, string> = {
+  "This problem has no hidden tests yet.": "Bài này chưa có test ẩn.",
   "Invalid username or password": "Tên đăng nhập hoặc mật khẩu không đúng",
   "Too many attempts. Wait a minute and try again.": "Bạn thử quá nhiều lần. Hãy đợi một phút rồi thử lại.",
   "Too many emails from your network. Try again in an hour.": "Mạng của bạn đã gửi quá nhiều email. Hãy thử lại sau một tiếng.",

@@ -1,8 +1,10 @@
 """Test runs (the editor's Run button) with a fake sandbox, no Docker needed."""
 
 import unittest
+from types import SimpleNamespace
+from unittest.mock import patch
 
-from app.services.judge_service import run_tests
+from app.services.judge_service import load_random_hidden_testcases, run_tests
 
 SAMPLES = [
     {"id": 1, "input": "1 2\n", "output": "3\n"},
@@ -120,6 +122,51 @@ class RunTestsTests(unittest.TestCase):
     def test_without_testcases_raises(self):
         with self.assertRaises(ValueError):
             run_tests(fake_runner([], []), "code", [], 1000, 64)
+
+
+class FakeQuery:
+    def __init__(self, rows):
+        self.rows = rows
+
+    def filter(self, *args, **kwargs):
+        return self
+
+    def all(self):
+        return self.rows
+
+
+class FakeDB:
+    def __init__(self, rows):
+        self.rows = rows
+
+    def query(self, model):
+        return FakeQuery(self.rows)
+
+
+class HiddenTestcaseSelectionTests(unittest.TestCase):
+    def rows(self, count):
+        return [
+            SimpleNamespace(id=index, input_path=f"in-{index}", output_path=f"out-{index}")
+            for index in range(1, count + 1)
+        ]
+
+    def test_picks_at_most_the_requested_number(self):
+        with patch("app.services.judge_service.read_file", side_effect=lambda path: path):
+            picked = load_random_hidden_testcases(FakeDB(self.rows(4)), 7, count=2)
+
+        self.assertEqual(len(picked), 2)
+        self.assertEqual(len({case["id"] for case in picked}), 2)
+        self.assertTrue(all(case["input"].startswith("in-") for case in picked))
+
+    def test_returns_everything_when_the_request_is_larger(self):
+        with patch("app.services.judge_service.read_file", side_effect=lambda path: path):
+            picked = load_random_hidden_testcases(FakeDB(self.rows(3)), 7, count=10)
+
+        self.assertEqual(len(picked), 3)
+
+    def test_without_hidden_tests_returns_empty(self):
+        with patch("app.services.judge_service.read_file", side_effect=lambda path: path):
+            self.assertEqual(load_random_hidden_testcases(FakeDB([]), 7, count=10), [])
 
 
 if __name__ == "__main__":

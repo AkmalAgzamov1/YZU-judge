@@ -17,7 +17,9 @@ from app.models.mock_exam import MockExam  # noqa: F401  # submissions.mock_exam
 from app.models.cpe_paper import CpePaper  # noqa: F401  # mock_exams.paper_id
 from app.models.email_code import EmailCode
 from app.services.judge_service import (
+    load_random_hidden_testcases,
     load_sample_testcases,
+    load_testcases,
     judge_submission,
     run_tests,
 )
@@ -37,6 +39,10 @@ RUN_RETENTION = timedelta(days=1)
 
 # A test run only needs the visible samples, and only a handful of them.
 MAX_SAMPLE_CASES = 5
+
+# A random run samples hidden cases; ten is enough to check a solution without
+# turning every click into a full judgment.
+MAX_RANDOM_CASES = 10
 
 # Enough for a comparison in the editor. The sandbox itself allows much more,
 # but a run result is stored in the database and sent to the browser.
@@ -211,11 +217,14 @@ def _clip_case_text(text):
 
 @celery_app.task(ignore_result=True)
 def run_code_task(run_id):
-    """Runs a student's code once against samples or a custom input.
+    """Runs a student's code once against samples, hidden tests or a custom input.
 
     This does not create a submission. The row is a short lived scratch pad; the
     worker marks it finished with every case's output, or error if the sandbox
     itself broke. Compilation errors are a normal finished result.
+
+    Random runs use hidden testcases. Their inputs, expected outputs and the
+    program's raw output stay in the worker; only verdicts and timings are saved.
     """
     db = SessionLocal()
 
@@ -234,11 +243,22 @@ def run_code_task(run_id):
             if problem is None:
                 raise ValueError(f"Problem {run.problem_id} is not found!")
 
+            hidden = run.mode == "random"
+
             if run.mode == "samples":
                 testcases = load_sample_testcases(db, problem.id, limit = MAX_SAMPLE_CASES)
 
                 if not testcases:
                     raise ValueError(f"Problem {problem.id} has no sample tests")
+            elif hidden:
+                testcases = load_random_hidden_testcases(
+                    db,
+                    problem.id,
+                    count = min(run.random_count or 1, MAX_RANDOM_CASES),
+                )
+
+                if not testcases:
+                    raise ValueError(f"Problem {problem.id} has no hidden tests")
             else:
                 testcases = [{
                     "id": None,
@@ -267,11 +287,14 @@ def run_code_task(run_id):
 
                 results.append({
                     "index": index + 1,
-                    "input": _clip_case_text(testcase.get("input")),
-                    "expected_output": _clip_case_text(testcase.get("output")),
-                    "stdout": _clip_case_text(result["stdout"]) or "",
-                    "stderr": _clip_case_text(result["stderr"]) or "",
-                    "exit_code": result["exit_code"],
+                    # Hidden inputs and outputs must never reach the browser.
+                    "input": None if hidden else _clip_case_text(testcase.get("input")),
+                    "expected_output": None if hidden else _clip_case_text(testcase.get("output")),
+                    "stdout": "" if hidden else (_clip_case_text(result["stdout"]) or ""),
+                    "stderr": "" if hidden else (_clip_case_text(result["stderr"]) or ""),
+                    # The exit code is a side channel for hidden inputs; the
+                    # verdict already tells the student whether the run failed.
+                    "exit_code": None if hidden else result["exit_code"],
                     "verdict": result["verdict"],
                     "time_taken_ms": result["time_taken_ms"],
                     "memory_used_mb": result.get("memory_used_mb"),

@@ -383,6 +383,21 @@ export const id = {
   "Submit": "Kirim",
   "Sign in to submit": "Masuk untuk mengirim",
   "Code editor": "Editor kode",
+  "Resize panels": "Ubah ukuran panel",
+  "Drag to resize": "Seret untuk mengubah ukuran",
+
+  // Editor options
+  "Editor options": "Opsi editor",
+  "Font size": "Ukuran font",
+  "Smaller font": "Perkecil font",
+  "Larger font": "Perbesar font",
+  "Reset font size": "Atur ulang ukuran font",
+  "Load code…": "Muat kode…",
+  "Save code": "Simpan kode",
+  "Print code": "Cetak kode",
+  "The file is too large.": "File terlalu besar.",
+  "The file could not be read.": "File tidak dapat dibaca.",
+  "The browser blocked the print window.": "Browser memblokir jendela cetak.",
 
   // Run panel
   "Run": "Jalankan",
@@ -390,6 +405,13 @@ export const id = {
   "Sign in to run": "Masuk untuk menjalankan",
   "Test your code": "Uji kode Anda",
   "Sample tests": "Tes contoh",
+  "Random": "Acak",
+  "Custom": "Kustom",
+  "Random tests": "Tes acak",
+  "Tests": "Tes",
+  "Runs hidden tests at random. Inputs and expected outputs are not shown.":
+    "Menjalankan tes tersembunyi secara acak. Input dan output yang diharapkan tidak ditampilkan.",
+  "{passed} of {total} hidden tests passed": "{passed} dari {total} tes tersembunyi lulus",
   "Custom input": "Input khusus",
   "Running…": "Menjalankan…",
   "Finished": "Selesai",
@@ -406,6 +428,9 @@ export const id = {
   "Type or paste the input your program should read.": "Ketik atau tempel input yang harus dibaca program Anda.",
   "Close": "Tutup",
   "{passed} of {total} samples passed": "{passed} dari {total} tes contoh lulus",
+
+  // Test runs
+  "Hidden test data is not shown.": "Data tes tersembunyi tidak ditampilkan.",
 
   // Judge panel
   "sending your code…": "mengirim kodemu…",
@@ -597,6 +622,7 @@ export const id = {
 
 // Messages the server sends in English, by their exact text.
 export const apiMessages: Record<string, string> = {
+  "This problem has no hidden tests yet.": "Soal ini belum memiliki tes tersembunyi.",
   "Invalid username or password": "Nama pengguna atau kata sandi tidak valid",
   "Too many attempts. Wait a minute and try again.": "Terlalu banyak percobaan. Tunggu semenit dan coba lagi.",
   "Too many emails from your network. Try again in an hour.": "Terlalu banyak email dari jaringanmu. Coba lagi dalam sejam.",

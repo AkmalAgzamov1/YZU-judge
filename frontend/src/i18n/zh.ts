@@ -383,6 +383,21 @@ export const zh = {
   "Submit": "提交",
   "Sign in to submit": "登入後提交",
   "Code editor": "程式碼編輯器",
+  "Resize panels": "調整面板大小",
+  "Drag to resize": "拖曳調整大小",
+
+  // Editor options
+  "Editor options": "編輯器選項",
+  "Font size": "字型大小",
+  "Smaller font": "縮小字型",
+  "Larger font": "放大字型",
+  "Reset font size": "重設字型大小",
+  "Load code…": "載入程式碼…",
+  "Save code": "儲存程式碼",
+  "Print code": "列印程式碼",
+  "The file is too large.": "檔案太大。",
+  "The file could not be read.": "無法讀取檔案。",
+  "The browser blocked the print window.": "瀏覽器阻擋了列印視窗。",
 
   // Run panel
   "Run": "執行",
@@ -390,6 +405,13 @@ export const zh = {
   "Sign in to run": "登入後執行",
   "Test your code": "測試你的程式碼",
   "Sample tests": "範例測資",
+  "Random": "隨機",
+  "Custom": "自訂",
+  "Random tests": "隨機測資",
+  "Tests": "測試",
+  "Runs hidden tests at random. Inputs and expected outputs are not shown.":
+    "隨機使用隱藏測資，不顯示輸入與預期輸出。",
+  "{passed} of {total} hidden tests passed": "隱藏測資通過 {passed} / {total}",
   "Custom input": "自訂輸入",
   "Running…": "執行中…",
   "Finished": "執行完成",
@@ -406,6 +428,9 @@ export const zh = {
   "Type or paste the input your program should read.": "輸入或貼上程式要讀取的內容。",
   "Close": "關閉",
   "{passed} of {total} samples passed": "範例通過 {passed} / {total}",
+
+  // Test runs
+  "Hidden test data is not shown.": "不顯示隱藏測資。",
 
   // Judge panel
   "sending your code…": "正在送出程式碼…",
@@ -597,6 +622,7 @@ export const zh = {
 
 // Messages the server sends in English, by their exact text.
 export const apiMessages: Record<string, string> = {
+  "This problem has no hidden tests yet.": "這題還沒有隱藏測資。",
   "Invalid username or password": "使用者名稱或密碼錯誤",
   "Too many attempts. Wait a minute and try again.": "嘗試次數過多，請一分鐘後再試。",
   "Too many emails from your network. Try again in an hour.": "你所在的網路寄出太多信件，請一小時後再試。",

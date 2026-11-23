@@ -92,6 +92,18 @@ def create_run(
                 detail="This problem has no sample tests yet.",
             )
 
+    if run_data.mode == "random":
+        has_hidden = db.query(TestCase.id).filter(
+            TestCase.problem_id == problem.id,
+            TestCase.is_sample.is_(False),
+        ).first()
+
+        if has_hidden is None:
+            raise HTTPException(
+                status_code=400,
+                detail="This problem has no hidden tests yet.",
+            )
+
     check_rate_limit(db, current_user)
 
     run = Run(
@@ -103,6 +115,7 @@ def create_run(
         # A custom input is only meaningful for that mode, and samples never
         # take user text.
         custom_input=run_data.custom_input if run_data.mode == "custom" else None,
+        random_count=run_data.random_count if run_data.mode == "random" else None,
         status="pending",
     )
 

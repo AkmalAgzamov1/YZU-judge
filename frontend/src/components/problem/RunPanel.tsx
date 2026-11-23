@@ -1,4 +1,4 @@
-import { CircleNotch, Play, X } from "@phosphor-icons/react";
+import { CircleNotch, Play } from "@phosphor-icons/react";
 import { useEffect, useRef, useState } from "react";
 import {
   ApiError,
@@ -14,15 +14,16 @@ import type { Language } from "../../lib/languages";
 import { verdictColor, verdictLabel } from "../../lib/verdicts";
 import { buttonPrimarySmall, focusRing } from "../ui";
 
-type RunMode = "samples" | "custom";
+type RunMode = "samples" | "random" | "custom";
 
 interface RunPanelProps {
   problemId: number;
   samples: Sample[];
   language: Language;
   code: string;
-  open: boolean;
-  onClose: () => void;
+  className?: string;
+  // Set when the visitor is not signed in: the Run button asks them to sign in.
+  onRequireAuth?: () => void;
 }
 
 const MAX_CUSTOM_INPUT_BYTES = 16_384;
@@ -93,13 +94,14 @@ export default function RunPanel({
   samples,
   language,
   code,
-  open,
-  onClose,
+  className = "",
+  onRequireAuth,
 }: RunPanelProps) {
   const { t } = useI18n();
   const [mode, setMode] = useState<RunMode>("samples");
   const [selected, setSelected] = useState(0);
   const [customInput, setCustomInput] = useState("");
+  const [randomCount, setRandomCount] = useState(1);
   const [starting, setStarting] = useState(false);
   const [runId, setRunId] = useState<number | null>(null);
   const [run, setRun] = useState<Run | null>(null);
@@ -171,6 +173,11 @@ export default function RunPanel({
   async function runCode() {
     if (busy) return;
 
+    if (onRequireAuth) {
+      onRequireAuth();
+      return;
+    }
+
     if (!code.trim()) {
       setError(t("Write some code before running it."));
       return;
@@ -195,6 +202,7 @@ export default function RunPanel({
         mode,
         code,
         custom_input: mode === "custom" ? customInput : null,
+        random_count: mode === "random" ? randomCount : undefined,
       });
       setRun(created);
       setRunId(created.id);
@@ -211,7 +219,7 @@ export default function RunPanel({
   const codeChanged = run != null && ranWith != null && (ranWith.code !== code || ranWith.language !== language);
 
   const tabClass = (value: RunMode) =>
-    `rounded px-2 py-1 font-mono text-xs transition duration-300 ease-soft disabled:pointer-events-none disabled:opacity-50 ${focusRing} ${
+    `shrink-0 whitespace-nowrap rounded px-2 py-1 font-mono text-xs transition duration-300 ease-soft disabled:pointer-events-none disabled:opacity-50 ${focusRing} ${
       mode === value ? "bg-ink-3 text-white" : "text-neutral-500 hover:text-white"
     }`;
 
@@ -220,10 +228,14 @@ export default function RunPanel({
       id="run-panel"
       aria-label={t("Test your code")}
       aria-live="polite"
-      className={`${open ? "flex" : "hidden"} flex-col rounded-lg border border-white/10 bg-ink-0`}
+      className={`${className} flex flex-col rounded-lg border border-white/10 bg-ink-0`}
     >
-      <div className="flex items-center justify-between gap-3 border-b border-white/10 px-3 py-2">
-        <div role="tablist" aria-label={t("Test your code")} className="flex rounded-md border border-white/10 bg-ink-1 p-1">
+      <div className="flex items-center gap-3 border-b border-white/10 px-3 py-2">
+        <div
+          role="tablist"
+          aria-label={t("Test your code")}
+          className="flex min-w-0 flex-1 overflow-x-auto rounded-md border border-white/10 bg-ink-1 p-1"
+        >
           <button
             type="button"
             role="tab"
@@ -232,7 +244,17 @@ export default function RunPanel({
             onClick={() => selectMode("samples")}
             disabled={busy}
           >
-            {t("Sample tests")}
+            {t("Samples")}
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={mode === "random"}
+            className={tabClass("random")}
+            onClick={() => selectMode("random")}
+            disabled={busy}
+          >
+            {t("Random")}
           </button>
           <button
             type="button"
@@ -242,17 +264,9 @@ export default function RunPanel({
             onClick={() => selectMode("custom")}
             disabled={busy}
           >
-            {t("Custom input")}
+            {t("Custom")}
           </button>
         </div>
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label={t("Close")}
-          className={`rounded p-1 text-neutral-500 transition duration-300 ease-soft hover:text-white ${focusRing}`}
-        >
-          <X size={16} aria-hidden="true" />
-        </button>
       </div>
 
       <div className="p-3">
@@ -288,6 +302,30 @@ export default function RunPanel({
               )}
             </>
           )
+        ) : mode === "random" ? (
+          <div>
+            <p className="font-mono text-sm text-neutral-400">
+              {t("Runs hidden tests at random. Inputs and expected outputs are not shown.")}
+            </p>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <span className="font-mono text-xs text-neutral-500">{t("Tests")}</span>
+              {[1, 10].map((count) => (
+                <button
+                  key={count}
+                  type="button"
+                  aria-pressed={randomCount === count}
+                  onClick={() => setRandomCount(count)}
+                  className={`rounded border px-2 py-1 font-mono text-xs transition duration-300 ease-soft ${focusRing} ${
+                    randomCount === count
+                      ? "border-white/30 bg-ink-3 text-white"
+                      : "border-white/10 text-neutral-400 hover:text-white"
+                  }`}
+                >
+                  {count}
+                </button>
+              ))}
+            </div>
+          </div>
         ) : (
           <div>
             <label htmlFor="run-custom-input" className="font-mono text-xs text-neutral-500">
@@ -342,15 +380,40 @@ export default function RunPanel({
                 run?.verdict === "accepted" ? "text-emerald-400" : "text-yzu-red"
               }`}
             >
-              {mode === "samples"
-                ? t("{passed} of {total} samples passed", { passed, total: results.length })
-                : run?.verdict === "accepted"
-                  ? t("Finished")
-                  : t(verdictLabel[run?.verdict ?? "wrong_answer"]).toLowerCase()}
+              {run?.mode === "random"
+                ? t("{passed} of {total} hidden tests passed", { passed, total: results.length })
+                : run?.mode === "samples"
+                  ? t("{passed} of {total} samples passed", { passed, total: results.length })
+                  : run?.verdict === "accepted"
+                    ? t("Finished")
+                    : t(verdictLabel[run?.verdict ?? "wrong_answer"]).toLowerCase()}
             </p>
-            {results.map((result) => (
-              <ResultCard key={result.index} result={result} mode={mode} />
-            ))}
+            {run?.mode === "random" ? (
+              <div className="rounded-md border border-white/10 bg-ink-1">
+                <p className="border-b border-white/10 px-3 py-2 font-mono text-xs text-neutral-500">
+                  {t("Hidden test data is not shown.")}
+                </p>
+                <ul className="divide-y divide-white/10">
+                  {results.map((result) => (
+                    <li
+                      key={result.index}
+                      className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 px-3 py-2 font-mono text-xs"
+                    >
+                      <span className="text-neutral-300">{t("test {n}", { n: result.index })}</span>
+                      <span className="flex items-center gap-3 text-neutral-500">
+                        <span>{formatTime(result.time_taken_ms)}</span>
+                        <span>{formatMemory(result.memory_used_mb)}</span>
+                        <span className={verdictColor[result.verdict]}>
+                          {t(verdictLabel[result.verdict]).toLowerCase()}
+                        </span>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : (
+              results.map((result) => <ResultCard key={result.index} result={result} mode={mode} />)
+            )}
           </div>
         )}
 
@@ -373,7 +436,7 @@ export default function RunPanel({
           ) : (
             <Play size={16} weight="fill" aria-hidden="true" />
           )}
-          {busy ? t("Running…") : t("Run code")}
+          {busy ? t("Running…") : onRequireAuth ? t("Sign in to run") : t("Run code")}
         </button>
       </div>
     </section>

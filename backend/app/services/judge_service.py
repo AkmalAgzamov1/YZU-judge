@@ -1,3 +1,5 @@
+import random
+
 from sqlalchemy.orm import Session
 
 from app.models.testcase import TestCase
@@ -45,6 +47,34 @@ def load_sample_testcases(db: Session, problem_id: int, limit: int | None = None
             "output": read_file(testcase.output_path),
         }
         for testcase in query.all()
+    ]
+
+
+def load_random_hidden_testcases(db: Session, problem_id: int, count: int = 1):
+    """Pick hidden testcases at random for a test run.
+
+    The caller must never send their inputs or expected outputs back to the
+    browser; a run only reports verdicts for these cases.
+    """
+
+    testcases = (
+        db.query(TestCase)
+        .filter(TestCase.problem_id == problem_id, TestCase.is_sample.is_(False))
+        .all()
+    )
+
+    if not testcases:
+        return []
+
+    picked = random.sample(testcases, min(count, len(testcases)))
+
+    return [
+        {
+            "id": testcase.id,
+            "input": read_file(testcase.input_path),
+            "output": read_file(testcase.output_path),
+        }
+        for testcase in picked
     ]
 
 

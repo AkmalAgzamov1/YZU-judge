@@ -4,7 +4,7 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, Field, field_validator
 
 RunLanguage = Literal["python", "c_gcc", "c_msvc", "java8", "java11"]
-RunMode = Literal["samples", "custom"]
+RunMode = Literal["samples", "random", "custom"]
 RunStatus = Literal["pending", "running", "finished", "error"]
 RunVerdict = Literal[
     "accepted",
@@ -20,6 +20,7 @@ RunVerdict = Literal[
 # Same ceilings as a submission, plus a smaller cap for the custom input.
 MAX_CODE_BYTES = 65_536
 MAX_INPUT_BYTES = 16_384
+MAX_RANDOM_CASES = 10
 
 
 class RunCreate(BaseModel):
@@ -28,6 +29,7 @@ class RunCreate(BaseModel):
     mode: RunMode = "samples"
     code: Annotated[str, Field(max_length=MAX_CODE_BYTES)]
     custom_input: Annotated[str, Field(max_length=MAX_INPUT_BYTES)] | None = None
+    random_count: Annotated[int, Field(ge=1, le=MAX_RANDOM_CASES)] | None = None
 
     @field_validator("code")
     @classmethod

@@ -1049,11 +1049,13 @@ export interface components {
              * @default samples
              * @enum {string}
              */
-            mode: "samples" | "custom";
+            mode: "samples" | "random" | "custom";
             /** Code */
             code: string;
             /** Custom Input */
             custom_input?: string | null;
+            /** Random Count */
+            random_count?: number | null;
         };
         /** RunOut */
         RunOut: {
@@ -1070,7 +1072,7 @@ export interface components {
              * Mode
              * @enum {string}
              */
-            mode: "samples" | "custom";
+            mode: "samples" | "random" | "custom";
             /**
              * Status
              * @enum {string}

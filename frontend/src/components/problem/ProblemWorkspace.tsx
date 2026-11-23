@@ -1,5 +1,5 @@
-import { Lightbulb, PaperPlaneRight, Play } from "@phosphor-icons/react";
-import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { Lightbulb, PaperPlaneRight } from "@phosphor-icons/react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   ApiError,
@@ -12,6 +12,7 @@ import {
 import { useAuth } from "../../auth/AuthContext";
 import { useI18n } from "../../i18n";
 import { tr } from "../../i18n/translate";
+import { loadEditorFontSize, saveEditorFontSize, clampEditorFontSize } from "../../lib/editorSettings";
 import { loadDraft, saveDraft } from "../../lib/drafts";
 import {
   isLanguage,
@@ -33,12 +34,39 @@ import RunPanel from "./RunPanel";
 import Samples from "./Samples";
 import Statement from "./Statement";
 import SubmissionHistory from "./SubmissionHistory";
+import EditorOptions from "./EditorOptions";
 
 type LoadState =
   | { kind: "loading" }
   | { kind: "missing" }
   | { kind: "error"; message: string }
   | { kind: "ready"; problem: Problem; samples: Sample[] };
+
+const SPLIT_KEY = "yzu-judge:problem-split";
+const SPLIT_MIN = 30;
+const SPLIT_MAX = 70;
+const SPLIT_DEFAULT = 50;
+
+function clampSplit(value: number) {
+  return Math.round(Math.max(SPLIT_MIN, Math.min(SPLIT_MAX, value)) * 10) / 10;
+}
+
+function loadSplit() {
+  try {
+    const value = Number(localStorage.getItem(SPLIT_KEY));
+    return Number.isFinite(value) ? clampSplit(value) : SPLIT_DEFAULT;
+  } catch {
+    return SPLIT_DEFAULT;
+  }
+}
+
+function saveSplit(value: number) {
+  try {
+    localStorage.setItem(SPLIT_KEY, String(clampSplit(value)));
+  } catch {
+    // Storage can be unavailable; the current page still resizes.
+  }
+}
 
 interface ProblemWorkspaceProps {
   // Render with key={problemId} so drafts and judge state reset per problem.
@@ -92,6 +120,7 @@ export default function ProblemWorkspace({
   useDocumentTitle(state.kind === "ready" ? `${problemLabel(state.problem, problemId)} · YZU Judge` : null);
   const [attempt, setAttempt] = useState(0);
   const [language, setLanguage] = useState<Language>(() => loadPreferredLanguage());
+  const [editorFontSize, setEditorFontSize] = useState(() => loadEditorFontSize());
   const [code, setCode] = useState(() => loadDraft(problemId, draftScope, language));
   const [tab, setTab] = useState<"problem" | "code">("problem");
   // Topics hint at the solution, so they stay hidden until asked for.
@@ -102,23 +131,12 @@ export default function ProblemWorkspace({
 
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  // The Run panel stays mounted so a custom input and its result survive closing it.
-  const [runOpen, setRunOpen] = useState(false);
   const [activeId, setActiveId] = useState<number | null>(null);
   const [history, setHistory] = useState<Submission[]>([]);
   const [historyVersion, setHistoryVersion] = useState(0);
-
-  // The panel sits below the editor; bring it into view when it opens, otherwise
-  // on a laptop it would appear entirely below the fold.
-  useEffect(() => {
-    if (!runOpen) return;
-
-    const timer = window.setTimeout(() => {
-      document.getElementById("run-panel")?.scrollIntoView({ block: "nearest", behavior: "smooth" });
-    }, 0);
-
-    return () => window.clearTimeout(timer);
-  }, [runOpen]);
+  const [split, setSplit] = useState(() => loadSplit());
+  const [resizing, setResizing] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -172,6 +190,12 @@ export default function ProblemWorkspace({
     saveDraft(problemId, value, draftScope, forLanguage);
   }
 
+  function changeEditorFontSize(size: number) {
+    const next = clampEditorFontSize(size);
+    setEditorFontSize(next);
+    saveEditorFontSize(next);
+  }
+
   // Each language keeps its own draft, so switching never loses code.
   function switchLanguage(next: Language) {
     if (next === language) return;
@@ -218,12 +242,59 @@ export default function ProblemWorkspace({
     }
   }
 
-  function openRunPanel() {
-    if (!user) {
-      navigate("/login", { state: { from: location } });
-      return;
+  function startResize(event: ReactPointerEvent<HTMLDivElement>) {
+    if (event.button !== 0) return;
+
+    const container = containerRef.current;
+    if (!container) return;
+
+    event.preventDefault();
+
+    const rect = container.getBoundingClientRect();
+    let latest = split;
+    const previousCursor = document.body.style.cursor;
+    const previousSelect = document.body.style.userSelect;
+
+    setResizing(true);
+    document.body.style.cursor = "col-resize";
+    document.body.style.userSelect = "none";
+
+    function move(moveEvent: PointerEvent) {
+      const next = clampSplit(((moveEvent.clientX - rect.left) / rect.width) * 100);
+      latest = next;
+      setSplit(next);
     }
-    setRunOpen((open) => !open);
+
+    function stop() {
+      setResizing(false);
+      document.body.style.cursor = previousCursor;
+      document.body.style.userSelect = previousSelect;
+      saveSplit(latest);
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", stop);
+      window.removeEventListener("pointercancel", stop);
+    }
+
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", stop);
+    window.addEventListener("pointercancel", stop);
+  }
+
+  function resetSplit() {
+    setSplit(SPLIT_DEFAULT);
+    saveSplit(SPLIT_DEFAULT);
+  }
+
+  function onSplitKeyDown(event: ReactKeyboardEvent<HTMLDivElement>) {
+    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+      event.preventDefault();
+      const next = clampSplit(split + (event.key === "ArrowLeft" ? -2 : 2));
+      setSplit(next);
+      saveSplit(next);
+    } else if (event.key === "Home") {
+      event.preventDefault();
+      resetSplit();
+    }
   }
 
   const handleFinished = useCallback(() => {
@@ -279,7 +350,11 @@ export default function ProblemWorkspace({
     }`;
 
   return (
-    <div className={`mx-auto max-w-6xl lg:grid lg:grid-cols-2 lg:divide-x lg:divide-white/10 ${heightClass}`}>
+    <div
+      ref={containerRef}
+      style={{ "--split-left": `${split}%` } as CSSProperties}
+      className={`mx-auto max-w-6xl lg:flex lg:overflow-hidden ${heightClass}`}
+    >
       <div className={`-mx-4 bg-ink-0 px-4 py-3 lg:hidden ${mockExamId == null ? "sticky top-16 z-10" : ""}`}>
         <div role="tablist" aria-label={t("View")} className="flex rounded-lg border border-white/10 bg-ink-1 p-1">
           <button type="button" role="tab" aria-selected={tab === "problem"} className={tabClass("problem")} onClick={() => setTab("problem")}>
@@ -293,7 +368,7 @@ export default function ProblemWorkspace({
 
       <section
         aria-label={t("Problem statement")}
-        className={`${tab === "problem" ? "block" : "hidden"} py-8 lg:block lg:overflow-y-auto lg:pr-8`}
+        className={`${tab === "problem" ? "block" : "hidden"} py-8 lg:block lg:h-full lg:w-[var(--split-left)] lg:min-w-0 lg:flex-none lg:overflow-y-auto lg:pr-8`}
       >
         {topSlot}
 
@@ -361,11 +436,41 @@ export default function ProblemWorkspace({
             <Samples samples={state.samples} />
           </>
         )}
+
+        <RunPanel
+          className="mt-8"
+          problemId={problemId}
+          samples={state.kind === "ready" ? state.samples : []}
+          language={language}
+          code={code}
+          onRequireAuth={!user ? () => navigate("/login", { state: { from: location } }) : undefined}
+        />
       </section>
+
+      <div
+        role="separator"
+        aria-orientation="vertical"
+        aria-label={t("Resize panels")}
+        aria-valuemin={SPLIT_MIN}
+        aria-valuemax={SPLIT_MAX}
+        aria-valuenow={Math.round(split)}
+        tabIndex={0}
+        title={t("Drag to resize")}
+        onPointerDown={startResize}
+        onDoubleClick={resetSplit}
+        onKeyDown={onSplitKeyDown}
+        className={`group hidden cursor-col-resize touch-none select-none items-stretch justify-center lg:flex lg:w-2 lg:flex-none ${focusRing}`}
+      >
+        <span
+          className={`h-full w-px transition duration-200 ${
+            resizing ? "bg-white/30" : "bg-white/10 group-hover:bg-white/20 group-focus-visible:bg-white/30"
+          }`}
+        />
+      </div>
 
       <section
         aria-label={t("Code")}
-        className={`${tab === "code" ? "flex" : "hidden"} flex-col gap-4 py-8 lg:flex lg:overflow-y-auto lg:pl-8`}
+        className={`${tab === "code" ? "flex" : "hidden"} flex-col gap-4 py-8 lg:flex lg:h-full lg:min-w-0 lg:flex-1 lg:overflow-y-auto lg:pl-8`}
       >
         <div className="flex flex-wrap items-center justify-between gap-3">
           <LanguageSelect
@@ -377,17 +482,6 @@ export default function ProblemWorkspace({
           />
 
           <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={openRunPanel}
-              aria-expanded={runOpen}
-              aria-controls="run-panel"
-              className={buttonSecondary}
-            >
-              <Play size={16} weight="fill" aria-hidden="true" />
-              {user ? t("Run") : t("Sign in to run")}
-            </button>
-
             <button type="button" onClick={submit} disabled={submitting} className={buttonPrimary}>
               {user ? (submitting ? t("Sending…") : t("Submit")) : t("Sign in to submit")}
               {user && <PaperPlaneRight size={16} weight="bold" aria-hidden="true" />}
@@ -395,18 +489,23 @@ export default function ProblemWorkspace({
           </div>
         </div>
 
-        <div className="h-96 overflow-hidden rounded-lg border border-white/10 lg:h-auto lg:min-h-80 lg:flex-1">
-          <CodeEditor value={code} onChange={(value) => handleCodeChange(value)} onSubmit={submit} language={language} />
+        <div className="relative h-96 overflow-hidden rounded-lg border border-white/10 lg:h-auto lg:min-h-80 lg:flex-1">
+          <CodeEditor
+            value={code}
+            onChange={(value) => handleCodeChange(value)}
+            onSubmit={submit}
+            language={language}
+            fontSize={editorFontSize}
+          />
+          <EditorOptions
+            code={code}
+            language={language}
+            title={state.kind === "ready" ? state.problem.title : null}
+            fontSize={editorFontSize}
+            onFontSizeChange={changeEditorFontSize}
+            onCodeLoaded={(value) => handleCodeChange(value)}
+          />
         </div>
-
-        <RunPanel
-          problemId={problemId}
-          samples={state.kind === "ready" ? state.samples : []}
-          language={language}
-          code={code}
-          open={runOpen}
-          onClose={() => setRunOpen(false)}
-        />
 
         <JudgePanel
           key={activeId ?? "idle"}

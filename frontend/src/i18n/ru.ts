@@ -385,6 +385,21 @@ export const ru = {
   "Submit": "Отправить",
   "Sign in to submit": "Войдите, чтобы отправить",
   "Code editor": "Редактор кода",
+  "Resize panels": "Изменить размер панелей",
+  "Drag to resize": "Перетащите, чтобы изменить размер",
+
+  // Editor options
+  "Editor options": "Настройки редактора",
+  "Font size": "Размер шрифта",
+  "Smaller font": "Уменьшить шрифт",
+  "Larger font": "Увеличить шрифт",
+  "Reset font size": "Сбросить размер шрифта",
+  "Load code…": "Загрузить код…",
+  "Save code": "Сохранить код",
+  "Print code": "Печать кода",
+  "The file is too large.": "Файл слишком большой.",
+  "The file could not be read.": "Не удалось прочитать файл.",
+  "The browser blocked the print window.": "Браузер заблокировал окно печати.",
 
   // Run panel
   "Run": "Запустить",
@@ -392,6 +407,13 @@ export const ru = {
   "Sign in to run": "Войдите, чтобы запустить",
   "Test your code": "Проверьте свой код",
   "Sample tests": "Примеры тестов",
+  "Random": "Случайные",
+  "Custom": "Свой",
+  "Random tests": "Случайные тесты",
+  "Tests": "Тесты",
+  "Runs hidden tests at random. Inputs and expected outputs are not shown.":
+    "Запускает случайные скрытые тесты. Входные данные и ожидаемый вывод не показываются.",
+  "{passed} of {total} hidden tests passed": "Пройдено {passed} из {total} скрытых тестов",
   "Custom input": "Свой ввод",
   "Running…": "Выполняется…",
   "Finished": "Выполнено",
@@ -408,6 +430,9 @@ export const ru = {
   "Type or paste the input your program should read.": "Введите или вставьте данные, которые должна прочитать программа.",
   "Close": "Закрыть",
   "{passed} of {total} samples passed": "Пройдено {passed} из {total} примеров",
+
+  // Test runs
+  "Hidden test data is not shown.": "Скрытые тесты не показываются.",
 
   // Judge panel
   "sending your code…": "отправляем ваш код…",
@@ -599,6 +624,7 @@ export const ru = {
 
 // Messages the server sends in English, by their exact text.
 export const apiMessages: Record<string, string> = {
+  "This problem has no hidden tests yet.": "У этой задачи пока нет скрытых тестов.",
   "Invalid username or password": "Неверный логин или пароль",
   "Too many attempts. Wait a minute and try again.": "Слишком много попыток. Подождите минуту и попробуйте снова.",
   "Too many emails from your network. Try again in an hour.": "С вашей сети отправлено слишком много писем. Попробуйте через час.",
