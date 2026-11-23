@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from .routers import problems, users, testcases, submissions, cpe_papers, mock_exams, problem_help, admin
+from .routers import problems, users, testcases, submissions, cpe_papers, mock_exams, problem_help, admin, runs
 from fastapi.middleware.cors import CORSMiddleware
 from .config import API_DOCS, CORS_ORIGINS
 
@@ -10,6 +10,7 @@ app = FastAPI(
 )
 
 app.include_router(submissions.router)
+app.include_router(runs.router)
 app.include_router(testcases.router)
 app.include_router(problems.router)
 app.include_router(users.router)

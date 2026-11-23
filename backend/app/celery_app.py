@@ -21,5 +21,9 @@ celery_app.conf.update(
             "task": "app.tasks.delete_unverified_accounts",
             "schedule": 3600.0,
         },
+        "delete-old-test-runs": {
+            "task": "app.tasks.delete_old_runs",
+            "schedule": 3600.0,
+        },
     },
 )

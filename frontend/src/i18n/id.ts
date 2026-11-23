@@ -384,6 +384,29 @@ export const id = {
   "Sign in to submit": "Masuk untuk mengirim",
   "Code editor": "Editor kode",
 
+  // Run panel
+  "Run": "Jalankan",
+  "Run code": "Jalankan kode",
+  "Sign in to run": "Masuk untuk menjalankan",
+  "Test your code": "Uji kode Anda",
+  "Sample tests": "Tes contoh",
+  "Custom input": "Input khusus",
+  "Running…": "Menjalankan…",
+  "Finished": "Selesai",
+  "Expected": "Hasil yang diharapkan",
+  "Your output": "Output Anda",
+  "(no output)": "(tidak ada output)",
+  "Run your code to see the result here.": "Jalankan kode Anda untuk melihat hasilnya di sini.",
+  "This problem has no sample tests yet.": "Soal ini belum memiliki tes contoh.",
+  "The judge could not run your code. Try again.": "Sistem penilai tidak dapat menjalankan kode Anda. Coba lagi.",
+  "The judge is taking longer than usual. Your run is still queued.": "Sistem penilai membutuhkan waktu lebih lama dari biasanya. Uji coba Anda masih dalam antrean.",
+  "The code changed. Run it again to test the new code.": "Kode berubah. Jalankan lagi untuk menguji kode baru.",
+  "Custom input must be at most 16 KiB.": "Input khusus maksimal 16 KiB.",
+  "Write some code before running it.": "Tulis kode sebelum menjalankannya.",
+  "Type or paste the input your program should read.": "Ketik atau tempel input yang harus dibaca program Anda.",
+  "Close": "Tutup",
+  "{passed} of {total} samples passed": "{passed} dari {total} tes contoh lulus",
+
   // Judge panel
   "sending your code…": "mengirim kodemu…",
   "Submit your code to see the verdict here.": "Kirim kodemu untuk melihat verdict di sini.",
@@ -607,6 +630,11 @@ export const apiMessages: Record<string, string> = {
   "No such CPE paper": "Tidak ada naskah CPE itu",
   "This CPE paper has no problems yet": "Naskah CPE ini belum punya soal",
   "Hints and solutions are hidden during a Mock CPE.": "Petunjuk dan solusi disembunyikan selama CPE simulasi.",
+  "Too many test runs. Wait for the current one to finish, then try again.": "Terlalu banyak uji coba. Tunggu yang sekarang selesai lalu coba lagi.",
+  "The judge is offline right now. Try again in a minute.": "Sistem penilai sedang offline. Coba lagi dalam satu menit.",
+  "No such test run": "Uji coba tidak ditemukan",
+  "You can only access your own test runs": "Anda hanya dapat mengakses uji coba Anda sendiri",
+  "This problem has no sample tests yet.": "Soal ini belum memiliki tes contoh.",
 };
 
 // Server messages with a number in them.

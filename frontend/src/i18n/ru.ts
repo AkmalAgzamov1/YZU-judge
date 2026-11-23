@@ -386,6 +386,29 @@ export const ru = {
   "Sign in to submit": "Войдите, чтобы отправить",
   "Code editor": "Редактор кода",
 
+  // Run panel
+  "Run": "Запустить",
+  "Run code": "Запустить код",
+  "Sign in to run": "Войдите, чтобы запустить",
+  "Test your code": "Проверьте свой код",
+  "Sample tests": "Примеры тестов",
+  "Custom input": "Свой ввод",
+  "Running…": "Выполняется…",
+  "Finished": "Выполнено",
+  "Expected": "Ожидаемый вывод",
+  "Your output": "Ваш вывод",
+  "(no output)": "(нет вывода)",
+  "Run your code to see the result here.": "Запустите код, чтобы увидеть результат.",
+  "This problem has no sample tests yet.": "У этой задачи пока нет примеров тестов.",
+  "The judge could not run your code. Try again.": "Система не смогла запустить ваш код. Попробуйте ещё раз.",
+  "The judge is taking longer than usual. Your run is still queued.": "Судья работает дольше обычного. Ваш тестовый запуск всё ещё в очереди.",
+  "The code changed. Run it again to test the new code.": "Код изменился. Запустите ещё раз, чтобы проверить новый код.",
+  "Custom input must be at most 16 KiB.": "Свой ввод не должен превышать 16 КиБ.",
+  "Write some code before running it.": "Сначала напишите код.",
+  "Type or paste the input your program should read.": "Введите или вставьте данные, которые должна прочитать программа.",
+  "Close": "Закрыть",
+  "{passed} of {total} samples passed": "Пройдено {passed} из {total} примеров",
+
   // Judge panel
   "sending your code…": "отправляем ваш код…",
   "Submit your code to see the verdict here.": "Отправьте код — здесь появится вердикт.",
@@ -609,6 +632,11 @@ export const apiMessages: Record<string, string> = {
   "No such CPE paper": "Такого варианта CPE нет",
   "This CPE paper has no problems yet": "В этом варианте CPE пока нет задач",
   "Hints and solutions are hidden during a Mock CPE.": "Во время пробного CPE подсказки и решения скрыты.",
+  "Too many test runs. Wait for the current one to finish, then try again.": "Слишком много тестовых запусков. Дождитесь завершения текущего и попробуйте снова.",
+  "The judge is offline right now. Try again in a minute.": "Судья сейчас недоступен. Попробуйте через минуту.",
+  "No such test run": "Тестовый запуск не найден",
+  "You can only access your own test runs": "Вы можете открывать только свои тестовые запуски",
+  "This problem has no sample tests yet.": "У этой задачи пока нет примеров тестов.",
 };
 
 // Server messages with a number in them.

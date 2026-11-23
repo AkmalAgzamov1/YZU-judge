@@ -15,6 +15,7 @@ from app.models.problem import Problem
 from app.models.testcase import TestCase
 from app.models.submission import Submission
 from app.models.submission_result import SubmissionResult
+from app.models.run import Run
 from app.models.cpe_paper import CpePaper, CpePaperProblem
 from app.models.mock_exam import MockExam
 from app.models.hint_reveal import HintReveal

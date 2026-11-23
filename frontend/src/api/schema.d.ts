@@ -56,6 +56,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/runs/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Run */
+        post: operations["create_run_runs__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/runs/{run_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Run */
+        get: operations["get_run_runs__run_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/problems/{problem_id}/testcases": {
         parameters: {
             query?: never;
@@ -378,7 +412,9 @@ export interface paths {
         put?: never;
         /**
          * Refresh Token
-         * @description Trades a still valid token for a fresh one, so active users are never signed out.
+         * @description Trades a still valid token for a fresh one, up to MAX_SESSION_DAYS after the last sign in.
+         *
+         *     Tokens from before auth_time existed have none, so they start a new window here.
          */
         post: operations["refresh_token_users_refresh_post"];
         delete?: never;
@@ -969,6 +1005,89 @@ export interface components {
             /** Password */
             password: string;
         };
+        /** RunCaseOut */
+        RunCaseOut: {
+            /** Index */
+            index: number;
+            /** Input */
+            input?: string | null;
+            /** Expected Output */
+            expected_output?: string | null;
+            /**
+             * Stdout
+             * @default
+             */
+            stdout: string;
+            /**
+             * Stderr
+             * @default
+             */
+            stderr: string;
+            /** Exit Code */
+            exit_code?: number | null;
+            /**
+             * Verdict
+             * @enum {string}
+             */
+            verdict: "accepted" | "wrong_answer" | "presentation_error" | "time_limit_exceeded" | "memory_limit_exceeded" | "output_limit_exceeded" | "runtime_error" | "compilation_error";
+            /** Time Taken Ms */
+            time_taken_ms: number;
+            /** Memory Used Mb */
+            memory_used_mb?: number | null;
+        };
+        /** RunCreate */
+        RunCreate: {
+            /** Problem Id */
+            problem_id: number;
+            /**
+             * Language
+             * @enum {string}
+             */
+            language: "python" | "c_gcc" | "c_msvc" | "java8" | "java11";
+            /**
+             * Mode
+             * @default samples
+             * @enum {string}
+             */
+            mode: "samples" | "custom";
+            /** Code */
+            code: string;
+            /** Custom Input */
+            custom_input?: string | null;
+        };
+        /** RunOut */
+        RunOut: {
+            /** Id */
+            id: number;
+            /** Problem Id */
+            problem_id: number;
+            /**
+             * Language
+             * @enum {string}
+             */
+            language: "python" | "c_gcc" | "c_msvc" | "java8" | "java11";
+            /**
+             * Mode
+             * @enum {string}
+             */
+            mode: "samples" | "custom";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "pending" | "running" | "finished" | "error";
+            /** Verdict */
+            verdict?: ("accepted" | "wrong_answer" | "presentation_error" | "time_limit_exceeded" | "memory_limit_exceeded" | "output_limit_exceeded" | "runtime_error" | "compilation_error") | null;
+            /** Compile Output */
+            compile_output?: string | null;
+            /** Results */
+            results?: components["schemas"]["RunCaseOut"][] | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
         /** SampleOut */
         SampleOut: {
             /** Order */
@@ -1305,6 +1424,70 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SubmissionOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_run_runs__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RunCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RunOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_run_runs__run_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                run_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RunOut"];
                 };
             };
             /** @description Validation Error */

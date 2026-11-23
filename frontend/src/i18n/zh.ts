@@ -384,6 +384,29 @@ export const zh = {
   "Sign in to submit": "登入後提交",
   "Code editor": "程式碼編輯器",
 
+  // Run panel
+  "Run": "執行",
+  "Run code": "執行程式碼",
+  "Sign in to run": "登入後執行",
+  "Test your code": "測試你的程式碼",
+  "Sample tests": "範例測資",
+  "Custom input": "自訂輸入",
+  "Running…": "執行中…",
+  "Finished": "執行完成",
+  "Expected": "預期輸出",
+  "Your output": "你的輸出",
+  "(no output)": "（沒有輸出）",
+  "Run your code to see the result here.": "執行你的程式碼後，結果會顯示在這裡。",
+  "This problem has no sample tests yet.": "這題還沒有範例測資。",
+  "The judge could not run your code. Try again.": "評測系統無法執行你的程式碼，請再試一次。",
+  "The judge is taking longer than usual. Your run is still queued.": "評測系統處理時間比平常久，你的測試執行仍在佇列中。",
+  "The code changed. Run it again to test the new code.": "程式碼已變更，請重新執行以測試新的程式碼。",
+  "Custom input must be at most 16 KiB.": "自訂輸入最多 16 KiB。",
+  "Write some code before running it.": "請先寫一些程式再執行。",
+  "Type or paste the input your program should read.": "輸入或貼上程式要讀取的內容。",
+  "Close": "關閉",
+  "{passed} of {total} samples passed": "範例通過 {passed} / {total}",
+
   // Judge panel
   "sending your code…": "正在送出程式碼…",
   "Submit your code to see the verdict here.": "提交程式碼後，評測結果會顯示在這裡。",
@@ -607,6 +630,11 @@ export const apiMessages: Record<string, string> = {
   "No such CPE paper": "找不到這份 CPE 試卷",
   "This CPE paper has no problems yet": "這份 CPE 試卷還沒有題目",
   "Hints and solutions are hidden during a Mock CPE.": "模擬 CPE 進行中不顯示提示與解答。",
+  "Too many test runs. Wait for the current one to finish, then try again.": "測試執行次數太多，請等目前的執行結束後再試。",
+  "The judge is offline right now. Try again in a minute.": "評測系統目前離線，請一分鐘後再試。",
+  "No such test run": "找不到這次測試執行",
+  "You can only access your own test runs": "你只能存取自己的測試執行",
+  "This problem has no sample tests yet.": "這題還沒有範例測資。",
 };
 
 // Server messages with a number in them.

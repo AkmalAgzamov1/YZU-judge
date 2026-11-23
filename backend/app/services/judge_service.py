@@ -26,6 +26,28 @@ def load_testcases(db: Session, problem_id: int):
     ]
 
 
+def load_sample_testcases(db: Session, problem_id: int, limit: int | None = None):
+    """Only the visible samples, for a test run. Never touches hidden test files."""
+
+    query = (
+        db.query(TestCase)
+        .filter(TestCase.problem_id == problem_id, TestCase.is_sample.is_(True))
+        .order_by(TestCase.sample_order.nulls_last(), TestCase.id)
+    )
+
+    if limit is not None:
+        query = query.limit(limit)
+
+    return [
+        {
+            "id": testcase.id,
+            "input": read_file(testcase.input_path),
+            "output": read_file(testcase.output_path),
+        }
+        for testcase in query.all()
+    ]
+
+
 def _normalize_newlines(text):
     return text.replace("\r\n", "\n")
 
@@ -94,6 +116,11 @@ def judge_code(
 
     elif result["exit_code"] != 0:
         verdict = "runtime_error"
+
+    elif expected_output is None:
+        # A custom input has no expected output: producing output and exiting
+        # cleanly is all there is to check.
+        verdict = "accepted"
 
     else:
         verdict = compare_output(result["stdout"], expected_output, strict_output)
@@ -167,6 +194,63 @@ def judge_submission(
             missing_final_newline(result["stdout"]) for result in results
         ),
     }
+
+
+def run_tests(
+    run_code,
+    code,
+    testcases,
+    time_limit_ms,
+    memory_limit_mb,
+    language="python",
+    compile_code=None,
+    strict_output=True,
+):
+    """Runs every case and keeps going after a failure, unlike judge_submission.
+
+    A test run shows the student all the sample results at once. The overall
+    verdict is the first failed case's verdict, or accepted when all pass.
+    """
+
+    if not testcases:
+        raise ValueError("Cannot run a test without testcases")
+
+    run_options = {}
+    if needs_compilation(language):
+        if compile_code is None:
+            raise ValueError(f"{language} needs compile_code")
+
+        compiled = compile_code(language, code)
+        if not compiled["ok"]:
+            return {
+                "verdict": "compilation_error",
+                "results": [],
+                "compile_output": compiled["output"],
+            }
+
+        run_options = {"language": language, "binary": compiled["binary"]}
+
+    results = []
+    verdict = "accepted"
+
+    for testcase in testcases:
+        result = judge_code(
+            run_code=run_code,
+            code=code,
+            input_data=testcase["input"],
+            expected_output=testcase["output"],
+            time_limit_ms=time_limit_ms,
+            memory_limit_mb=memory_limit_mb,
+            strict_output=strict_output,
+            **run_options,
+        )
+        result["testcase_id"] = testcase["id"]
+        results.append(result)
+
+        if verdict == "accepted" and result["verdict"] != "accepted":
+            verdict = result["verdict"]
+
+    return {"verdict": verdict, "results": results}
 
 
 def missing_final_newline(output):

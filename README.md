@@ -38,6 +38,7 @@ I started on September 19, 2026, and I wanted to really understand every layer, 
 - **Practice problems.** 299 problems from past CPE exams, sorted from easy to hard. You can filter by difficulty and by topic (math, strings, dp, graphs, and so on).
 - **Read the statement your way.** Every problem has a short summary written for this site, plus a button that opens the official CPE PDF.
 - **Submit in the same languages as the real CPE exam:** Python 3.9.6, C/C++ (MinGW GCC 6.3.0 or MSVC v140), and Java (AdoptOpenJDK 8 or 11). You see the verdict for each test: Accepted, Wrong Answer, Time Limit, Memory Limit, Runtime Error or Compilation Error.
+- **Try code before you submit.** The Run button tests your solution against the visible samples, or against any input you type. It runs in the same sandbox as the real judge, shows your output next to the expected one, and never creates a submission or uses an attempt.
 - **Take a Mock CPE.** 38 real past exams, 3 hours each, with a timer and your results at the end. Topics and tags are hidden during the exam, so you have to figure out the approach yourself, just like in the real one.
 - **Track your progress.** Your account page shows what you solved and your recent activity.
 - **Avoid spoilers.** Topics are hidden behind a "Show topics" button, because sometimes knowing it's a DP problem is half the answer.

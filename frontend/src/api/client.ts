@@ -27,6 +27,12 @@ type SubmissionCreate = components["schemas"]["SubmissionCreate"];
 
 type SubmissionResult = components["schemas"]["SubmissionResultOut"];
 
+type Run = components["schemas"]["RunOut"];
+
+type RunCase = components["schemas"]["RunCaseOut"];
+
+type RunCreate = components["schemas"]["RunCreate"];
+
 type Sample = components["schemas"]["SampleOut"];
 
 type ProblemHelp = components["schemas"]["ProblemHelpOut"];
@@ -249,6 +255,20 @@ export const cpePapersApi = {
   },
 };
 
+// Throwaway test runs from the editor: sample tests or one custom input.
+export const runsApi = {
+  create(data: RunCreate): Promise<Run> {
+    return request<Run>("/runs/", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  },
+
+  get(id: number): Promise<Run> {
+    return request<Run>(`/runs/${id}`);
+  },
+};
+
 export const mockExamsApi = {
   start(paperId: number): Promise<MockExam> {
     return request<MockExam>("/mock-exams/", {
@@ -364,6 +384,9 @@ export type {
   LoginResponse,
   Problem,
   ProblemHelp,
+  Run,
+  RunCase,
+  RunCreate,
   Sample,
   Submission,
   SubmissionResult,

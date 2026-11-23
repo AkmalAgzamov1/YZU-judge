@@ -1,0 +1,126 @@
+"""Test runs (the editor's Run button) with a fake sandbox, no Docker needed."""
+
+import unittest
+
+from app.services.judge_service import run_tests
+
+SAMPLES = [
+    {"id": 1, "input": "1 2\n", "output": "3\n"},
+    {"id": 2, "input": "5 5\n", "output": "10\n"},
+]
+
+
+def fake_runner(outputs, calls):
+    def run_code(code, input_data, time_limit_ms, memory_limit_mb, **options):
+        calls.append(input_data)
+        return {
+            "stdout": outputs[len(calls) - 1],
+            "stderr": "",
+            "exit_code": 0,
+            "timed_out": False,
+            "is_oom": False,
+            "time_taken_ms": 5,
+            "memory_used_mb": 4,
+        }
+
+    return run_code
+
+
+class RunTestsTests(unittest.TestCase):
+    def test_all_samples_pass(self):
+        calls = []
+        result = run_tests(fake_runner(["3\n", "10\n"], calls), "code", SAMPLES, 1000, 64)
+        self.assertEqual(result["verdict"], "accepted")
+        self.assertEqual(len(result["results"]), 2)
+        self.assertEqual(calls, ["1 2\n", "5 5\n"])
+
+    def test_keeps_going_after_a_wrong_answer(self):
+        calls = []
+        result = run_tests(fake_runner(["4\n", "10\n"], calls), "code", SAMPLES, 1000, 64)
+        self.assertEqual(result["verdict"], "wrong_answer")
+        self.assertEqual(len(result["results"]), 2)
+        self.assertEqual(result["results"][0]["verdict"], "wrong_answer")
+        self.assertEqual(result["results"][1]["verdict"], "accepted")
+        # Both samples ran; unlike a submission, a test run shows every result.
+        self.assertEqual(len(calls), 2)
+
+    def test_custom_input_without_expected_output_is_accepted(self):
+        result = run_tests(
+            fake_runner(["anything\n"], []),
+            "code",
+            [{"id": None, "input": "hello\n", "output": None}],
+            1000,
+            64,
+        )
+        self.assertEqual(result["verdict"], "accepted")
+        self.assertEqual(result["results"][0]["stdout"], "anything\n")
+
+    def test_nonzero_exit_is_a_runtime_error_even_without_expected_output(self):
+        def run_code(code, input_data, time_limit_ms, memory_limit_mb, **options):
+            return {
+                "stdout": "",
+                "stderr": "Traceback...",
+                "exit_code": 1,
+                "timed_out": False,
+                "is_oom": False,
+                "time_taken_ms": 5,
+                "memory_used_mb": 4,
+            }
+
+        result = run_tests(
+            run_code,
+            "code",
+            [{"id": None, "input": "", "output": None}],
+            1000,
+            64,
+        )
+        self.assertEqual(result["verdict"], "runtime_error")
+
+    def test_compilation_error_stops_before_running(self):
+        calls = []
+
+        def compile_code(language, code):
+            return {"ok": False, "output": "expected ';'", "binary": None}
+
+        result = run_tests(
+            fake_runner([], calls),
+            "code",
+            SAMPLES,
+            1000,
+            64,
+            language="c_gcc",
+            compile_code=compile_code,
+        )
+        self.assertEqual(result["verdict"], "compilation_error")
+        self.assertEqual(result["compile_output"], "expected ';'")
+        self.assertEqual(result["results"], [])
+        self.assertEqual(calls, [])
+
+    def test_compiled_language_compiles_once(self):
+        calls = []
+        compiles = []
+
+        def compile_code(language, code):
+            compiles.append(language)
+            return {"ok": True, "output": "", "binary": b"binary"}
+
+        result = run_tests(
+            fake_runner(["3\n", "10\n"], calls),
+            "code",
+            SAMPLES,
+            1000,
+            64,
+            language="c_gcc",
+            compile_code=compile_code,
+        )
+        self.assertEqual(result["verdict"], "accepted")
+        self.assertEqual(compiles, ["c_gcc"])
+        self.assertEqual(len(calls), 2)
+
+    def test_without_testcases_raises(self):
+        with self.assertRaises(ValueError):
+            run_tests(fake_runner([], []), "code", [], 1000, 64)
+
+
+if __name__ == "__main__":
+    unittest.main()

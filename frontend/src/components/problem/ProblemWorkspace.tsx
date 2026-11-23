@@ -1,4 +1,4 @@
-import { Lightbulb, PaperPlaneRight } from "@phosphor-icons/react";
+import { Lightbulb, PaperPlaneRight, Play } from "@phosphor-icons/react";
 import { useCallback, useEffect, useState, type ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -29,6 +29,7 @@ import { buttonPrimary, buttonSecondary, focusRing } from "../ui";
 import CodeEditor from "./CodeEditor";
 import JudgePanel from "./JudgePanel";
 import ProblemHelp from "./ProblemHelp";
+import RunPanel from "./RunPanel";
 import Samples from "./Samples";
 import Statement from "./Statement";
 import SubmissionHistory from "./SubmissionHistory";
@@ -101,9 +102,23 @@ export default function ProblemWorkspace({
 
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  // The Run panel stays mounted so a custom input and its result survive closing it.
+  const [runOpen, setRunOpen] = useState(false);
   const [activeId, setActiveId] = useState<number | null>(null);
   const [history, setHistory] = useState<Submission[]>([]);
   const [historyVersion, setHistoryVersion] = useState(0);
+
+  // The panel sits below the editor; bring it into view when it opens, otherwise
+  // on a laptop it would appear entirely below the fold.
+  useEffect(() => {
+    if (!runOpen) return;
+
+    const timer = window.setTimeout(() => {
+      document.getElementById("run-panel")?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    }, 0);
+
+    return () => window.clearTimeout(timer);
+  }, [runOpen]);
 
   useEffect(() => {
     let cancelled = false;
@@ -201,6 +216,14 @@ export default function ProblemWorkspace({
     } finally {
       setSubmitting(false);
     }
+  }
+
+  function openRunPanel() {
+    if (!user) {
+      navigate("/login", { state: { from: location } });
+      return;
+    }
+    setRunOpen((open) => !open);
   }
 
   const handleFinished = useCallback(() => {
@@ -344,7 +367,7 @@ export default function ProblemWorkspace({
         aria-label={t("Code")}
         className={`${tab === "code" ? "flex" : "hidden"} flex-col gap-4 py-8 lg:flex lg:overflow-y-auto lg:pl-8`}
       >
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <LanguageSelect
             value={language}
             onChange={(id) => switchLanguage(id as Language)}
@@ -353,15 +376,37 @@ export default function ProblemWorkspace({
             className="min-w-0 max-w-xs flex-1 lg:flex-none lg:w-64"
           />
 
-          <button type="button" onClick={submit} disabled={submitting} className={buttonPrimary}>
-            {user ? (submitting ? t("Sending…") : t("Submit")) : t("Sign in to submit")}
-            {user && <PaperPlaneRight size={16} weight="bold" aria-hidden="true" />}
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={openRunPanel}
+              aria-expanded={runOpen}
+              aria-controls="run-panel"
+              className={buttonSecondary}
+            >
+              <Play size={16} weight="fill" aria-hidden="true" />
+              {user ? t("Run") : t("Sign in to run")}
+            </button>
+
+            <button type="button" onClick={submit} disabled={submitting} className={buttonPrimary}>
+              {user ? (submitting ? t("Sending…") : t("Submit")) : t("Sign in to submit")}
+              {user && <PaperPlaneRight size={16} weight="bold" aria-hidden="true" />}
+            </button>
+          </div>
         </div>
 
         <div className="h-96 overflow-hidden rounded-lg border border-white/10 lg:h-auto lg:min-h-80 lg:flex-1">
           <CodeEditor value={code} onChange={(value) => handleCodeChange(value)} onSubmit={submit} language={language} />
         </div>
+
+        <RunPanel
+          problemId={problemId}
+          samples={state.kind === "ready" ? state.samples : []}
+          language={language}
+          code={code}
+          open={runOpen}
+          onClose={() => setRunOpen(false)}
+        />
 
         <JudgePanel
           key={activeId ?? "idle"}
