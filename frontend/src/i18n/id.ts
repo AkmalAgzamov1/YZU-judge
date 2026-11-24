@@ -462,6 +462,9 @@ export const id = {
   // Exam simulation
   "Simulation mode": "Mode simulasi",
   "Exit simulation": "Keluar dari simulasi",
+  "Replace your code?": "Ganti kode Anda?",
+  "Your code for this problem will be replaced with the starter code.": "Kode Anda untuk soal ini akan diganti dengan kode awal.",
+  "Replace": "Ganti",
   "Open the full-screen exam simulation": "Buka simulasi ujian layar penuh",
   "Fullscreen": "Layar penuh",
   "Exit fullscreen": "Keluar dari layar penuh",

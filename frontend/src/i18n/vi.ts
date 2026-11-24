@@ -462,6 +462,9 @@ export const vi = {
   // Exam simulation
   "Simulation mode": "Chế độ mô phỏng",
   "Exit simulation": "Thoát mô phỏng",
+  "Replace your code?": "Thay thế mã của bạn?",
+  "Your code for this problem will be replaced with the starter code.": "Mã của bạn cho bài này sẽ được thay bằng mã khởi đầu.",
+  "Replace": "Thay thế",
   "Open the full-screen exam simulation": "Mở bài thi mô phỏng toàn màn hình",
   "Fullscreen": "Toàn màn hình",
   "Exit fullscreen": "Thoát toàn màn hình",

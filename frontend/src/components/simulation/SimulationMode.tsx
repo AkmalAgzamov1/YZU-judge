@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import { useEffect, useId, useRef, useState, type ChangeEvent } from "react";
 import { createPortal } from "react-dom";
 import {
   ApiError,
@@ -174,22 +174,27 @@ function IdentityPanel({ exam, solved }: { exam: SimulationExamInfo; solved: num
   );
 }
 
-function FinishDialog({
+function ConfirmModal({
   open,
-  left,
-  busy,
-  error,
+  title,
+  text,
+  confirmLabel,
+  busy = false,
+  error = null,
   onCancel,
   onConfirm,
 }: {
   open: boolean;
-  left: number;
-  busy: boolean;
-  error: string | null;
+  title: string;
+  text: string;
+  confirmLabel: string;
+  busy?: boolean;
+  error?: string | null;
   onCancel: () => void;
   onConfirm: () => void;
 }) {
   const { t } = useI18n();
+  const titleId = useId();
   const cancelRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -205,17 +210,12 @@ function FinishDialog({
         if (event.target === event.currentTarget && !busy) onCancel();
       }}
     >
-      <div className="sim-modal" role="dialog" aria-modal="true" aria-labelledby="sim-finish-title">
-        <div className="sim-modal-title" id="sim-finish-title">
-          {t("Finish the exam now?")}
+      <div className="sim-modal" role="dialog" aria-modal="true" aria-labelledby={titleId}>
+        <div className="sim-modal-title" id={titleId}>
+          {title}
         </div>
         <div className="sim-modal-body">
-          <p>
-            {t(
-              "You still have {clock}. Submissions still in the queue will count. You cannot submit after finishing.",
-              { clock: formatChineseClock(left) },
-            )}
-          </p>
+          <p>{text}</p>
           {error && <p className="sim-modal-error">{error}</p>}
         </div>
         <div className="sim-modal-actions">
@@ -223,7 +223,7 @@ function FinishDialog({
             {t("Cancel")}
           </button>
           <button type="button" className="sim-win-btn sim-win-default" onClick={onConfirm} disabled={busy}>
-            {busy ? t("One moment…") : t("Finish exam")}
+            {busy ? t("One moment…") : confirmLabel}
           </button>
         </div>
       </div>
@@ -275,6 +275,7 @@ export default function SimulationMode({
   const [finishOpen, setFinishOpen] = useState(false);
   const [finishing, setFinishing] = useState(false);
   const [finishError, setFinishError] = useState<string | null>(null);
+  const [replaceOpen, setReplaceOpen] = useState(false);
 
   const [scale, setScale] = useState(1);
   const [fullscreen, setFullscreen] = useState(false);
@@ -295,6 +296,7 @@ export default function SimulationMode({
     printCode: () => void;
     resetCodeFont: () => void;
     changeCodeFont: (delta: number) => void;
+    focusPane: (pane: "problem" | "results" | "output", tab?: OutputTab) => void;
   }>({
     pasteOriginal: () => {},
     pasteExample: () => {},
@@ -302,6 +304,7 @@ export default function SimulationMode({
     printCode: () => {},
     resetCodeFont: () => {},
     changeCodeFont: () => {},
+    focusPane: () => {},
   });
 
   useDocumentTitle(load.kind === "ready" ? `${load.problem.title} · YZU Judge` : null);
@@ -685,11 +688,16 @@ export default function SimulationMode({
     setCodeFontSize(16.2);
   }
 
+  function replaceWithStarter() {
+    setReplaceOpen(false);
+    handleCodeChange(STARTER_CODE[language]);
+  }
+
+  // Ctrl+O is easy to hit by accident, so the student's own code is never replaced unasked.
   function pasteOriginal() {
     setMenu(null);
-    const starter = STARTER_CODE[language];
-    setCode(starter);
-    saveDraft(problemId, starter, scope, language);
+    if (!code.trim() || code === STARTER_CODE[language]) replaceWithStarter();
+    else setReplaceOpen(true);
   }
 
   function pasteExample() {
@@ -798,12 +806,42 @@ export default function SimulationMode({
   });
 
   useEffect(() => {
-    shortcutsRef.current = { pasteOriginal, pasteExample, saveFile, printCode, resetCodeFont, changeCodeFont };
+    shortcutsRef.current = {
+      pasteOriginal,
+      pasteExample,
+      saveFile,
+      printCode,
+      resetCodeFont,
+      changeCodeFont,
+      focusPane,
+    };
   });
+
+  // In the real exam Ctrl+W loads a file; here it closes the tab, and a page cannot take that
+  // key over. Ask first while the clock runs.
+  const guardTab = exam != null && !timeUp;
+
+  useEffect(() => {
+    if (!guardTab) return;
+
+    function askBeforeLeaving(event: BeforeUnloadEvent) {
+      event.preventDefault();
+    }
+
+    window.addEventListener("beforeunload", askBeforeLeaving);
+    return () => window.removeEventListener("beforeunload", askBeforeLeaving);
+  }, [guardTab]);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
+        // The editor already used this Escape (to close its autocomplete or search),
+        // or it cancels Chinese input; neither should close the exam window.
+        if (event.defaultPrevented || event.isComposing) return;
+        if (replaceOpen) {
+          setReplaceOpen(false);
+          return;
+        }
         if (finishOpen) {
           if (!finishing) setFinishOpen(false);
           return;
@@ -820,7 +858,11 @@ export default function SimulationMode({
         // left fullscreen, do not close the simulation as well.
         if (Date.now() - lastFullscreenExit.current < 500) return;
         onExit();
+        return;
       }
+
+      // Nothing behind an open dialog may react, least of all Submit.
+      if (replaceOpen || finishOpen) return;
 
       if (event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
         event.preventDefault();
@@ -844,6 +886,15 @@ export default function SimulationMode({
         } else if (key === "p") {
           event.preventDefault();
           shortcuts.printCode();
+        } else if (key === "b" || key === "j") {
+          event.preventDefault();
+          shortcuts.focusPane("output", "actual");
+        } else if (key === "k") {
+          event.preventDefault();
+          shortcuts.focusPane("output", "expected");
+        } else if (key === "g") {
+          event.preventDefault();
+          shortcuts.focusPane("results");
         } else if (key === "0") {
           event.preventDefault();
           shortcuts.resetCodeFont();
@@ -859,7 +910,7 @@ export default function SimulationMode({
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [finishOpen, finishing, menu, onExit]);
+  }, [finishOpen, finishing, replaceOpen, menu, onExit]);
 
   const buttonClass = (name: Menu) => `sim-menu ${name === "grade" ? "sim-menu-hot" : ""} ${menu === name ? "is-open" : ""}`;
 
@@ -997,7 +1048,6 @@ export default function SimulationMode({
                     }}
                   >
                     <span>提檔複答(W)(Load File)</span>
-                    <kbd>Ctrl+W</kbd>
                   </button>
                   <button type="button" role="menuitem" className="sim-dd-item" onClick={saveFile}>
                     <span>封卷存檔(S)(Save File)</span>
@@ -1005,7 +1055,6 @@ export default function SimulationMode({
                   </button>
                   <button type="button" role="menuitem" className="sim-dd-item" onClick={saveFileAs}>
                     <span>另存新檔(A)(Save As)</span>
-                    <kbd>Ctrl+N</kbd>
                   </button>
                   <button type="button" role="menuitem" className="sim-dd-item" onClick={loadServerFile}>
                     提取網路存檔(Load Server File)
@@ -1096,7 +1145,6 @@ export default function SimulationMode({
                   </button>
                   <button type="button" role="menuitem" className="sim-dd-item" onClick={() => focusPane("problem")}>
                     <span>顯示題目(P)(Show Problem Window)</span>
-                    <kbd>Ctrl+P</kbd>
                   </button>
                   <button
                     type="button"
@@ -1114,7 +1162,6 @@ export default function SimulationMode({
                     onClick={() => focusPane("output", "expected")}
                   >
                     <span>標準小黑(T)(Show Cmd Window)</span>
-                    <kbd>Ctrl+T</kbd>
                   </button>
                   <button type="button" role="menuitem" className="sim-dd-item" onClick={() => focusPane("results")}>
                     <span>顯示結果(G)(Show Result Window)</span>
@@ -1635,15 +1682,29 @@ export default function SimulationMode({
         onChange={(event) => void handleFilePicked(event)}
       />
 
-      <FinishDialog
+      <ConfirmModal
         open={finishOpen}
-        left={left}
+        title={t("Finish the exam now?")}
+        text={t(
+          "You still have {clock}. Submissions still in the queue will count. You cannot submit after finishing.",
+          { clock: formatChineseClock(left) },
+        )}
+        confirmLabel={t("Finish exam")}
         busy={finishing}
         error={finishError}
         onCancel={() => {
           if (!finishing) setFinishOpen(false);
         }}
         onConfirm={() => void finishExam()}
+      />
+
+      <ConfirmModal
+        open={replaceOpen}
+        title={t("Replace your code?")}
+        text={t("Your code for this problem will be replaced with the starter code.")}
+        confirmLabel={t("Replace")}
+        onCancel={() => setReplaceOpen(false)}
+        onConfirm={replaceWithStarter}
       />
     </div>,
     document.body,

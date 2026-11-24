@@ -462,6 +462,9 @@ export const zh = {
   // Exam simulation
   "Simulation mode": "模擬模式",
   "Exit simulation": "離開模擬",
+  "Replace your code?": "要取代你的程式碼嗎？",
+  "Your code for this problem will be replaced with the starter code.": "這題目前的程式碼會被預設程式碼取代。",
+  "Replace": "取代",
   "Open the full-screen exam simulation": "開啟全螢幕模擬考試",
   "Fullscreen": "全螢幕",
   "Exit fullscreen": "離開全螢幕",

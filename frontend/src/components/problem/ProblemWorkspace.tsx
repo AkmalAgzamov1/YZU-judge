@@ -496,10 +496,11 @@ export default function ProblemWorkspace({
 
           <div className="flex items-center gap-2">
             {onEnterSimulation && (
+              // The exam window is a fixed 1280 x 800 canvas, unreadable on a phone.
               <button
                 type="button"
                 onClick={openSimulation}
-                className={buttonSecondary}
+                className={`${buttonSecondary} max-lg:hidden`}
                 title={t("Open the full-screen exam simulation")}
               >
                 <Monitor size={16} aria-hidden="true" />
