@@ -19,8 +19,8 @@ from .mock_exams import utc_now
 logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/runs", tags=["Runs"])
 
-# Runs share one judge worker with submissions. Keep one student from filling it.
-MAX_ACTIVE_RUNS = 2
+# Runs share the judge's two slots with submissions, so one student gets one slot at most.
+MAX_ACTIVE_RUNS = 1
 MAX_RUNS_PER_MINUTE = 12
 
 

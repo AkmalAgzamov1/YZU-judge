@@ -46,6 +46,26 @@ class RunTestsTests(unittest.TestCase):
         # Both samples ran; unlike a submission, a test run shows every result.
         self.assertEqual(len(calls), 2)
 
+    def test_stops_after_a_time_limit(self):
+        calls = []
+
+        def run_code(code, input_data, time_limit_ms, memory_limit_mb, **options):
+            calls.append(input_data)
+            return {
+                "stdout": "",
+                "stderr": "",
+                "exit_code": None,
+                "timed_out": True,
+                "is_oom": False,
+                "time_taken_ms": 1000,
+                "memory_used_mb": 4,
+            }
+
+        result = run_tests(run_code, "code", SAMPLES, 1000, 64)
+        self.assertEqual(result["verdict"], "time_limit_exceeded")
+        self.assertEqual(len(result["results"]), 1)
+        self.assertEqual(len(calls), 1)
+
     def test_custom_input_without_expected_output_is_accepted(self):
         result = run_tests(
             fake_runner(["anything\n"], []),

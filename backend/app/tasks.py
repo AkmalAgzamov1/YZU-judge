@@ -215,7 +215,9 @@ def _clip_case_text(text):
     return text[:RUN_CASE_OUTPUT_LIMIT] + "\n... (truncated)"
 
 
-@celery_app.task(ignore_result=True)
+# On Redis 0 is the most urgent priority (the default, so submissions) and 9 the least:
+# a waiting submission is always picked before a waiting test run.
+@celery_app.task(ignore_result=True, priority=9)
 def run_code_task(run_id):
     """Runs a student's code once against samples, hidden tests or a custom input.
 

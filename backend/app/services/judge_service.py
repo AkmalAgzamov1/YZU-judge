@@ -240,6 +240,9 @@ def run_tests(
 
     A test run shows the student all the sample results at once. The overall
     verdict is the first failed case's verdict, or accepted when all pass.
+
+    A time limit is the exception: the remaining cases would most likely hang too,
+    each holding a judge slot for the whole limit, so the run stops there.
     """
 
     if not testcases:
@@ -279,6 +282,9 @@ def run_tests(
 
         if verdict == "accepted" and result["verdict"] != "accepted":
             verdict = result["verdict"]
+
+        if result["verdict"] == "time_limit_exceeded":
+            break
 
     return {"verdict": verdict, "results": results}
 
