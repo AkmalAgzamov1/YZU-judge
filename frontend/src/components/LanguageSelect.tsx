@@ -1,5 +1,5 @@
 import { CaretDown, Check } from "@phosphor-icons/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { focusRing } from "./ui";
 
 // One entry in a language dropdown. `note` is the smaller trailing text, e.g. the
@@ -8,6 +8,8 @@ export interface SelectOption {
   id: string;
   label: string;
   note?: string;
+  // What a compact trigger shows instead of the label, e.g. "EN" for "English".
+  short?: string;
 }
 
 interface LanguageSelectProps {
@@ -17,12 +19,28 @@ interface LanguageSelectProps {
   // Accessible name for the whole control, e.g. translated "Language".
   label: string;
   className?: string;
+  // A small icon button (icon + short label) instead of a full width field, for the nav bar.
+  compact?: boolean;
+  icon?: ReactNode;
+  // Which edge the popup lines up with; a control near the right edge opens leftwards.
+  align?: "left" | "right";
 }
 
 // A dropdown picker instead of a row of buttons, so the list stays readable when more
 // languages (or more toolchains) are added. Built on the listbox pattern: Arrow keys
 // move, Enter or Space chooses, Escape closes, and clicking away closes too.
-export default function LanguageSelect({ value, onChange, options, label, className = "" }: LanguageSelectProps) {
+export default function LanguageSelect({
+  value,
+  onChange,
+  options,
+  label,
+  className = "",
+  compact = false,
+  icon,
+  align = "left",
+}: LanguageSelectProps) {
+  // Two pickers can be on one page (the nav and the editor), so the list id must be unique.
+  const listId = useId();
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
 
@@ -133,26 +151,41 @@ export default function LanguageSelect({ value, onChange, options, label, classN
         type="button"
         aria-haspopup="listbox"
         aria-expanded={open}
-        aria-controls="language-select-list"
+        aria-controls={listId}
         aria-label={label}
         onClick={() => (open ? closeList(false) : openList())}
         onKeyDown={onTriggerKeyDown}
-        className={`inline-flex w-full min-w-40 items-center justify-between gap-3 rounded-lg border border-white/10 bg-ink-1 px-3 py-2 text-left text-sm font-medium text-white transition duration-300 ease-soft hover:bg-ink-2 ${focusRing}`}
+        className={
+          compact
+            ? `inline-flex h-10 items-center gap-2 rounded-lg px-3 text-sm font-semibold transition duration-300 ease-soft active:scale-[0.98] ${
+                open ? "bg-white/10 text-white" : "text-neutral-400 hover:bg-white/10 hover:text-white"
+              } ${focusRing}`
+            : `inline-flex w-full min-w-40 items-center justify-between gap-3 rounded-lg border border-white/10 bg-ink-1 px-3 py-2 text-left text-sm font-medium text-white transition duration-300 ease-soft hover:bg-ink-2 ${focusRing}`
+        }
       >
-        <span className="min-w-0">
-          {selected?.label}
-          {selected?.note && <span className="text-neutral-500"> {selected.note}</span>}
-        </span>
-        <CaretDown size={16} weight="bold" aria-hidden="true" className={`shrink-0 transition duration-300 ${open ? "rotate-180" : ""}`} />
+        {compact ? (
+          <>
+            {icon}
+            <span>{selected?.short ?? selected?.label}</span>
+          </>
+        ) : (
+          <>
+            <span className="min-w-0">
+              {selected?.label}
+              {selected?.note && <span className="text-neutral-500"> {selected.note}</span>}
+            </span>
+            <CaretDown size={16} weight="bold" aria-hidden="true" className={`shrink-0 transition duration-300 ${open ? "rotate-180" : ""}`} />
+          </>
+        )}
       </button>
 
       {open && (
         <ul
           ref={listRef}
-          id="language-select-list"
+          id={listId}
           role="listbox"
           aria-label={label}
-          className="absolute left-0 z-30 mt-2 max-h-72 min-w-full overflow-y-auto rounded-lg border border-white/10 bg-ink-2 p-1 shadow-2xl"
+          className={`absolute ${align === "right" ? "right-0" : "left-0"} z-30 mt-2 max-h-72 min-w-full overflow-y-auto rounded-lg border border-white/10 bg-ink-2 p-1 shadow-2xl`}
         >
           {options.map((option, index) => {
             const isSelected = option.id === value;

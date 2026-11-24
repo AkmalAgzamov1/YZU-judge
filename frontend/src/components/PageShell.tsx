@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import { useI18n } from "../i18n";
 import SiteFooter from "./SiteFooter";
-import SiteNav from "./SiteNav";
+import Navbar from "./Navbar";
 
 export default function PageShell({ children }: { children: ReactNode }) {
   const { t } = useI18n();
@@ -14,7 +14,7 @@ export default function PageShell({ children }: { children: ReactNode }) {
       >
         {t("Skip to content")}
       </a>
-      <SiteNav />
+      <Navbar floating />
       <main id="main" className="min-h-[70vh]">
         {children}
       </main>
