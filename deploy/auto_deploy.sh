@@ -20,7 +20,8 @@ git merge -q --ff-only origin/main
 
 CHANGED="$(git diff --name-only "$OLD" "$NEW")"
 # Docs alone change nothing that runs, so leave the containers (and running judgments) alone.
-if ! grep -qv '\.md$' <<< "$CHANGED"; then
+# The lessons in frontend/src/learn are Markdown too, but they are built into the site.
+if ! grep -qv '\.md$' <<< "$CHANGED" && ! grep -q '^frontend/src/learn/' <<< "$CHANGED"; then
     echo "$(date -u +%FT%TZ) only docs changed, nothing to rebuild"
     exit 0
 fi
