@@ -18,7 +18,7 @@ For international students it's even harder. Most of the information about the C
 
 On top of that, you're new to the country, the university and the whole system, and nobody sits you down and says "hey, you need to pass this, here's how." A lot of international students end up struggling with the CPE not because they can't code, but because nobody told them about it early enough.
 
-That's a big part of why YZU Judge is fully in English, and why it tries to explain the exam itself, not just give you problems.
+That's a big part of why YZU Judge is in English first, with the interface also available in Chinese, Vietnamese, Russian and Indonesian, and why it tries to explain the exam itself, not just give you problems.
 
 So I wanted one place where you can open a past CPE problem, read it, write your solution, press Submit, and know in a few seconds whether it passes. That's YZU Judge.
 
@@ -31,15 +31,19 @@ I started on September 19, 2026, and I wanted to really understand every layer, 
 - **Mid October:** Celery and Redis, so judging happens in the background and the site never freezes while code is running.
 - **Late October:** the frontend, then everything that turns it into a real practice platform: the problem pages, the editor, mock exams, an admin panel, C++ support, and finally the import of all the past CPE exams.
 - **November 1:** deployed it to [yzujudge.com](https://yzujudge.com) on a Linux server with Docker, HTTPS through Caddy, and automatic deploys on every push to `main`.
+- **November:** email verification and password reset, the real CPE exam languages, search engine visibility, and the interface in Chinese, Vietnamese, Russian and Indonesian.
+- **November 22–24:** the Learn section, test runs in the editor, and the full-screen exam simulation.
 
 ## What you can do on it
 
 - **Know what's coming.** The home page counts down to the next CPE and shows the official "one star" list. Every one of the last 52 exams had exactly one problem from that list, so we group them by how likely they are to show up next time.
+- **Learn the basics first.** The Learn section has 11 short lessons, from input and output to sorting, maps and recursion, plus a page of common mistakes that cost points. They are written in English and Traditional Chinese (the other interface languages show the English text), and most link to practice problems on the same topic.
+- **Use it in your language.** Switch the interface between English, Chinese, Vietnamese, Russian and Indonesian from the globe button in the navbar.
 - **Practice problems.** 299 problems from past CPE exams, sorted from easy to hard. You can filter by difficulty and by topic (math, strings, dp, graphs, and so on).
 - **Read the statement your way.** Every problem has a short summary written for this site, plus a button that opens the official CPE PDF.
 - **Submit in the same languages as the real CPE exam:** Python 3.9.6, C/C++ (MinGW GCC 6.3.0 or MSVC v140), and Java (AdoptOpenJDK 8 or 11). You see the verdict for each test: Accepted, Wrong Answer, Time Limit, Memory Limit, Runtime Error or Compilation Error.
 - **Test code before you submit.** The test panel under the problem runs the visible samples, a random set of hidden tests, or any input you type. It uses the same sandbox as the real judge and never creates a submission or uses an attempt.
-- **Practise in an exam window.** The Simulation button opens a problem, or a whole Mock CPE, in a full-screen exam-style workspace with a statement, editor, timer, output and a standard-input box. Esc or the red close button returns to the normal site.
+- **Practise in an exam window.** The Simulation button opens a problem, or a whole Mock CPE, in a full-screen exam-style workspace with a statement, editor, timer, output and a standard-input box. Esc or the red close button returns to the normal site (an Esc the editor uses for its own autocomplete doesn't count), your code is never replaced without asking, and closing the tab during a Mock CPE asks first. It is hidden on small screens.
 - **Take a Mock CPE.** 38 real past exams, 3 hours each, with a timer and your results at the end. Topics and tags are hidden during the exam, so you have to figure out the approach yourself, just like in the real one.
 - **Track your progress.** Your account page shows what you solved and your recent activity.
 - **Avoid spoilers.** Topics are hidden behind a "Show topics" button, because sometimes knowing it's a DP problem is half the answer.
