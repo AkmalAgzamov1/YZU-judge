@@ -8,6 +8,8 @@ from ..models.problem import Problem
 from ..models.user import User
 from ..schemas.problem import ProblemCreate, ProblemOut, ProblemUpdate, ProblemStats
 from ..dependencies import get_current_admin_user, get_optional_user, is_admin
+from ..models.hint_reveal import HintReveal
+from ..models.run import Run
 from ..models.submission import Submission
 from ..models.cpe_paper import CpePaperProblem
 from ..topics import normalize_topics
@@ -145,13 +147,21 @@ def delete_problem(problem_id: int, current_user: User = Depends(get_current_adm
             detail = "This problem is part of a CPE paper. Remove it from the paper first."
         )
 
+    # Scratch data about this problem. Its foreign keys would block the delete.
+    db.query(Run).filter(Run.problem_id == problem_id).delete(synchronize_session = False)
+    db.query(HintReveal).filter(HintReveal.problem_id == problem_id).delete(synchronize_session = False)
+
+    test_files = []
     for testcase in db.query(TestCase).filter(TestCase.problem_id == problem_id).all():
-        delete_file(testcase.input_path)
-        delete_file(testcase.output_path)
+        test_files += [testcase.input_path, testcase.output_path]
         db.delete(testcase)
 
     db.delete(problem)
     db.commit()
+
+    # Only after the commit: a failed delete must not leave a problem without its tests.
+    for path in test_files:
+        delete_file(path)
 
     return {"message": "problem deleted"}
 

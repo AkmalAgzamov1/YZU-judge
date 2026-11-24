@@ -413,6 +413,54 @@ export const id = {
   "Submit": "Kirim",
   "Sign in to submit": "Masuk untuk mengirim",
   "Code editor": "Editor kode",
+  "Resize panels": "Ubah ukuran panel",
+  "Drag to resize": "Seret untuk mengubah ukuran",
+
+  // Editor options
+  "Editor options": "Opsi editor",
+  "Font size": "Ukuran font",
+  "Smaller font": "Perkecil font",
+  "Larger font": "Perbesar font",
+  "Reset font size": "Atur ulang ukuran font",
+  "Load code…": "Muat kode…",
+  "Save code": "Simpan kode",
+  "Print code": "Cetak kode",
+  "The file is too large.": "File terlalu besar.",
+  "The file could not be read.": "File tidak dapat dibaca.",
+  "The browser blocked the print window.": "Browser memblokir jendela cetak.",
+
+  // Run panel
+  "Run": "Jalankan",
+  "Run code": "Jalankan kode",
+  "Sign in to run": "Masuk untuk menjalankan",
+  "Test your code": "Uji kode Anda",
+  "Sample tests": "Tes contoh",
+  "Random": "Acak",
+  "Custom": "Kustom",
+  "Random tests": "Tes acak",
+  "Tests": "Tes",
+  "Runs hidden tests at random. Inputs and expected outputs are not shown.":
+    "Menjalankan tes tersembunyi secara acak. Input dan output yang diharapkan tidak ditampilkan.",
+  "{passed} of {total} hidden tests passed": "{passed} dari {total} tes tersembunyi lulus",
+  "Custom input": "Input khusus",
+  "Running…": "Menjalankan…",
+  "Finished": "Selesai",
+  "Expected": "Hasil yang diharapkan",
+  "Your output": "Output Anda",
+  "(no output)": "(tidak ada output)",
+  "Run your code to see the result here.": "Jalankan kode Anda untuk melihat hasilnya di sini.",
+  "This problem has no sample tests yet.": "Soal ini belum memiliki tes contoh.",
+  "The judge could not run your code. Try again.": "Sistem penilai tidak dapat menjalankan kode Anda. Coba lagi.",
+  "The judge is taking longer than usual. Your run is still queued.": "Sistem penilai membutuhkan waktu lebih lama dari biasanya. Uji coba Anda masih dalam antrean.",
+  "The code changed. Run it again to test the new code.": "Kode berubah. Jalankan lagi untuk menguji kode baru.",
+  "Custom input must be at most 16 KiB.": "Input khusus maksimal 16 KiB.",
+  "Write some code before running it.": "Tulis kode sebelum menjalankannya.",
+  "Type or paste the input your program should read.": "Ketik atau tempel input yang harus dibaca program Anda.",
+  "Close": "Tutup",
+  "{passed} of {total} samples passed": "{passed} dari {total} tes contoh lulus",
+
+  // Test runs
+  "Hidden test data is not shown.": "Data tes tersembunyi tidak ditampilkan.",
 
   // Judge panel
   "sending your code…": "mengirim kodemu…",
@@ -604,6 +652,8 @@ export const id = {
 
 // Messages the server sends in English, by their exact text.
 export const apiMessages: Record<string, string> = {
+  "This problem has no hidden tests yet.": "Soal ini belum memiliki tes tersembunyi.",
+  "The text contains a null character. Save the file as UTF-8 and try again.": "Teks berisi karakter null. Simpan berkas sebagai UTF-8, lalu coba lagi.",
   "Invalid username or password": "Nama pengguna atau kata sandi tidak valid",
   "Too many attempts. Wait a minute and try again.": "Terlalu banyak percobaan. Tunggu semenit dan coba lagi.",
   "Too many emails from your network. Try again in an hour.": "Terlalu banyak email dari jaringanmu. Coba lagi dalam sejam.",
@@ -637,6 +687,11 @@ export const apiMessages: Record<string, string> = {
   "No such CPE paper": "Tidak ada naskah CPE itu",
   "This CPE paper has no problems yet": "Naskah CPE ini belum punya soal",
   "Hints and solutions are hidden during a Mock CPE.": "Petunjuk dan solusi disembunyikan selama CPE simulasi.",
+  "Too many test runs. Wait for the current one to finish, then try again.": "Terlalu banyak uji coba. Tunggu yang sekarang selesai lalu coba lagi.",
+  "The judge is offline right now. Try again in a minute.": "Sistem penilai sedang offline. Coba lagi dalam satu menit.",
+  "No such test run": "Uji coba tidak ditemukan",
+  "You can only access your own test runs": "Anda hanya dapat mengakses uji coba Anda sendiri",
+  "This problem has no sample tests yet.": "Soal ini belum memiliki tes contoh.",
 };
 
 // Server messages with a number in them.

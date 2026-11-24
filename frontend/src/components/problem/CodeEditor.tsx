@@ -5,15 +5,24 @@ import { HighlightStyle, syntaxHighlighting } from "@codemirror/language";
 import { EditorView } from "@codemirror/view";
 import { tags } from "@lezer/highlight";
 import CodeMirror from "@uiw/react-codemirror";
-import { type KeyboardEvent } from "react";
+import { type CSSProperties, type KeyboardEvent } from "react";
 import type { Extension } from "@codemirror/state";
 import { useI18n } from "../../i18n";
+import { loadEditorFontSize } from "../../lib/editorSettings";
 import type { EditorLanguage } from "../../lib/languages";
 
 const editorTheme = EditorView.theme(
   {
-    "&": { backgroundColor: "#181818", color: "#e5e5e5", fontSize: "14px", height: "100%" },
-    ".cm-scroller": { fontFamily: '"Geist Mono Variable", ui-monospace, monospace', lineHeight: "20px" },
+    "&": {
+      backgroundColor: "#181818",
+      color: "#e5e5e5",
+      fontSize: "var(--editor-font-size, 14px)",
+      height: "100%",
+    },
+    ".cm-scroller": {
+      fontFamily: '"Geist Mono Variable", ui-monospace, monospace',
+      lineHeight: "var(--editor-line-height, 20px)",
+    },
     ".cm-content": { caretColor: "#ffffff", padding: "12px 0" },
     ".cm-gutters": { backgroundColor: "#181818", color: "#525252", border: "none" },
     ".cm-activeLine": { backgroundColor: "#1f1f1f" },
@@ -45,6 +54,8 @@ interface CodeEditorProps {
   onSubmit?: () => void;
   readOnly?: boolean;
   language?: EditorLanguage;
+  // Defaults to the size saved from the editor options menu.
+  fontSize?: number;
 }
 
 const extensionsFor: Record<EditorLanguage, Extension[]> = {
@@ -56,8 +67,16 @@ const extensionsFor: Record<EditorLanguage, Extension[]> = {
   cpp: [cpp(), syntaxHighlighting(highlight)],
 };
 
-export default function CodeEditor({ value, onChange, onSubmit, readOnly = false, language = "python" }: CodeEditorProps) {
+export default function CodeEditor({
+  value,
+  onChange,
+  onSubmit,
+  readOnly = false,
+  language = "python",
+  fontSize,
+}: CodeEditorProps) {
   const { t } = useI18n();
+  const size = fontSize ?? loadEditorFontSize();
 
   // Catch Ctrl/Cmd + Enter before CodeMirror turns it into a new line.
   function handleKeyDownCapture(event: KeyboardEvent<HTMLDivElement>) {
@@ -69,7 +88,16 @@ export default function CodeEditor({ value, onChange, onSubmit, readOnly = false
   }
 
   return (
-    <div className="h-full" onKeyDownCapture={handleKeyDownCapture}>
+    <div
+      className="h-full"
+      style={
+        {
+          "--editor-font-size": `${size}px`,
+          "--editor-line-height": `${Math.round(size * 1.43)}px`,
+        } as CSSProperties
+      }
+      onKeyDownCapture={handleKeyDownCapture}
+    >
       <CodeMirror
         value={value}
         onChange={onChange}

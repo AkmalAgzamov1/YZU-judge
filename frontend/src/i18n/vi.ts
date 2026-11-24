@@ -413,6 +413,54 @@ export const vi = {
   "Submit": "Nộp",
   "Sign in to submit": "Đăng nhập để nộp",
   "Code editor": "Trình soạn code",
+  "Resize panels": "Thay đổi kích thước bảng",
+  "Drag to resize": "Kéo để thay đổi kích thước",
+
+  // Editor options
+  "Editor options": "Tùy chọn trình soạn thảo",
+  "Font size": "Cỡ chữ",
+  "Smaller font": "Giảm cỡ chữ",
+  "Larger font": "Tăng cỡ chữ",
+  "Reset font size": "Đặt lại cỡ chữ",
+  "Load code…": "Tải mã…",
+  "Save code": "Lưu mã",
+  "Print code": "In mã",
+  "The file is too large.": "Tệp quá lớn.",
+  "The file could not be read.": "Không thể đọc tệp.",
+  "The browser blocked the print window.": "Trình duyệt đã chặn cửa sổ in.",
+
+  // Run panel
+  "Run": "Chạy",
+  "Run code": "Chạy mã",
+  "Sign in to run": "Đăng nhập để chạy",
+  "Test your code": "Kiểm tra mã của bạn",
+  "Sample tests": "Test mẫu",
+  "Random": "Ngẫu nhiên",
+  "Custom": "Tùy chỉnh",
+  "Random tests": "Test ngẫu nhiên",
+  "Tests": "Test",
+  "Runs hidden tests at random. Inputs and expected outputs are not shown.":
+    "Chạy ngẫu nhiên các test ẩn. Không hiển thị dữ liệu nhập và kết quả mong đợi.",
+  "{passed} of {total} hidden tests passed": "Đã vượt qua {passed}/{total} test ẩn",
+  "Custom input": "Nhập tùy chỉnh",
+  "Running…": "Đang chạy…",
+  "Finished": "Đã chạy xong",
+  "Expected": "Kết quả mong đợi",
+  "Your output": "Kết quả của bạn",
+  "(no output)": "(không có kết quả)",
+  "Run your code to see the result here.": "Chạy mã của bạn để xem kết quả tại đây.",
+  "This problem has no sample tests yet.": "Bài này chưa có test mẫu.",
+  "The judge could not run your code. Try again.": "Hệ thống chấm không thể chạy mã của bạn. Hãy thử lại.",
+  "The judge is taking longer than usual. Your run is still queued.": "Hệ thống chấm đang mất nhiều thời gian hơn bình thường. Lần chạy thử của bạn vẫn đang trong hàng đợi.",
+  "The code changed. Run it again to test the new code.": "Mã đã thay đổi. Chạy lại để kiểm tra mã mới.",
+  "Custom input must be at most 16 KiB.": "Dữ liệu nhập tùy chỉnh tối đa 16 KiB.",
+  "Write some code before running it.": "Hãy viết mã trước khi chạy.",
+  "Type or paste the input your program should read.": "Nhập hoặc dán dữ liệu mà chương trình của bạn sẽ đọc.",
+  "Close": "Đóng",
+  "{passed} of {total} samples passed": "Đã vượt qua {passed}/{total} test mẫu",
+
+  // Test runs
+  "Hidden test data is not shown.": "Không hiển thị dữ liệu test ẩn.",
 
   // Judge panel
   "sending your code…": "đang gửi code của bạn…",
@@ -604,6 +652,8 @@ export const vi = {
 
 // Messages the server sends in English, by their exact text.
 export const apiMessages: Record<string, string> = {
+  "This problem has no hidden tests yet.": "Bài này chưa có test ẩn.",
+  "The text contains a null character. Save the file as UTF-8 and try again.": "Văn bản chứa ký tự null. Hãy lưu tệp dưới dạng UTF-8 rồi thử lại.",
   "Invalid username or password": "Tên đăng nhập hoặc mật khẩu không đúng",
   "Too many attempts. Wait a minute and try again.": "Bạn thử quá nhiều lần. Hãy đợi một phút rồi thử lại.",
   "Too many emails from your network. Try again in an hour.": "Mạng của bạn đã gửi quá nhiều email. Hãy thử lại sau một tiếng.",
@@ -637,6 +687,11 @@ export const apiMessages: Record<string, string> = {
   "No such CPE paper": "Không có đề CPE này",
   "This CPE paper has no problems yet": "Đề CPE này chưa có bài nào",
   "Hints and solutions are hidden during a Mock CPE.": "Gợi ý và lời giải bị ẩn trong lúc đang thi CPE thử.",
+  "Too many test runs. Wait for the current one to finish, then try again.": "Bạn đã chạy thử quá nhiều lần. Hãy đợi lần chạy hiện tại xong rồi thử lại.",
+  "The judge is offline right now. Try again in a minute.": "Hệ thống chấm đang ngoại tuyến. Hãy thử lại sau một phút.",
+  "No such test run": "Không tìm thấy lần chạy thử này",
+  "You can only access your own test runs": "Bạn chỉ có thể truy cập các lần chạy thử của mình",
+  "This problem has no sample tests yet.": "Bài này chưa có test mẫu.",
 };
 
 // Server messages with a number in them.

@@ -415,6 +415,54 @@ export const ru = {
   "Submit": "Отправить",
   "Sign in to submit": "Войдите, чтобы отправить",
   "Code editor": "Редактор кода",
+  "Resize panels": "Изменить размер панелей",
+  "Drag to resize": "Перетащите, чтобы изменить размер",
+
+  // Editor options
+  "Editor options": "Настройки редактора",
+  "Font size": "Размер шрифта",
+  "Smaller font": "Уменьшить шрифт",
+  "Larger font": "Увеличить шрифт",
+  "Reset font size": "Сбросить размер шрифта",
+  "Load code…": "Загрузить код…",
+  "Save code": "Сохранить код",
+  "Print code": "Печать кода",
+  "The file is too large.": "Файл слишком большой.",
+  "The file could not be read.": "Не удалось прочитать файл.",
+  "The browser blocked the print window.": "Браузер заблокировал окно печати.",
+
+  // Run panel
+  "Run": "Запустить",
+  "Run code": "Запустить код",
+  "Sign in to run": "Войдите, чтобы запустить",
+  "Test your code": "Проверьте свой код",
+  "Sample tests": "Примеры тестов",
+  "Random": "Случайные",
+  "Custom": "Свой",
+  "Random tests": "Случайные тесты",
+  "Tests": "Тесты",
+  "Runs hidden tests at random. Inputs and expected outputs are not shown.":
+    "Запускает случайные скрытые тесты. Входные данные и ожидаемый вывод не показываются.",
+  "{passed} of {total} hidden tests passed": "Пройдено {passed} из {total} скрытых тестов",
+  "Custom input": "Свой ввод",
+  "Running…": "Выполняется…",
+  "Finished": "Выполнено",
+  "Expected": "Ожидаемый вывод",
+  "Your output": "Ваш вывод",
+  "(no output)": "(нет вывода)",
+  "Run your code to see the result here.": "Запустите код, чтобы увидеть результат.",
+  "This problem has no sample tests yet.": "У этой задачи пока нет примеров тестов.",
+  "The judge could not run your code. Try again.": "Система не смогла запустить ваш код. Попробуйте ещё раз.",
+  "The judge is taking longer than usual. Your run is still queued.": "Судья работает дольше обычного. Ваш тестовый запуск всё ещё в очереди.",
+  "The code changed. Run it again to test the new code.": "Код изменился. Запустите ещё раз, чтобы проверить новый код.",
+  "Custom input must be at most 16 KiB.": "Свой ввод не должен превышать 16 КиБ.",
+  "Write some code before running it.": "Сначала напишите код.",
+  "Type or paste the input your program should read.": "Введите или вставьте данные, которые должна прочитать программа.",
+  "Close": "Закрыть",
+  "{passed} of {total} samples passed": "Пройдено {passed} из {total} примеров",
+
+  // Test runs
+  "Hidden test data is not shown.": "Скрытые тесты не показываются.",
 
   // Judge panel
   "sending your code…": "отправляем ваш код…",
@@ -606,6 +654,8 @@ export const ru = {
 
 // Messages the server sends in English, by their exact text.
 export const apiMessages: Record<string, string> = {
+  "This problem has no hidden tests yet.": "У этой задачи пока нет скрытых тестов.",
+  "The text contains a null character. Save the file as UTF-8 and try again.": "В тексте есть нулевой символ (NUL). Сохраните файл в UTF-8 и попробуйте снова.",
   "Invalid username or password": "Неверный логин или пароль",
   "Too many attempts. Wait a minute and try again.": "Слишком много попыток. Подождите минуту и попробуйте снова.",
   "Too many emails from your network. Try again in an hour.": "С вашей сети отправлено слишком много писем. Попробуйте через час.",
@@ -639,6 +689,11 @@ export const apiMessages: Record<string, string> = {
   "No such CPE paper": "Такого варианта CPE нет",
   "This CPE paper has no problems yet": "В этом варианте CPE пока нет задач",
   "Hints and solutions are hidden during a Mock CPE.": "Во время пробного CPE подсказки и решения скрыты.",
+  "Too many test runs. Wait for the current one to finish, then try again.": "Слишком много тестовых запусков. Дождитесь завершения текущего и попробуйте снова.",
+  "The judge is offline right now. Try again in a minute.": "Судья сейчас недоступен. Попробуйте через минуту.",
+  "No such test run": "Тестовый запуск не найден",
+  "You can only access your own test runs": "Вы можете открывать только свои тестовые запуски",
+  "This problem has no sample tests yet.": "У этой задачи пока нет примеров тестов.",
 };
 
 // Server messages with a number in them.
