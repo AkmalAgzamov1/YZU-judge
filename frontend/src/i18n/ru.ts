@@ -464,6 +464,9 @@ export const ru = {
   // Exam simulation
   "Simulation mode": "Режим симуляции",
   "Exit simulation": "Выйти из симуляции",
+  "Replace your code?": "Заменить ваш код?",
+  "Your code for this problem will be replaced with the starter code.": "Ваш код этой задачи будет заменён начальным шаблоном.",
+  "Replace": "Заменить",
   "Open the full-screen exam simulation": "Открыть полноэкранную симуляцию экзамена",
   "Fullscreen": "Полный экран",
   "Exit fullscreen": "Выйти из полноэкранного режима",

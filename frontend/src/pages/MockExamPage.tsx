@@ -158,7 +158,7 @@ function ExamView({ exam, onRefresh }: { exam: MockExam; onRefresh: () => void }
             </p>
             <button
               type="button"
-              className={buttonSecondary}
+              className={`${buttonSecondary} max-lg:hidden`}
               title={t("Open the full-screen exam simulation")}
               onClick={openSimulation}
             >
