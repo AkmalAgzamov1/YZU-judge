@@ -625,6 +625,7 @@ export const ru = {
 // Messages the server sends in English, by their exact text.
 export const apiMessages: Record<string, string> = {
   "This problem has no hidden tests yet.": "У этой задачи пока нет скрытых тестов.",
+  "The text contains a null character. Save the file as UTF-8 and try again.": "В тексте есть нулевой символ (NUL). Сохраните файл в UTF-8 и попробуйте снова.",
   "Invalid username or password": "Неверный логин или пароль",
   "Too many attempts. Wait a minute and try again.": "Слишком много попыток. Подождите минуту и попробуйте снова.",
   "Too many emails from your network. Try again in an hour.": "С вашей сети отправлено слишком много писем. Попробуйте через час.",

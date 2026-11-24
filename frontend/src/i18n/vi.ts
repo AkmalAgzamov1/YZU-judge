@@ -623,6 +623,7 @@ export const vi = {
 // Messages the server sends in English, by their exact text.
 export const apiMessages: Record<string, string> = {
   "This problem has no hidden tests yet.": "Bài này chưa có test ẩn.",
+  "The text contains a null character. Save the file as UTF-8 and try again.": "Văn bản chứa ký tự null. Hãy lưu tệp dưới dạng UTF-8 rồi thử lại.",
   "Invalid username or password": "Tên đăng nhập hoặc mật khẩu không đúng",
   "Too many attempts. Wait a minute and try again.": "Bạn thử quá nhiều lần. Hãy đợi một phút rồi thử lại.",
   "Too many emails from your network. Try again in an hour.": "Mạng của bạn đã gửi quá nhiều email. Hãy thử lại sau một tiếng.",

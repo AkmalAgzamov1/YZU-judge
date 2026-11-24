@@ -623,6 +623,7 @@ export const zh = {
 // Messages the server sends in English, by their exact text.
 export const apiMessages: Record<string, string> = {
   "This problem has no hidden tests yet.": "這題還沒有隱藏測資。",
+  "The text contains a null character. Save the file as UTF-8 and try again.": "內容含有空字元（NUL）。請將檔案另存為 UTF-8 後再試一次。",
   "Invalid username or password": "使用者名稱或密碼錯誤",
   "Too many attempts. Wait a minute and try again.": "嘗試次數過多，請一分鐘後再試。",
   "Too many emails from your network. Try again in an hour.": "你所在的網路寄出太多信件，請一小時後再試。",

@@ -14,6 +14,7 @@ from ..models.mock_exam import MockExam
 from ..models.cpe_paper import CpePaperProblem
 from .mock_exams import is_active, utc_now
 
+from ..text_checks import check_no_null_characters
 from ..schemas.submission import SubmissionCreate, SubmissionOut, SubmissionResultOut
 
 import logging
@@ -72,6 +73,8 @@ def create_submission(submission_data: SubmissionCreate, current_user: User = De
 
     if problem is None or (not problem.is_published and not current_user.is_admin):
         raise HTTPException(status_code = 404, detail = "Problem not found")
+
+    check_no_null_characters(submission_data.code)
 
     if submission_data.mock_exam_id is not None:
         check_mock_exam_submission(db, submission_data, current_user)

@@ -53,8 +53,9 @@ function clampSplit(value: number) {
 
 function loadSplit() {
   try {
+    // Nothing saved yet reads as null, and Number(null) is 0, which is not a width.
     const value = Number(localStorage.getItem(SPLIT_KEY));
-    return Number.isFinite(value) ? clampSplit(value) : SPLIT_DEFAULT;
+    return Number.isFinite(value) && value > 0 ? clampSplit(value) : SPLIT_DEFAULT;
   } catch {
     return SPLIT_DEFAULT;
   }

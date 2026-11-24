@@ -623,6 +623,7 @@ export const id = {
 // Messages the server sends in English, by their exact text.
 export const apiMessages: Record<string, string> = {
   "This problem has no hidden tests yet.": "Soal ini belum memiliki tes tersembunyi.",
+  "The text contains a null character. Save the file as UTF-8 and try again.": "Teks berisi karakter null. Simpan berkas sebagai UTF-8, lalu coba lagi.",
   "Invalid username or password": "Nama pengguna atau kata sandi tidak valid",
   "Too many attempts. Wait a minute and try again.": "Terlalu banyak percobaan. Tunggu semenit dan coba lagi.",
   "Too many emails from your network. Try again in an hour.": "Terlalu banyak email dari jaringanmu. Coba lagi dalam sejam.",

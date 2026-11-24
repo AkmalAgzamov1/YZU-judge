@@ -13,6 +13,7 @@ from ..models.testcase import TestCase
 from ..models.user import User
 from ..schemas.run import RunCaseOut, RunCreate, RunOut
 from ..tasks import run_code_task
+from ..text_checks import check_no_null_characters
 from .mock_exams import utc_now
 
 logger = logging.getLogger(__name__)
@@ -79,6 +80,8 @@ def create_run(
 
     if problem is None or (not problem.is_published and not current_user.is_admin):
         raise HTTPException(status_code=404, detail="Problem not found")
+
+    check_no_null_characters(run_data.code, run_data.custom_input)
 
     if run_data.mode == "samples":
         has_sample = db.query(TestCase.id).filter(
