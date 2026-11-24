@@ -1,4 +1,4 @@
-import { Lightbulb, PaperPlaneRight } from "@phosphor-icons/react";
+import { Lightbulb, Monitor, PaperPlaneRight } from "@phosphor-icons/react";
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type KeyboardEvent as ReactKeyboardEvent, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
@@ -82,6 +82,9 @@ interface ProblemWorkspaceProps {
   heightClass?: string;
   onSubmissionFinished?: () => void;
   onExamEnded?: () => void;
+  // Opens the full-screen exam simulation. The page owns the switch because it
+  // replaces this workspace with the full-screen exam interface.
+  onEnterSimulation?: () => void;
 }
 
 function StatementSkeleton() {
@@ -108,6 +111,7 @@ export default function ProblemWorkspace({
   heightClass = "lg:h-[calc(100svh-4rem)]",
   onSubmissionFinished,
   onExamEnded,
+  onEnterSimulation,
 }: ProblemWorkspaceProps) {
   const { user, isLoading: authLoading } = useAuth();
   const { t } = useI18n();
@@ -298,6 +302,14 @@ export default function ProblemWorkspace({
     }
   }
 
+  function openSimulation() {
+    if (!user) {
+      navigate("/login", { state: { from: location } });
+      return;
+    }
+    onEnterSimulation?.();
+  }
+
   const handleFinished = useCallback(() => {
     setHistoryVersion((value) => value + 1);
     onSubmissionFinished?.();
@@ -483,6 +495,18 @@ export default function ProblemWorkspace({
           />
 
           <div className="flex items-center gap-2">
+            {onEnterSimulation && (
+              <button
+                type="button"
+                onClick={openSimulation}
+                className={buttonSecondary}
+                title={t("Open the full-screen exam simulation")}
+              >
+                <Monitor size={16} aria-hidden="true" />
+                {t("Simulation")}
+              </button>
+            )}
+
             <button type="button" onClick={submit} disabled={submitting} className={buttonPrimary}>
               {user ? (submitting ? t("Sending…") : t("Submit")) : t("Sign in to submit")}
               {user && <PaperPlaneRight size={16} weight="bold" aria-hidden="true" />}

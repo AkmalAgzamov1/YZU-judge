@@ -461,6 +461,21 @@ export const ru = {
   "Close": "Закрыть",
   "{passed} of {total} samples passed": "Пройдено {passed} из {total} примеров",
 
+  // Exam simulation
+  "Simulation mode": "Режим симуляции",
+  "Exit simulation": "Выйти из симуляции",
+  "Open the full-screen exam simulation": "Открыть полноэкранную симуляцию экзамена",
+  "Fullscreen": "Полный экран",
+  "Exit fullscreen": "Выйти из полноэкранного режима",
+  "The code changed since this result.": "Код изменился после этого результата.",
+  "Standard input": "Стандартный ввод",
+  "Run with this input": "Запустить с этим вводом",
+  "Result comparison": "Сравнение результатов",
+  "Press Esc or the red close button to return to the normal interface.": "Нажмите Esc или красную кнопку закрытия, чтобы вернуться к обычному интерфейсу.",
+  "Use 編譯測試 to test with samples or your own input, and 批改交卷 to submit.": "Меню 編譯測試 проверяет на примерах или своём вводе, 批改交卷 отправляет код.",
+  "Started at {start} · {n} problems · ends at {end}": "Начало в {start} · {n} задач · конец в {end}",
+  "The clock runs on the server. Press Esc to return to the normal interface; the exam keeps running.": "Часы идут на сервере. Нажмите Esc, чтобы вернуться к обычному интерфейсу; экзамен продолжится.",
+
   // Test runs
   "Hidden test data is not shown.": "Скрытые тесты не показываются.",
 
